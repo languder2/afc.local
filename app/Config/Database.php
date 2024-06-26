@@ -26,10 +26,10 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'localhost',
+        'hostname'     => 'MariaDB-11.2',
         'username'     => 'root',
         'password'     => '',
-        'database'     => 'abit',
+        'database'     => 'afc',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
