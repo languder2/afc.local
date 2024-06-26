@@ -26,7 +26,6 @@ class AFCModel extends GeneralModel {
         return true;
     }
     private function replaces(&$rec,array $replaces){
-        dd($rec);
         foreach ($replaces as $field)
             $rec->{$field}= $this->statuses[$field][$rec->{$field}];
     }

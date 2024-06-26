@@ -19,22 +19,20 @@ class AFCController extends BaseController{
         $data= (object)[];
 
         $data->totalApp= $this->afc->db->table($this->afc->table)->get()->getNumRows();
-/*
         $data->methodSubmitting= (object)[
             "total"=> $this->afc->getAFC("methodSubmitting",false,false,false,["methodSubmitting!="=>""],false,['methodSubmitting']),
             "byDate"=> $this->afc->getAFC("methodSubmitting",false,true,false,["methodSubmitting!="=>""],false,['methodSubmitting']),
             "byDateTime"=> $this->afc->getAFC("methodSubmitting",false,false,true,["methodSubmitting!="=>""],false,['methodSubmitting']),
         ];
-*/
         $data->edForms= (object)[
             "total"=> $this->afc->getAFC("specShape",false,false,false,["specShape!="=>""],false,['specShape']),
-            //"byDate"=> $this->afc->getAFC("specShape",false,true,false,["specShape!="=>""],false,['specShape']),
-            //"byDateTime"=> $this->afc->getAFC("specShape",false,false,true,["specShape!="=>""],false,['specShape']),
+            "byDate"=> $this->afc->getAFC("specShape",false,true,false,["specShape!="=>""],false,['specShape']),
+            "byDateTime"=> $this->afc->getAFC("specShape",false,false,true,["specShape!="=>""],false,['specShape']),
         ];
 
-//        $levels= $this->afc->getAFC("specLevel",['specID'],false,false,false,false,false);
+        $levels= $this->afc->getAFC("specLevel",['specID'],false,false,false,false,false);
 
-  //      dd($data->totalApp,$levels);
+        dd($data->totalApp,$levels);
 
     }
 
