@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\HubModel;
+use App\Models\GeneralModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -39,7 +39,7 @@ abstract class BaseController extends Controller
      */
     protected $helpers = [];
     protected Session $session;
-    protected HubModel $model;
+    protected GeneralModel $model;
     /**
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.
@@ -60,6 +60,6 @@ abstract class BaseController extends Controller
 
         $this->session = \Config\Services::session();
         $this->db = \Config\Database::connect();
-        $this->model= model(HubModel::class);
+        $this->model= model(GeneralModel::class);
     }
 }
