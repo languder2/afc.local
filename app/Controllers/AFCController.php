@@ -21,18 +21,24 @@ class AFCController extends BaseController{
         $data->totalApp= $this->afc->db->table($this->afc->table)->get()->getNumRows();
         $data->methodSubmitting= (object)[
             "total"=> $this->afc->getAFC("methodSubmitting",false,false,false,["methodSubmitting!="=>""],false,['methodSubmitting']),
-            "byDate"=> $this->afc->getAFC("methodSubmitting",false,true,false,["methodSubmitting!="=>""],false,['methodSubmitting']),
-            "byDateTime"=> $this->afc->getAFC("methodSubmitting",false,false,true,["methodSubmitting!="=>""],false,['methodSubmitting']),
+//            "byDate"=> $this->afc->getAFC("methodSubmitting",false,true,false,["methodSubmitting!="=>""],false,['methodSubmitting']),
+//          "byDateTime"=> $this->afc->getAFC("methodSubmitting",false,false,true,["methodSubmitting!="=>""],false,['methodSubmitting']),
         ];
         $data->edForms= (object)[
             "total"=> $this->afc->getAFC("specShape",false,false,false,["specShape!="=>""],false,['specShape']),
-            "byDate"=> $this->afc->getAFC("specShape",false,true,false,["specShape!="=>""],false,['specShape']),
-            "byDateTime"=> $this->afc->getAFC("specShape",false,false,true,["specShape!="=>""],false,['specShape']),
+//            "byDate"=> $this->afc->getAFC("specShape",false,true,false,["specShape!="=>""],false,['specShape']),
+//            "byDateTime"=> $this->afc->getAFC("specShape",false,false,true,["specShape!="=>""],false,['specShape']),
         ];
 
-        $levels= $this->afc->getAFC("specLevel",['specID'],false,false,false,false,false);
-        #test= 1;
-        dd($data->totalApp,$levels);
+        $data->levels= $this->afc->getAFC("specLevel",false,false,false,false,false,false);
+        $data->basis= $this->afc->getAFC("appBasis",false,false,false,["appBasis!="=>""],false,['appBasis']);
+        $data->specs= $this->afc->getAFC("specID",["specCode","specLevel","specName","specProfile"],false,false,["specCode!="=>""],false,false);
+        $data->appStatus= $this->afc->getAFC("appStatus",false,false,false,false,false,false);
+        $data->citizenship= $this->afc->getAFC("citizenship",false,false,false,false,false,false);
+        $data->uStatus= $this->afc->getAFC("uStatus",false,false,false,false,false,false);
+        $data->approval= $this->afc->getAFC("approval",false,false,false,false,false,false);
+
+        return view("public/afc/main",(array)$data);
 
     }
 
