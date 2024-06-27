@@ -31,7 +31,7 @@ class AFCController extends BaseController{
         ];
 
         $levels= $this->afc->getAFC("specLevel",['specID'],false,false,false,false,false);
-
+        #test= 1;
         dd($data->totalApp,$levels);
 
     }
