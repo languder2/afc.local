@@ -3,7 +3,7 @@
         <?=$spec->specName??""?>
         <?=!empty($spec->specProfile)?"<br>$spec->specProfile":""?>
     </h3>
-    <div class="chart-container" style="position: relative; height:50vh; width:100%">
+    <div class="chart-container" style="position: relative; height:35vh; width:100%">
         <canvas id="chart"></canvas>
     </div>
     <script>
@@ -13,10 +13,7 @@
         // Переменные
         let chart = null;
         // Функции
-        const createLineChart = (dates, totals, forms, levels,formColors,levelColors,formTitles,levelTitles) => {
-            let gradient = context.createLinearGradient(0, 0, 0, window.screen.width/2);
-            gradient.addColorStop(0, 'rgba(74, 169, 230, 0.1)');
-            gradient.addColorStop(1, 'rgba(74, 169, 230, 0.001)');
+        const createLineChart = (dates, totals, forms, levels,formColors,levelColors,formTitles,levelTitles,yMax) => {
             let data = {
                 labels: dates,
                 datasets: [{
@@ -24,7 +21,7 @@
                     data: totals,
                     pointStyle: true,
                     fill: true,
-                    backgroundColor: gradient,
+                    backgroundColor: '#4AA9E610',
                     borderWidth: 1,
                     borderColor: 'rgba(74, 169, 230, 1)',
                     tension: 0.2
@@ -36,7 +33,7 @@
                     data: form,
                     pointStyle: true,
                     fill: true,
-                    backgroundColor: gradient,
+                    backgroundColor: '#4AA9E610',
                     borderWidth: 1,
                     borderColor: formColors[i],
                     tension: 0.2
@@ -48,18 +45,17 @@
                     data: level,
                     pointStyle: true,
                     fill: true,
-                    backgroundColor: gradient,
+//                    backgroundColor: gradient,
+                    backgroundColor: '#4AA9E610',
                     borderWidth: 1,
                     borderColor: levelColors[i],
                     tension: 0.2
                 }));
             }
 
-
-
             let xScaleConfig = {
-//            min:2,
-//            max: 4,
+                min:totals.length-14,
+                max: totals.length,
                 ticks: {
                     autoSkip: true,
                     maxRotation: 0,
@@ -74,6 +70,7 @@
                 }
             }
             let yScaleConfig = {
+                max: yMax,
                 ticks: {
                     color: 'rgba(74, 169, 230, 0.9)',
                     beginAtZero: true,
@@ -91,18 +88,7 @@
                     enabled: true,
                     mode: 'x',
                 },
-                /*
-                            zoom: {
-                                mode: 'x',
-                                pinch: {
-                                    enabled: true
-                                },
-                                wheel: {
-                                    enabled: true
-                                },
-                            }
-
-                 */
+                /*  zoom: { mode: 'x',  pinch: { enabled: true }, wheel: { enabled: true } } */
             }
             let config = {
                 type: 'line',
@@ -116,7 +102,7 @@
                     },
                     plugins: {
                         legend: {
-                            position: "top"
+                            position: "bottom"
                         },
                         zoom: zoomOptions
                     },
@@ -128,14 +114,15 @@
         // Получение данных с сервера
         let dates = [<?=$dates??""?>];
         let totals = [<?=implode(",",$totals??[])?>];
+
         let forms= [
             <?php if(isset($forms)) foreach($forms as $form):?>
-                [<?=implode(",",$form)?>],
+            [<?=implode(",",$form)?>],
             <?php endforeach;?>
         ];
         let levels= [
             <?php if(isset($levels)) foreach($levels as $level):?>
-                [<?=implode(",",$level)?>],
+            [<?=implode(",",$level)?>],
             <?php endforeach;?>
         ];
         let formColors= [
@@ -150,31 +137,167 @@
         let levelTitles= [
             <?php if(isset($levelTitles)) foreach($levelTitles as $title) echo "'$title->specLevel',";?>
         ];
-        createLineChart(dates, totals,forms,levels,formColors,levelColors,formTitles,levelTitles);
-
-        // ОБРАБОТЧИКИ СОБЫТИЙ
+        let yMax= <?=max($totals)+1?>;
+        createLineChart(dates, totals,forms,levels,formColors,levelColors,formTitles,levelTitles,yMax);
+    </script>
+</div>
+<div class="container-lg">
+    <div class="chart-container" style="position: relative; height:200px; width:100%">
+        <canvas id="chart2"></canvas>
+    </div>
+    <script>
+        // Получение контекста для рисования
+        let canvas2 = window.document.getElementById('chart2');
+        let context2 = canvas2.getContext('2d');
+        // Переменные
+        let chart2 = null;
+        // Функции
+        const createLineChart2 = (dates, totals, forms, levels,formColors,levelColors,formTitles,levelTitles,yMax) => {
+            let data = {
+                labels: dates,
+                datasets: [{
+                    label: 'Всего',
+                    data: totals,
+                    pointStyle: true,
+                    fill: true,
+                    backgroundColor: '#4AA9E610',
+                    borderWidth: 1,
+                    borderColor: 'rgba(74, 169, 230, 1)',
+                    tension: 0.2
+                }]
+            }
+            let xScaleConfig = {
+                ticks: {
+                    autoSkip: true,
+                    maxRotation: 0,
+                    // minRotation: 90,
+                    color: 'rgba(74, 169, 230, 1)'
+                },
+                border: {
+                    color: 'rgba(74, 169, 230, 1)'
+                },
+                grid: {
+                    color: 'rgba(74, 169, 230, 0.3)'
+                }
+            }
+            let yScaleConfig = {
+                max: yMax,
+                ticks: {
+                    color: 'rgba(74, 169, 230, 0.9)',
+                    beginAtZero: true,
+                    stepSize: 1
+                },
+                border: {
+                    color: 'rgba(74, 169, 230, 1)'
+                },
+                grid: {
+                    color: 'rgba(74, 169, 230, 0.3)'
+                }
+            }
+            let config = {
+                type: 'line',
+                data: data,
+                options: {
+                    aspectRatio: 2,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: xScaleConfig,
+                        y: yScaleConfig
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                    },
+                }
+            }
+            chart2 = new Chart(context2, config);
+            return false;
+        }
+        createLineChart2(dates, totals,forms,levels,formColors,levelColors,formTitles,levelTitles,yMax);
     </script>
 </div>
 
-<div class="container-lg">
-    <div class="gridSpecDetailList">
-        <?php if(isset($totals)) foreach ($totals as $day=>$cnt):?>
-            <?php if(empty($cnt)) continue;?>
-            <div><?=$day?></div>
-            <div><?=$cnt?></div>
-            <div class="grid2">
-                <?php if(isset($formRows[$day])) foreach ($formRows[$day] as $form=>$cnt):?>
-                    <div><?=$form?></div>
-                    <div><?=$cnt?></div>
-                <?php endforeach;?>
-            </div>
-            <div class="grid2">
-                <?php if(isset($levelRows[$day])) foreach ($levelRows[$day] as $level=>$cnt):?>
-                    <div><?=$level?></div>
-                    <div><?=$cnt?></div>
-                <?php endforeach;?>
-            </div>
 
-        <?php endforeach;?>
+<div class="container-lg my-4">
+    <div class="row row-cols-3 text-center">
+        <div class="col-3">
+            <div class="grid-DayCnt">
+                <div class="fw-bold">
+                    Дата
+                </div>
+                <div class="fw-bold">
+                    Кол-во:
+                </div>
+                <?php $i=0; if(isset($totals)) foreach ($totals as $day=>$cnt): if(!$cnt) continue; $i++;?>
+                    <div class="bg<?=$i%2?>">
+                        <?=$day?>
+                    </div>
+                    <div class="bg<?=$i%2?>">
+                        <?=$cnt?>
+                    </div>
+                <?php endforeach;?>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="grid-Day">
+                <div class="fw-bold">
+                    Дата
+                </div>
+                <div class="grid-Cnt">
+                    <div class="fw-bold text-start">
+                        Форма:
+                    </div>
+                    <div class="fw-bold">
+                        Кол-во:
+                    </div>
+                </div>
+                <?php $i=0; if(isset($formRows)) foreach ($formRows as $day=>$forms): if(empty($forms)) continue; $i++;?>
+                    <div class="bg<?=$i%2?>">
+                        <?=$day?>
+                    </div>
+                    <div class="grid-Cnt bg<?=$i%2?>">
+                        <?php foreach ($forms as $form=>$cnt):?>
+                            <div class="text-start">
+                                <?=$form?>
+                            </div>
+                            <div>
+                                <?=$cnt?>
+                            </div>
+                        <?php endforeach;?>
+                    </div>
+                <?php endforeach;?>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="grid-Day">
+                <div class="fw-bold">
+                    Дата
+                </div>
+                <div class="grid-Cnt">
+                    <div class="fw-bold text-start">
+                         Уровень:
+                    </div>
+                    <div class="fw-bold">
+                        Кол-во:
+                    </div>
+                </div>
+                <?php $i=0; if(isset($levelRows)) foreach ($levelRows as $day=>$levels): if(empty($levels)) continue; $i++;?>
+                    <div class="bg<?=$i%2?>">
+                        <?=$day?>
+                    </div>
+                    <div class="grid-Cnt bg<?=$i%2?>">
+                        <?php foreach ($levels as $level=>$cnt):?>
+                            <div class="text-start">
+                                <?=$level?>
+                            </div>
+                            <div>
+                                <?=$cnt?>
+                            </div>
+                        <?php endforeach;?>
+                    </div>
+                <?php endforeach;?>
+            </div>
+        </div>
     </div>
 </div>

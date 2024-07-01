@@ -76,6 +76,10 @@ class AFCModel extends GeneralModel {
             $where[$op]= $rec->{$op};
         return true;
     }
+    public function getAFCCount($groupBy= [], $where= []):int
+    {
+        return $this->db->table($this->table)->where($where)->groupBy($groupBy)->get()->getNumRows();
+    }
     public function getValuesByList(array &$list,string $code,string|array $ops,array|string $select,array|string $groupBy,?string $assoc= NULL):array|bool
     {
         if(!count($list))return false;
@@ -92,4 +96,21 @@ class AFCModel extends GeneralModel {
         return true;
     }
 
+    public function prepareArrays(&$list,&$labels= [],$data,$field):bool
+    {
+        $list= [];
+        foreach ($data as $rec){
+            $list[$rec->{$field}]= $rec->cnt;
+            if(!in_array($rec->{$field},$labels))
+                $labels[]= $rec->{$field};
+        }
+        return true;
+    }
+    public function prepareDate($obj):string
+    {
+        $values= [];
+        foreach ($obj as $value)
+            $values[]= "'$value'";
+        return implode(",",$values);
+    }
 }

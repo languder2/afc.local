@@ -51,10 +51,137 @@ class AFCController extends BaseController{
 
     public function summary():string|bool
     {
-        $data= (object)[];
-        $data->specs= $this->afc->getAFC(["specName","specProfile"],['specID'],["specCode!="=>""],'specName',false);
-        $data->pageContent= view("public/afc/SpecsList",["list"=>$data->specs]);
-        return  view("public/page",["pageContent"=>$data->pageContent]);
+        $conditions= (object)[
+            "college"=>"specLevel IN ('СПО-повышенный уровень','СПО-базовый уровень','НПО (лицей, гимназия)')",
+            "vpo"=>"specLevel IN ('ВПО-Специалисты','ВПО-Бакалавры','ВПО-Магистры')",
+            "ppo"=>"specLevel IN ('Аспирантура','Докторантура')",
+        ];
+
+        $data= (object)[
+            "titles"=> (object)[
+                'all'=> "Всего",
+                'college'=> "Колледжи",
+                'vpo'=> "ВПО",
+                'ppo'=> "ППО",
+            ],
+            "totals"=>(object)[
+                "apps"=> (object)[],
+                "uIDs"=> (object)[],
+            ],
+            "mSubmit"=> (object)[],
+            "specProfiles"=>(object)[],
+            "specs"=>(object)[],
+        ];
+        $data->totals->apps->all= $this->afc->getAFCCount("id");
+        foreach ($conditions as $code=>$condition)
+            $data->totals->apps->{$code}= $this->afc->getAFCCount("id",$condition);
+
+        $pageContent["appTotals"]= view("public/afc/ChartTotals",[
+            "chartID"=>"appTotals",
+            "chartTitle"=>"Заявки",
+            "labels"=> $data->titles,
+            "values"=> $data->totals->apps,
+            "dLabels"=> $this->afc->prepareDate($data->titles),
+            "dValues"=> $this->afc->prepareDate($data->totals->apps),
+            "width"=>"100%",
+            "height"=>"150px",
+        ]);
+
+        $data->totals->uIDs->all= $this->afc->getAFCCount("uID");
+        foreach ($conditions as $code=>$condition)
+            $data->totals->uIDs->{$code}= $this->afc->getAFCCount("uID",$condition);
+
+        $pageContent["abitTotals"]= view("public/afc/ChartTotals",[
+            "chartID"=>"abitTotals",
+            "chartTitle"=>"Люди",
+            "labels"=> $data->titles,
+            "values"=> $data->totals->uIDs,
+            "dLabels"=> $this->afc->prepareDate($data->titles),
+            "dValues"=> $this->afc->prepareDate($data->totals->uIDs),
+            "width"=>"100%",
+            "height"=>"150px",
+            "kl"=>false
+        ]);
+
+        foreach ($conditions as $code=>$condition){
+            $labels= [];
+            $this->afc->prepareArrays(
+                $data->mSubmit->{$code},
+                $labels,
+                $this->afc->getAFC("methodSubmitting",false,"methodSubmitting!='' AND $condition",false,false,false,['methodSubmitting']),
+                "methodSubmitting"
+            );
+            $pageContent["methodSubmitting"][$code]= view("public/afc/ChartTotals",[
+                "chartID"=>"ms_$code",
+                "chartTitle"=>$data->titles->{$code},
+                "labels"=> $labels,
+                "values"=> (object)$data->mSubmit->{$code},
+                "dLabels"=> $this->afc->prepareDate($labels),
+                "dValues"=> $this->afc->prepareDate($data->mSubmit->{$code}),
+                "kl"=> true,
+                "width"=>"100%",
+                "height"=>"150px",
+            ]);
+        }
+
+        foreach ($conditions as $code=>$condition){
+            $labels= [];
+            $this->afc->prepareArrays(
+                $list,
+                $labels,
+                $this->afc->getAFC("specShape",false,"specShape!='' AND $condition",false,false,false,['specShape']),
+                "specShape"
+            );
+            $pageContent["forms"][$code]= view("public/afc/ChartTotals",[
+                "chartID"=>"form_$code",
+                "chartTitle"=>$data->titles->{$code},
+                "labels"=> $labels,
+                "values"=> (object)$list,
+                "dLabels"=> $this->afc->prepareDate($labels),
+                "dValues"=> $this->afc->prepareDate($list),
+                "kl"=> true,
+                "width"=>"100%",
+                "height"=>"150px",
+            ]);
+        }
+
+        $basis= [];
+        $this->afc->prepareArrays(
+            $basis,
+            $labels,
+            $this->afc->getAFC("appBasis",false,["appBasis!="=>""]),
+            "appBasis"
+        );
+        $pageContent["appBasis"]= view("public/afc/ChartTotals",[
+            "chartID"=>"appBasis",
+            "chartTitle"=>"Основание",
+            "labels"=> $labels,
+            "values"=> (object)$basis,
+            "dLabels"=> $this->afc->prepareDate($labels),
+            "dValues"=> $this->afc->prepareDate($basis),
+            "width"=>"100%",
+            "height"=>"150px",
+            "kl"=>true
+        ]);
+
+
+        $data->specProfiles=[
+            'college'=> (object)[
+                "title"=> "Колледжи",
+                "list" => $this->afc->getAFC(["specName","specProfile"],['specID'],"specLevel IN ('СПО-повышенный уровень','СПО-базовый уровень','НПО (лицей, гимназия)')",'specName')
+            ],
+            'vpo'=> (object)[
+                "title"=> "ВПО",
+                "list" => $this->afc->getAFC(["specName","specProfile"],['specID'],"specLevel IN ('ВПО-Специалисты','ВПО-Бакалавры','ВПО-Магистры')",'specName')
+            ],
+            'ppo'=> (object)[
+                "title"=> "ППО",
+                "list" => $this->afc->getAFC(["specName","specProfile"],['specID'],"specLevel IN ('Аспирантура','Докторантура')",'specName')
+            ],
+        ];
+        $pageContent["specProfiles"]= view("public/afc/SpecsList",["list"=>$data->specProfiles]);
+
+        return  view("public/page",["pageContent"=>view("public/afc/Main",$pageContent)]);
     }
 
     public function chartSpecByDays($specID):string|bool
@@ -73,7 +200,17 @@ class AFCController extends BaseController{
         $totals= [];
         $forms= [];
         $levels= [];
-
+        /*
+                $dates= [];
+                foreach ($totalRows as $day=>$total){
+                    $dates[]= $day;
+                    $totals[$day]= $total??0;
+                    foreach ($formKeys as $key=>$row)
+                        $forms[$key][$day]= $formRows[$day][$row->specShape]??0;
+                    foreach ($levelKeys as $key=>$row)
+                        $levels[$key][$day]= $levelRows[$day][$row->specLevel]??0;
+                }
+        */
         $dates = $this->model->get_dates('2024-06-20', date("Y-m-d"),"d.m");
         foreach ($dates as $dk=>$day){
             $dates[$dk]= "'$day'";
@@ -108,6 +245,7 @@ class AFCController extends BaseController{
             "levelRows"=>$levelRows,
         ];
         $pageContent= view("public/afc/SpecChart",$data);
+
         return  view("public/page",["pageContent"=>$pageContent]);
     }
 

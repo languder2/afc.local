@@ -28,8 +28,33 @@
     grid-template-columns: 200px 100px 1fr 1fr;
     gap: 5px;
 }
-.gridSpecDetailList .grid2{
+.grid2{
     display: grid;
     grid-template-columns: 1fr 100px;
+    gap: 3px;
+}
+.grid-DayCnt{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+}
+.grid-Day{
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 3px;
+}
+.grid-Cnt{
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 3px;
 }
 
+.bg0{
+    background-color: #4AA9E607;
+}
+.bg1{
+    background-color: #4AA9E615;
+}
+.bg0,.bg1{
+    padding: 3px 5px;
+}
