@@ -5,6 +5,7 @@ use CodeIgniter\Validation\ValidationInterface;
 class GeneralModel extends UserModel{
 
     public array $statuses;
+    public array $colors;
 
     public function __construct(?ConnectionInterface $db = null, ?ValidationInterface $validation = null)
     {
@@ -29,7 +30,25 @@ class GeneralModel extends UserModel{
         $q= $this->db->table("statuses")->get()->getResult();
         foreach ($q as $rec)
             $this->statuses[$rec->type][$rec->value]= $rec->text;
+
+        $q= $this->db->table("colors")->get()->getResult();
+        foreach ($q as $rec)
+            $this->colors[$rec->name]= $rec->color;
+
         return true;
     }
+    public function get_dates($start, $end, $format = 'd.m.Y')
+    {
+        $day = 86400;
+        $start = strtotime($start . ' -1 days');
+        $end = strtotime($end . ' +1 days');
+        $nums = round(($end - $start) / $day);
 
+        $days = array();
+        for ($i = 1; $i < $nums; $i++) {
+            $days[] = date($format, ($start + ($i * $day)));
+        }
+
+        return $days;
+    }
 }

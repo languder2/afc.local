@@ -6,6 +6,7 @@ class AFCModel extends GeneralModel {
     protected $table= "3report";
     private $byDays= "appDate";
     private $byTimes= "appDateTime";
+    protected $dateFormat= "d.m";
     public function __construct(?ConnectionInterface $db = null, ?ValidationInterface $validation = null)
     {
         parent::__construct($db, $validation);
@@ -18,11 +19,9 @@ class AFCModel extends GeneralModel {
             $select= array_merge($groupBy,["COUNT(id) as cnt"]);
         return true;
     }
-    private function prepareGroupBy(&$groupBy,$byDays,$byTimes):bool{
+    private function prepareGroupBy(&$groupBy):bool{
         if(!is_array($groupBy))
             $groupBy= [$groupBy];
-        if($byDays or $byTimes)
-            $groupBy[]= $byTimes?$this->byTimes:$this->byDays;
         return true;
     }
     private function replaces(&$rec,array $replaces){
@@ -30,15 +29,28 @@ class AFCModel extends GeneralModel {
             $rec->{$field}= $this->statuses[$field][$rec->{$field}];
     }
 
-    private function generateTreeByTerms($res,$field):array{
+    private function generateTreeByTerms($res,$fieldTrees):array{
         $results= [];
-        foreach ($res as $rec)
-            $results[$rec->{$field}][]= $rec;
+        foreach ($res as $rec){
+            $day= date($this->dateFormat,strtotime($rec->{$this->byDays}));
+            if($fieldTrees)
+                $results[$day][$rec->{$fieldTrees}]= $rec->cnt;
+            else
+                $results[$day]= $rec->cnt;
+        }
         return $results;
     }
-
-    public function getAFC(array|string $groupBy,array|bool $select= false,bool $byDays=false,bool $byTimes=false,array|bool|string $where= false,array|bool $orderBy= false,array|bool $replaces= false):array{
-        self::prepareGroupBy($groupBy,$byDays,$byTimes);
+    public function getAFC(
+        array|string $groupBy,
+        array|bool $select= false,
+        array|bool|string $where= false,
+        array|bool $orderBy= false,
+        bool $dayTrees = false,
+        bool|string $fieldTrees = false,
+        array|bool $replaces= false
+    ):array|object
+    {
+        self::prepareGroupBy($groupBy);
         self::prepareSelect($groupBy,$select);
         $res= $this->db
             ->table($this->table)
@@ -52,10 +64,32 @@ class AFCModel extends GeneralModel {
         if($replaces)
             foreach ($res as $key=>$rec)
                 self::replaces($res[$key],$replaces);
-        if($byDays or $byTimes)
-            $res= self::generateTreeByTerms($res,$byTimes?$this->byTimes:$this->byDays);
+        if($dayTrees)
+            $res= self::generateTreeByTerms($res,$fieldTrees);
         return $res;
-
+    }
+    public function prepareWhere($rec,$ops,&$where):bool
+    {
+        if(!is_array($ops)) $ops=[$ops];
+        $where= [];
+        foreach ($ops as $op)
+            $where[$op]= $rec->{$op};
+        return true;
+    }
+    public function getValuesByList(array &$list,string $code,string|array $ops,array|string $select,array|string $groupBy,?string $assoc= NULL):array|bool
+    {
+        if(!count($list))return false;
+        foreach ($list as $key=>$rec){
+            self::prepareWhere($rec,$ops,$where);
+            $list[$key]->{$code}= $this->db
+                ->table($this->table)
+                ->select($select)
+                ->where($where)
+                ->groupBy($groupBy)
+                ->get()
+                ->getResult();
+        }
+        return true;
     }
 
 }

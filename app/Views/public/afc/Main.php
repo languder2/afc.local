@@ -122,9 +122,9 @@
 <h4>
     По Гражданству:
 </h4>
-<table>
-    <?php if(!empty($citizenship)) foreach ($citizenship as $rec):?>
-        <tr>
+<?php if(!empty($citizenship)) foreach ($citizenship as $rec):?>
+    <table>
+        <tr style="border: solid 1px #e5e5e5;">
             <td width="200px">
                 <?=$rec->citizenship?>
             </td>
@@ -135,34 +135,63 @@
 
             </td>
         </tr>
-    <?php endforeach;?>
-</table>
+    </table>
+<?php endforeach;?>
 <hr>
 <h4>По специальности:</h4>
-<table width="100%">
+<table width="100%" class="specs">
     <?php if(!empty($specs)) foreach ($specs as $rec):?>
         <tr>
-            <td >
-                <?=$rec->specID?>
-            </td>
-            <td >
-                <?=$rec->specCode?>
-            </td>
-            <td >
-                <?=$rec->specLevel?>
-            </td>
-            <td >
+            <td>
                 <?=$rec->specName?>
-            </td>
-            <td >
+                <br>
                 <?=$rec->specProfile?>
+            </td>
+            <td>
+                <div class="grid">
+                <?php if($rec->codes) foreach ($rec->codes as $code):?>
+                    <div>
+                        <?=$code->specCode??""?>
+                    </div>
+                    <div>
+                        <?=$code->cnt??""?>
+                    </div>
+                <?php endforeach;?>
+                </div>
+            </td>
+            <td>
+                <div class="grid">
+                <?php if($rec->levels) foreach ($rec->levels as $level):?>
+                    <div>
+                        <?=$level->specLevel??""?>
+                    </div>
+                    <div>
+                        <?=$level->cnt??""?>
+                    </div>
+                <?php endforeach;?>
+                </div>
             </td>
             <td>
                 <a href="<?=base_url("/detail/specCode/")?>">
                     <?=$rec->cnt?>
                 </a>
-
             </td>
         </tr>
     <?php endforeach;?>
 </table>
+<style>
+    .specs tr:nth-child(2n+1){
+        background: #f5f5f5;
+    }
+    .specs tr:nth-child(2n){
+        background: #fafafa;
+    }
+    .specs td{
+        padding: 2px 7px;
+    }
+    .specs .grid{
+        display: grid;
+        grid-template-columns: 1fr 50px;
+        gap: 2px;
+    }
+</style>
