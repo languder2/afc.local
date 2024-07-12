@@ -9,6 +9,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Session\Session;
+use mysql_xdevapi\DatabaseObject;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -40,6 +41,7 @@ abstract class BaseController extends Controller
     protected $helpers = [];
     protected Session $session;
     protected GeneralModel $model;
+    protected object $db;
     /**
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.

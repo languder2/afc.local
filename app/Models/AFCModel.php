@@ -113,4 +113,29 @@ class AFCModel extends GeneralModel {
             $values[]= "'$value'";
         return implode(",",$values);
     }
+
+    public function convertListToTreeFieldDate(array $list,?string $field,bool $reverse= false):array
+    {
+        $result= [];
+        foreach ($list as $rec)
+            if($field){
+                if($reverse)
+                    $result[$rec->{"appDate"}][$rec->{$field}]= $rec->cnt;
+                else
+                    $result[$rec->{$field}][$rec->{"appDate"}]= $rec->cnt;
+            }
+            else{
+                $result[$rec->{"appDate"}]= $rec->cnt;
+            }
+        return $result;
+    }
+
+    public function fillMissingDates($dates,$list):array
+    {
+        $results= [];
+        foreach ($dates as $date)
+            $results[$date]= $list[$date] ?? 0;
+        return  $results;
+    }
+
 }

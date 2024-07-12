@@ -2,22 +2,42 @@
     display: grid;
     grid-template-columns: 1fr 100px;
     gap: 5px;
+    vertical-align: center;
+    justify-content: center;
 }
+.gridSpecList2{
+    display: grid;
+    grid-template-columns: 100px 1fr 100px 100px;
+    gap: 5px;
+}
+.gridSpecList2 > div,
 .gridSpecList > div{
     padding: 5px 10px;
     background-color: #f5faff;
 }
+.gridSpecList2 > div:nth-child(4n+1),
+.gridSpecList2 > div:nth-child(4n+3){
+    text-align: center;
+}
+.gridSpecList2 > div:nth-child(4n+3),
+.gridSpecList2 > div:nth-child(4n),
 .gridSpecList > div:nth-child(2n){
     text-align: right;
 }
+.gridSpecList2 > div:nth-child(8n+1),
+.gridSpecList2 > div:nth-child(8n+2),
+.gridSpecList2 > div:nth-child(8n+3),
+.gridSpecList2 > div:nth-child(8n+4),
 .gridSpecList > div:nth-child(4n+1),
 .gridSpecList > div:nth-child(4n+2){
     background-color: #0a53be10;
 }
+.gridSpecList2 a,
 .gridSpecList a{
     text-decoration: none;
     color: darkblue;
 }
+.gridSpecList2 a:hover,
 .gridSpecList a:hover{
     color: #0a53be;
 }

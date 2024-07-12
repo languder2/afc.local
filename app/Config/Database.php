@@ -17,7 +17,7 @@ class Database extends Config
     /**
      * Lets you choose which connection group to use if no other is specified.
      */
-    public string $defaultGroup = 'local';
+    public string $defaultGroup = 'beget';
 
     /**
      * The default database connection.

@@ -14,6 +14,11 @@
                         <?=$values->{$code}??0?>
                     </div>
                 <?php endforeach;?>
+                <div class="mb-2" style="column-span: 2">
+                    <a href="/byDays/<?=$chartID??""?>">
+                        подробнее
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-8">

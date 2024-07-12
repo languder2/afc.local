@@ -37,7 +37,7 @@ class GeneralModel extends UserModel{
 
         return true;
     }
-    public function get_dates($start, $end, $format = 'd.m.Y')
+    public function get_dates($start, $end, $format = 'd.m.Y'):array
     {
         $day = 86400;
         $start = strtotime($start . ' -1 days');
