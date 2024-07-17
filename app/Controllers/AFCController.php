@@ -389,7 +389,7 @@ class AFCController extends BaseController{
         foreach ($arr as $code=>$whereIn){
             $list= $this->db
                 ->table("edSpecs")
-                ->select("code, name, profile, edLevel, JSON_EXTRACT(cnt,'$.total') cnt, SUM(JSON_EXTRACT(places,'$.OO')+JSON_EXTRACT(places,'$.CN')+JSON_EXTRACT(places,'$.KV')+JSON_EXTRACT(places,'$.SK')) places")
+                ->select("code, name, profile, edLevel, SUM(cnt) cnt, SUM(places) places")
                 ->whereIn("edLevel",$whereIn)
                 ->groupBy(['code','name',"profile",'edLevel'])
                 ->orderBy("edLevel","asc")
