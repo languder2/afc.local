@@ -69,7 +69,7 @@ class InputOutput
      */
     public function fwrite($handle, string $string): void
     {
-        if (! is_cli()) {
+        if (!is_cli()) {
             echo $string;
 
             return;

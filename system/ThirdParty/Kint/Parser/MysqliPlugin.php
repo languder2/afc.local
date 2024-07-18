@@ -86,14 +86,14 @@ class MysqliPlugin extends AbstractPlugin
             return;
         }
 
-        /** @psalm-var ?string $var->sqlstate */
+        /** @psalm-var ?string $var ->sqlstate */
         try {
             $connected = \is_string(@$var->sqlstate);
         } catch (Throwable $t) {
             $connected = false;
         }
 
-        /** @psalm-var ?string $var->client_info */
+        /** @psalm-var ?string $var ->client_info */
         try {
             $empty = !$connected && \is_string(@$var->client_info);
         } catch (Throwable $t) { // @codeCoverageIgnore
@@ -182,7 +182,7 @@ class MysqliPlugin extends AbstractPlugin
 
                 // We only do base mysqli properties so we don't need to worry about complex names
                 if ($this->parser->childHasPath($o, $child)) {
-                    $child->access_path .= $o->access_path.'->'.$child->name;
+                    $child->access_path .= $o->access_path . '->' . $child->name;
                 }
 
                 $basepropvalues[] = $this->parser->parse($param, $child);

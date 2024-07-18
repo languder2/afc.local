@@ -45,8 +45,8 @@ class DateTimeValue extends InstanceValue
     public function getValueShort(): string
     {
         $stamp = $this->dt->format('Y-m-d H:i:s');
-        if ((int) ($micro = $this->dt->format('u'))) {
-            $stamp .= '.'.$micro;
+        if ((int)($micro = $this->dt->format('u'))) {
+            $stamp .= '.' . $micro;
         }
         $stamp .= $this->dt->format('P T');
 

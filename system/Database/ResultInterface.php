@@ -61,8 +61,8 @@ interface ResultInterface
      *
      * @template T of object
      *
-     * @param         int|string                       $n    The index of the results to return, or column name.
-     * @param         string                           $type The type of result object. 'array', 'object' or class name.
+     * @param int|string $n The index of the results to return, or column name.
+     * @param string $type The type of result object. 'array', 'object' or class name.
      * @phpstan-param class-string<T>|'array'|'object' $type
      *
      * @return         array|float|int|object|stdClass|string|null
@@ -77,7 +77,7 @@ interface ResultInterface
      *
      * @template T of object
      *
-     * @param         int             $n         The index of the results to return.
+     * @param int $n The index of the results to return.
      * @phpstan-param class-string<T> $className
      *
      * @return         object|null
@@ -106,7 +106,7 @@ interface ResultInterface
     /**
      * Assigns an item into a particular column slot.
      *
-     * @param array|string               $key
+     * @param array|string $key
      * @param array|object|stdClass|null $value
      *
      * @return void

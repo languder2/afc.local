@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 // This helper is autoloaded by CodeIgniter.
 
-if (! function_exists('dd')) {
+if (!function_exists('dd')) {
     if (class_exists(Kint::class)) {
         /**
          * Prints a Kint debug report and exits.
@@ -49,7 +49,7 @@ if (! function_exists('dd')) {
     }
 }
 
-if (! function_exists('d') && ! class_exists(Kint::class)) {
+if (!function_exists('d') && !class_exists(Kint::class)) {
     // In case that Kint is not loaded.
     /**
      * d function
@@ -64,7 +64,7 @@ if (! function_exists('d') && ! class_exists(Kint::class)) {
     }
 }
 
-if (! function_exists('trace')) {
+if (!function_exists('trace')) {
     if (class_exists(Kint::class)) {
         /**
          * Provides a backtrace to the current execution point, from Kint.

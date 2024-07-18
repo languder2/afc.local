@@ -110,9 +110,9 @@ class Fabricator
     /**
      * Store the model instance and initialize Faker to the locale.
      *
-     * @param object|string $model      Instance or classname of the model to use
-     * @param array|null    $formatters Array of property => formatter
-     * @param string|null   $locale     Locale for Faker provider
+     * @param object|string $model Instance or classname of the model to use
+     * @param array|null $formatters Array of property => formatter
+     * @param string|null $locale Locale for Faker provider
      *
      * @throws InvalidArgumentException
      */
@@ -123,7 +123,7 @@ class Fabricator
             $model = model($model, false);
         }
 
-        if (! is_object($model)) {
+        if (!is_object($model)) {
             throw new InvalidArgumentException(lang('Fabricator.invalidModel'));
         }
 
@@ -166,14 +166,14 @@ class Fabricator
      */
     public static function getCount(string $table): int
     {
-        return ! isset(self::$tableCounts[$table]) ? 0 : self::$tableCounts[$table];
+        return !isset(self::$tableCounts[$table]) ? 0 : self::$tableCounts[$table];
     }
 
     /**
      * Set the count for a specific table
      *
      * @param string $table Name of the target table
-     * @param int    $count Count value
+     * @param int $count Count value
      *
      * @return int The new count value
      */
@@ -250,7 +250,7 @@ class Fabricator
      * Set the overrides, once or persistent
      *
      * @param array $overrides Array of [field => value]
-     * @param bool  $persist   Whether these overrides should persist through the next operation
+     * @param bool $persist Whether these overrides should persist through the next operation
      */
     public function setOverrides(array $overrides = [], $persist = true): self
     {
@@ -266,8 +266,8 @@ class Fabricator
     /**
      * Set a field to be unique.
      *
-     * @param bool $reset      If set to true, resets the list of existing values
-     * @param int  $maxRetries Maximum number of retries to find a unique value,
+     * @param bool $reset If set to true, resets the list of existing values
+     * @param int $maxRetries Maximum number of retries to find a unique value,
      *                         After which an OverflowException is thrown.
      */
     public function setUnique(string $field, bool $reset = false, int $maxRetries = 10000): static
@@ -292,8 +292,8 @@ class Fabricator
     /**
      * Set a field to be valid using a callback.
      *
-     * @param Closure(mixed): bool|null $validator  A function returning true for valid values
-     * @param int                       $maxRetries Maximum number of retries to find a valid value,
+     * @param Closure(mixed): bool|null $validator A function returning true for valid values
+     * @param int $maxRetries Maximum number of retries to find a valid value,
      *                                              After which an OverflowException is thrown.
      */
     public function setValid(string $field, ?Closure $validator = null, int $maxRetries = 10000): static
@@ -457,8 +457,7 @@ class Fabricator
 
                 $result[$field] = $faker->format($formatter);
             }
-        }
-        // If no formatters were defined then look for a model fake() method
+        } // If no formatters were defined then look for a model fake() method
         elseif (method_exists($this->model, 'fake')) {
             $result = $this->model->fake($this->faker);
 
@@ -466,9 +465,8 @@ class Fabricator
                 // This should cover entities
                 ? $result->toArray()
                 // Try to cast it
-                : (array) $result;
-        }
-        // Nothing left to do but give up
+                : (array)$result;
+        } // Nothing left to do but give up
         else {
             throw new RuntimeException(lang('Fabricator.missingFormatters'));
         }
@@ -511,7 +509,7 @@ class Fabricator
         }
 
         // Get the array values and apply them to the object
-        $array  = $this->makeArray();
+        $array = $this->makeArray();
         $object = new $className();
 
         // Check for the entity method
@@ -530,7 +528,7 @@ class Fabricator
      * Generate new entities from the database
      *
      * @param int|null $count Optional number to create a collection
-     * @param bool     $mock  Whether to execute or mock the insertion
+     * @param bool $mock Whether to execute or mock the insertion
      *
      * @return array|object An array or object (based on returnType), or an array of returnTypes
      *
@@ -576,8 +574,8 @@ class Fabricator
     {
         $datetime = match ($this->model->dateFormat) {
             'datetime' => date('Y-m-d H:i:s'),
-            'date'     => date('Y-m-d'),
-            default    => Time::now()->getTimestamp(),
+            'date' => date('Y-m-d'),
+            default => Time::now()->getTimestamp(),
         };
 
         // Determine which fields we will need

@@ -81,7 +81,7 @@ class Table
      */
     public function __construct(Connection $db, Forge $forge)
     {
-        $this->db    = $db;
+        $this->db = $db;
         $this->forge = $forge;
     }
 
@@ -98,11 +98,11 @@ class Table
 
         $prefix = $this->db->DBPrefix;
 
-        if (! empty($prefix) && str_starts_with($table, $prefix)) {
+        if (!empty($prefix) && str_starts_with($table, $prefix)) {
             $table = substr($table, strlen($prefix));
         }
 
-        if (! $this->db->tableExists($this->prefixedTableName)) {
+        if (!$this->db->tableExists($this->prefixedTableName)) {
             throw DataException::forTableNotFound($this->prefixedTableName);
         }
 
@@ -113,7 +113,7 @@ class Table
         $this->keys = array_merge($this->keys, $this->formatKeys($this->db->getIndexData($table)));
 
         // if primary key index exists twice then remove psuedo index name 'primary'.
-        $primaryIndexes = array_filter($this->keys, static fn ($index) => $index['type'] === 'primary');
+        $primaryIndexes = array_filter($this->keys, static fn($index) => $index['type'] === 'primary');
 
         if ($primaryIndexes !== [] && count($primaryIndexes) > 1 && array_key_exists('primary', $this->keys)) {
             unset($this->keys['primary']);
@@ -202,7 +202,7 @@ class Table
      */
     public function dropPrimaryKey(): Table
     {
-        $primaryIndexes = array_filter($this->keys, static fn ($index) => strtolower($index['type']) === 'primary');
+        $primaryIndexes = array_filter($this->keys, static fn($index) => strtolower($index['type']) === 'primary');
 
         foreach (array_keys($primaryIndexes) as $key) {
             unset($this->keys[$key]);
@@ -235,7 +235,7 @@ class Table
      */
     public function addPrimaryKey(array $fields): Table
     {
-        $primaryIndexes = array_filter($this->keys, static fn ($index) => strtolower($index['type']) === 'primary');
+        $primaryIndexes = array_filter($this->keys, static fn($index) => strtolower($index['type']) === 'primary');
 
         // if primary key already exists we can't add another one
         if ($primaryIndexes !== []) {
@@ -245,7 +245,7 @@ class Table
         // add array to keys of fields
         $pk = [
             'fields' => $fields['fields'],
-            'type'   => 'primary',
+            'type' => 'primary',
         ];
 
         $this->keys['primary'] = $pk;
@@ -264,12 +264,12 @@ class Table
 
         // convert to object
         foreach ($foreignKeys as $row) {
-            $obj                      = new stdClass();
-            $obj->column_name         = $row['field'];
-            $obj->foreign_table_name  = $row['referenceTable'];
+            $obj = new stdClass();
+            $obj->column_name = $row['field'];
+            $obj->foreign_table_name = $row['referenceTable'];
             $obj->foreign_column_name = $row['referenceField'];
-            $obj->on_delete           = $row['onDelete'];
-            $obj->on_update           = $row['onUpdate'];
+            $obj->on_delete = $row['onDelete'];
+            $obj->on_update = $row['onUpdate'];
 
             $fk[] = $obj;
         }
@@ -308,7 +308,7 @@ class Table
 
         $this->keys = array_filter(
             $this->keys,
-            static fn ($index) => count(array_intersect($index['fields'], $fieldNames)) === count($index['fields'])
+            static fn($index) => count(array_intersect($index['fields'], $fieldNames)) === count($index['fields'])
         );
 
         // Unique/Index keys
@@ -348,21 +348,21 @@ class Table
      */
     protected function copyData()
     {
-        $exFields  = [];
+        $exFields = [];
         $newFields = [];
 
         foreach ($this->fields as $name => $details) {
             $newFields[] = $details['new_name'] ?? $name;
-            $exFields[]  = $name;
+            $exFields[] = $name;
         }
 
         $exFields = implode(
             ', ',
-            array_map(fn ($item) => $this->db->protectIdentifiers($item), $exFields)
+            array_map(fn($item) => $this->db->protectIdentifiers($item), $exFields)
         );
         $newFields = implode(
             ', ',
-            array_map(fn ($item) => $this->db->protectIdentifiers($item), $newFields)
+            array_map(fn($item) => $this->db->protectIdentifiers($item), $newFields)
         );
 
         $this->db->query(
@@ -381,7 +381,7 @@ class Table
      */
     protected function formatFields($fields)
     {
-        if (! is_array($fields)) {
+        if (!is_array($fields)) {
             return $fields;
         }
 
@@ -389,9 +389,9 @@ class Table
 
         foreach ($fields as $field) {
             $return[$field->name] = [
-                'type'    => $field->type,
+                'type' => $field->type,
                 'default' => $field->default,
-                'null'    => $field->nullable,
+                'null' => $field->nullable,
             ];
 
             if ($field->default === null) {
@@ -404,9 +404,9 @@ class Table
                 $default = trim($field->default, "'");
 
                 if ($this->isIntegerType($field->type)) {
-                    $default = (int) $default;
+                    $default = (int)$default;
                 } elseif ($this->isNumericType($field->type)) {
-                    $default = (float) $default;
+                    $default = (float)$default;
                 }
 
                 $return[$field->name]['default'] = $default;
@@ -415,7 +415,7 @@ class Table
             if ($field->primary_key) {
                 $this->keys['primary'] = [
                     'fields' => [$field->name],
-                    'type'   => 'primary',
+                    'type' => 'primary',
                 ];
             }
         }
@@ -462,7 +462,7 @@ class Table
         foreach ($keys as $name => $key) {
             $return[strtolower($name)] = [
                 'fields' => $key->fields,
-                'type'   => strtolower($key->type),
+                'type' => strtolower($key->type),
             ];
         }
 
@@ -475,7 +475,7 @@ class Table
      */
     protected function dropIndexes()
     {
-        if (! is_array($this->keys) || $this->keys === []) {
+        if (!is_array($this->keys) || $this->keys === []) {
             return;
         }
 

@@ -44,21 +44,21 @@ class ClosurePlugin extends AbstractPlugin implements ValuePluginInterface
         $header = '';
 
         if (null !== ($s = $o->getModifiers())) {
-            $header .= '<var>'.$s.'</var> ';
+            $header .= '<var>' . $s . '</var> ';
         }
 
         if (null !== ($s = $o->getName())) {
-            $header .= '<dfn>'.$this->renderer->escape($s).'('.$this->renderer->escape($o->getParams()).')</dfn> ';
+            $header .= '<dfn>' . $this->renderer->escape($s) . '(' . $this->renderer->escape($o->getParams()) . ')</dfn> ';
         }
 
         $header .= '<var>Closure</var>';
         if (isset($o->spl_object_id)) {
-            $header .= '#'.((int) $o->spl_object_id);
+            $header .= '#' . ((int)$o->spl_object_id);
         }
-        $header .= ' '.$this->renderer->escape(Kint::shortenPath($o->filename)).':'.(int) $o->startline;
+        $header .= ' ' . $this->renderer->escape(Kint::shortenPath($o->filename)) . ':' . (int)$o->startline;
 
-        $header = $this->renderer->renderHeaderWrapper($o, (bool) \strlen($children), $header);
+        $header = $this->renderer->renderHeaderWrapper($o, (bool)\strlen($children), $header);
 
-        return '<dl>'.$header.$children.'</dl>';
+        return '<dl>' . $header . $children . '</dl>';
     }
 }

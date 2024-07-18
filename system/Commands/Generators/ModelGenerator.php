@@ -67,12 +67,12 @@ class ModelGenerator extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '--table'     => 'Supply a table name. Default: "the lowercased plural of the class name".',
-        '--dbgroup'   => 'Database group to use. Default: "default".',
-        '--return'    => 'Return type, Options: [array, object, entity]. Default: "array".',
+        '--table' => 'Supply a table name. Default: "the lowercased plural of the class name".',
+        '--dbgroup' => 'Database group to use. Default: "default".',
+        '--return' => 'Return type, Options: [array, object, entity]. Default: "array".',
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserModel).',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserModel).',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -82,7 +82,7 @@ class ModelGenerator extends BaseCommand
     {
         $this->component = 'Model';
         $this->directory = 'Models';
-        $this->template  = 'model.tpl.php';
+        $this->template = 'model.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.model';
         $this->generateClass($params);
@@ -93,9 +93,9 @@ class ModelGenerator extends BaseCommand
      */
     protected function prepare(string $class): string
     {
-        $table   = $this->getOption('table');
+        $table = $this->getOption('table');
         $dbGroup = $this->getOption('dbgroup');
-        $return  = $this->getOption('return');
+        $return = $this->getOption('return');
 
         $baseClass = class_basename($class);
 
@@ -103,10 +103,10 @@ class ModelGenerator extends BaseCommand
             $baseClass = $match[1];
         }
 
-        $table  = is_string($table) ? $table : plural(strtolower($baseClass));
+        $table = is_string($table) ? $table : plural(strtolower($baseClass));
         $return = is_string($return) ? $return : 'array';
 
-        if (! in_array($return, ['array', 'object', 'entity'], true)) {
+        if (!in_array($return, ['array', 'object', 'entity'], true)) {
             // @codeCoverageIgnoreStart
             $return = CLI::prompt(lang('CLI.generator.returnType'), ['array', 'object', 'entity'], 'required');
             CLI::newLine();

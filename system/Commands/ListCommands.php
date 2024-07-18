@@ -92,7 +92,7 @@ class ListCommands extends BaseCommand
         $groups = [];
 
         foreach ($commands as $title => $command) {
-            if (! isset($groups[$command['group']])) {
+            if (!isset($groups[$command['group']])) {
                 $groups[$command['group']] = [];
             }
 
@@ -108,7 +108,7 @@ class ListCommands extends BaseCommand
             CLI::write($group, 'yellow');
 
             foreach ($commands as $name => $command) {
-                $name   = $this->setPad($name, $length, 2, 2);
+                $name = $this->setPad($name, $length, 2, 2);
                 $output = CLI::color($name, 'green');
 
                 if (isset($command['description'])) {

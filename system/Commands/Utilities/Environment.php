@@ -101,14 +101,14 @@ final class Environment extends BaseCommand
             return;
         }
 
-        if (! in_array($env, self::$knownTypes, true)) {
+        if (!in_array($env, self::$knownTypes, true)) {
             CLI::error(sprintf('Invalid environment type "%s". Expected one of "%s".', $env, implode('" and "', self::$knownTypes)), 'light_gray', 'red');
             CLI::newLine();
 
             return;
         }
 
-        if (! $this->writeNewEnvironmentToEnvFile($env)) {
+        if (!$this->writeNewEnvironmentToEnvFile($env)) {
             CLI::error('Error in writing new environment to .env file.', 'light_gray', 'red');
             CLI::newLine();
 
@@ -134,8 +134,8 @@ final class Environment extends BaseCommand
         $baseEnv = ROOTPATH . 'env';
         $envFile = ROOTPATH . '.env';
 
-        if (! is_file($envFile)) {
-            if (! is_file($baseEnv)) {
+        if (!is_file($envFile)) {
+            if (!is_file($baseEnv)) {
                 CLI::write('Both default shipped `env` file and custom `.env` are missing.', 'yellow');
                 CLI::write('It is impossible to write the new environment type.', 'yellow');
                 CLI::newLine();
@@ -150,8 +150,8 @@ final class Environment extends BaseCommand
         $pattern = sprintf('/^[#\s]*CI_ENVIRONMENT[=\s]+%s$/m', $pattern);
 
         return file_put_contents(
-            $envFile,
-            preg_replace($pattern, "\nCI_ENVIRONMENT = {$newEnv}", file_get_contents($envFile), -1, $count)
-        ) !== false && $count > 0;
+                $envFile,
+                preg_replace($pattern, "\nCI_ENVIRONMENT = {$newEnv}", file_get_contents($envFile), -1, $count)
+            ) !== false && $count > 0;
     }
 }

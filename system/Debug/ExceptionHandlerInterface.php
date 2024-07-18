@@ -23,10 +23,10 @@ interface ExceptionHandlerInterface
      * Determines the correct way to display the error.
      */
     public function handle(
-        Throwable $exception,
-        RequestInterface $request,
+        Throwable         $exception,
+        RequestInterface  $request,
         ResponseInterface $response,
-        int $statusCode,
-        int $exitCode
+        int               $statusCode,
+        int               $exitCode
     ): void;
 }

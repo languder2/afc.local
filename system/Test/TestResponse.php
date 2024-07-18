@@ -82,7 +82,7 @@ class TestResponse
      */
     public function setResponse(ResponseInterface $response)
     {
-        $this->response  = $response;
+        $this->response = $response;
         $this->domParser = new DOMParser();
 
         $body = $response->getBody();
@@ -132,10 +132,10 @@ class TestResponse
             return false;
         }
 
-        $body = (string) $this->response->getBody();
+        $body = (string)$this->response->getBody();
 
         // Empty bodies are not considered valid, unless in redirects
-        return ! ($status < 300 && $body === '');
+        return !($status < 300 && $body === '');
     }
 
     /**
@@ -198,7 +198,7 @@ class TestResponse
     {
         $this->assertRedirect();
 
-        $uri         = trim(strtolower($uri));
+        $uri = trim(strtolower($uri));
         $redirectUri = strtolower($this->getRedirectUrl());
 
         $matches = $uri === $redirectUri
@@ -221,7 +221,7 @@ class TestResponse
      */
     public function getRedirectUrl(): ?string
     {
-        if (! $this->isRedirect()) {
+        if (!$this->isRedirect()) {
             return null;
         }
 
@@ -385,7 +385,7 @@ class TestResponse
         $json = $this->getJSON();
 
         if (is_object($test)) {
-            $test = method_exists($test, 'toArray') ? $test->toArray() : (array) $test;
+            $test = method_exists($test, 'toArray') ? $test->toArray() : (array)$test;
         }
 
         if (is_array($test)) {

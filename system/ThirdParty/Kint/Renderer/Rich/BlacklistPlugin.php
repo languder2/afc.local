@@ -33,6 +33,6 @@ class BlacklistPlugin extends AbstractPlugin implements ValuePluginInterface
 {
     public function renderValue(Value $o): string
     {
-        return '<dl>'.$this->renderLockedHeader($o, '<var>Blacklisted</var>').'</dl>';
+        return '<dl>' . $this->renderLockedHeader($o, '<var>Blacklisted</var>') . '</dl>';
     }
 }

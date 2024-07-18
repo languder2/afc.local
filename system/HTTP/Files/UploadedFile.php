@@ -80,113 +80,24 @@ class UploadedFile extends File implements UploadedFileInterface
     /**
      * Accepts the file information as would be filled in from the $_FILES array.
      *
-     * @param string      $path         The temporary location of the uploaded file.
-     * @param string      $originalName The client-provided filename.
-     * @param string|null $mimeType     The type of file as provided by PHP
-     * @param int|null    $size         The size of the file, in bytes
-     * @param int|null    $error        The error constant of the upload (one of PHP's UPLOADERRXXX constants)
-     * @param string|null $clientPath   The webkit relative path of the uploaded file.
+     * @param string $path The temporary location of the uploaded file.
+     * @param string $originalName The client-provided filename.
+     * @param string|null $mimeType The type of file as provided by PHP
+     * @param int|null $size The size of the file, in bytes
+     * @param int|null $error The error constant of the upload (one of PHP's UPLOADERRXXX constants)
+     * @param string|null $clientPath The webkit relative path of the uploaded file.
      */
     public function __construct(string $path, string $originalName, ?string $mimeType = null, ?int $size = null, ?int $error = null, ?string $clientPath = null)
     {
-        $this->path             = $path;
-        $this->name             = $originalName;
-        $this->originalName     = $originalName;
+        $this->path = $path;
+        $this->name = $originalName;
+        $this->originalName = $originalName;
         $this->originalMimeType = $mimeType;
-        $this->size             = $size;
-        $this->error            = $error;
-        $this->clientPath       = $clientPath;
+        $this->size = $size;
+        $this->error = $error;
+        $this->clientPath = $clientPath;
 
         parent::__construct($path, false);
-    }
-
-    /**
-     * Move the uploaded file to a new location.
-     *
-     * $targetPath may be an absolute path, or a relative path. If it is a
-     * relative path, resolution should be the same as used by PHP's rename()
-     * function.
-     *
-     * The original file MUST be removed on completion.
-     *
-     * If this method is called more than once, any subsequent calls MUST raise
-     * an exception.
-     *
-     * When used in an SAPI environment where $_FILES is populated, when writing
-     * files via moveTo(), is_uploaded_file() and move_uploaded_file() SHOULD be
-     * used to ensure permissions and upload status are verified correctly.
-     *
-     * If you wish to move to a stream, use getStream(), as SAPI operations
-     * cannot guarantee writing to stream destinations.
-     *
-     * @see http://php.net/is_uploaded_file
-     * @see http://php.net/move_uploaded_file
-     *
-     * @param string      $targetPath Path to which to move the uploaded file.
-     * @param string|null $name       the name to rename the file to.
-     * @param bool        $overwrite  State for indicating whether to overwrite the previously generated file with the same
-     *                                name or not.
-     *
-     * @return bool
-     */
-    public function move(string $targetPath, ?string $name = null, bool $overwrite = false)
-    {
-        $targetPath = rtrim($targetPath, '/') . '/';
-        $targetPath = $this->setPath($targetPath); // set the target path
-
-        if ($this->hasMoved) {
-            throw HTTPException::forAlreadyMoved();
-        }
-
-        if (! $this->isValid()) {
-            throw HTTPException::forInvalidFile();
-        }
-
-        $name ??= $this->getName();
-        $destination = $overwrite ? $targetPath . $name : $this->getDestination($targetPath . $name);
-
-        try {
-            $this->hasMoved = move_uploaded_file($this->path, $destination);
-        } catch (Exception) {
-            $error   = error_get_last();
-            $message = strip_tags($error['message'] ?? '');
-
-            throw HTTPException::forMoveFailed(basename($this->path), $targetPath, $message);
-        }
-
-        if ($this->hasMoved === false) {
-            $message = 'move_uploaded_file() returned false';
-
-            throw HTTPException::forMoveFailed(basename($this->path), $targetPath, $message);
-        }
-
-        @chmod($targetPath, 0777 & ~umask());
-
-        // Success, so store our new information
-        $this->path = $targetPath;
-        $this->name = basename($destination);
-
-        return true;
-    }
-
-    /**
-     * create file target path if
-     * the set path does not exist
-     *
-     * @return string The path set or created.
-     */
-    protected function setPath(string $path): string
-    {
-        if (! is_dir($path)) {
-            mkdir($path, 0777, true);
-            // create the index.html file
-            if (! is_file($path . 'index.html')) {
-                $file = fopen($path . 'index.html', 'x+b');
-                fclose($file);
-            }
-        }
-
-        return $path;
     }
 
     /**
@@ -225,31 +136,19 @@ class UploadedFile extends File implements UploadedFileInterface
     public function getErrorString(): string
     {
         $errors = [
-            UPLOAD_ERR_OK         => lang('HTTP.uploadErrOk'),
-            UPLOAD_ERR_INI_SIZE   => lang('HTTP.uploadErrIniSize'),
-            UPLOAD_ERR_FORM_SIZE  => lang('HTTP.uploadErrFormSize'),
-            UPLOAD_ERR_PARTIAL    => lang('HTTP.uploadErrPartial'),
-            UPLOAD_ERR_NO_FILE    => lang('HTTP.uploadErrNoFile'),
+            UPLOAD_ERR_OK => lang('HTTP.uploadErrOk'),
+            UPLOAD_ERR_INI_SIZE => lang('HTTP.uploadErrIniSize'),
+            UPLOAD_ERR_FORM_SIZE => lang('HTTP.uploadErrFormSize'),
+            UPLOAD_ERR_PARTIAL => lang('HTTP.uploadErrPartial'),
+            UPLOAD_ERR_NO_FILE => lang('HTTP.uploadErrNoFile'),
             UPLOAD_ERR_CANT_WRITE => lang('HTTP.uploadErrCantWrite'),
             UPLOAD_ERR_NO_TMP_DIR => lang('HTTP.uploadErrNoTmpDir'),
-            UPLOAD_ERR_EXTENSION  => lang('HTTP.uploadErrExtension'),
+            UPLOAD_ERR_EXTENSION => lang('HTTP.uploadErrExtension'),
         ];
 
         $error = $this->error ?? UPLOAD_ERR_OK;
 
         return sprintf($errors[$error] ?? lang('HTTP.uploadErrUnknown'), $this->getName());
-    }
-
-    /**
-     * Returns the mime type as provided by the client.
-     * This is NOT a trusted value.
-     * For a trusted version, use getMimeType() instead.
-     *
-     * @return string The media type sent by the client or null if none was provided.
-     */
-    public function getClientMimeType(): string
-    {
-        return $this->originalMimeType;
     }
 
     /**
@@ -262,6 +161,18 @@ class UploadedFile extends File implements UploadedFileInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * Returns the mime type as provided by the client.
+     * This is NOT a trusted value.
+     * For a trusted version, use getMimeType() instead.
+     *
+     * @return string The media type sent by the client or null if none was provided.
+     */
+    public function getClientMimeType(): string
+    {
+        return $this->originalMimeType;
     }
 
     /**
@@ -327,22 +238,13 @@ class UploadedFile extends File implements UploadedFileInterface
     }
 
     /**
-     * Returns whether the file was uploaded successfully, based on whether
-     * it was uploaded via HTTP and has no errors.
-     */
-    public function isValid(): bool
-    {
-        return is_uploaded_file($this->path) && $this->error === UPLOAD_ERR_OK;
-    }
-
-    /**
      * Save the uploaded file to a new location.
      *
      * By default, upload files are saved in writable/uploads directory. The YYYYMMDD folder
      * and random file name will be created.
      *
      * @param string|null $folderName the folder name to writable/uploads directory.
-     * @param string|null $fileName   the name to rename the file to.
+     * @param string|null $fileName the name to rename the file to.
      *
      * @return string file full path
      */
@@ -355,5 +257,103 @@ class UploadedFile extends File implements UploadedFileInterface
         $this->move(WRITEPATH . 'uploads/' . $folderName, $fileName);
 
         return $folderName . $this->name;
+    }
+
+    /**
+     * Move the uploaded file to a new location.
+     *
+     * $targetPath may be an absolute path, or a relative path. If it is a
+     * relative path, resolution should be the same as used by PHP's rename()
+     * function.
+     *
+     * The original file MUST be removed on completion.
+     *
+     * If this method is called more than once, any subsequent calls MUST raise
+     * an exception.
+     *
+     * When used in an SAPI environment where $_FILES is populated, when writing
+     * files via moveTo(), is_uploaded_file() and move_uploaded_file() SHOULD be
+     * used to ensure permissions and upload status are verified correctly.
+     *
+     * If you wish to move to a stream, use getStream(), as SAPI operations
+     * cannot guarantee writing to stream destinations.
+     *
+     * @see http://php.net/is_uploaded_file
+     * @see http://php.net/move_uploaded_file
+     *
+     * @param string $targetPath Path to which to move the uploaded file.
+     * @param string|null $name the name to rename the file to.
+     * @param bool $overwrite State for indicating whether to overwrite the previously generated file with the same
+     *                                name or not.
+     *
+     * @return bool
+     */
+    public function move(string $targetPath, ?string $name = null, bool $overwrite = false)
+    {
+        $targetPath = rtrim($targetPath, '/') . '/';
+        $targetPath = $this->setPath($targetPath); // set the target path
+
+        if ($this->hasMoved) {
+            throw HTTPException::forAlreadyMoved();
+        }
+
+        if (!$this->isValid()) {
+            throw HTTPException::forInvalidFile();
+        }
+
+        $name ??= $this->getName();
+        $destination = $overwrite ? $targetPath . $name : $this->getDestination($targetPath . $name);
+
+        try {
+            $this->hasMoved = move_uploaded_file($this->path, $destination);
+        } catch (Exception) {
+            $error = error_get_last();
+            $message = strip_tags($error['message'] ?? '');
+
+            throw HTTPException::forMoveFailed(basename($this->path), $targetPath, $message);
+        }
+
+        if ($this->hasMoved === false) {
+            $message = 'move_uploaded_file() returned false';
+
+            throw HTTPException::forMoveFailed(basename($this->path), $targetPath, $message);
+        }
+
+        @chmod($targetPath, 0777 & ~umask());
+
+        // Success, so store our new information
+        $this->path = $targetPath;
+        $this->name = basename($destination);
+
+        return true;
+    }
+
+    /**
+     * create file target path if
+     * the set path does not exist
+     *
+     * @return string The path set or created.
+     */
+    protected function setPath(string $path): string
+    {
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+            // create the index.html file
+            if (!is_file($path . 'index.html')) {
+                $file = fopen($path . 'index.html', 'x+b');
+                fclose($file);
+            }
+        }
+
+        return $path;
+    }
+
+    /**
+     * Returns whether the file was uploaded successfully, based on whether
+     * it was uploaded via HTTP and has no errors.
+     */
+    public function isValid(): bool
+    {
+        return is_uploaded_file($this->path) && $this->error === UPLOAD_ERR_OK;
     }
 }

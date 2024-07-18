@@ -1,6 +1,6 @@
 <div class="container-lg">
     <h3>
-        <?=$chartTitle??""?>
+        <?= $chartTitle ?? "" ?>
     </h3>
     <div class="chart-container" style="position: relative; height:35vh; width:100%">
         <canvas id="chart"></canvas>
@@ -9,7 +9,7 @@
         <canvas id="chart2"></canvas>
     </div>
     <script>
-        const createLineChart = (chart, context, data, max, from= false) => {
+        const createLineChart = (chart, context, data, max, from = false) => {
             let xScaleConfig = {
                 ticks: {
                     autoSkip: true,
@@ -25,8 +25,8 @@
                 }
             }
 
-            if(from)
-                xScaleConfig.min= from;
+            if (from)
+                xScaleConfig.min = from;
 
             let yScaleConfig = {
                 max: max,
@@ -71,37 +71,37 @@
 
 
         let data = {
-            labels: ['<?=implode("','",$dates??[])?>'],
+            labels: ['<?=implode("','", $dates ?? [])?>'],
             datasets: [
-                <?php $j= 0; ?>
+                <?php $j = 0; ?>
                 <?php if(!empty($datasets)) foreach ($datasets as $code=>$dataset):?>
-                    <?php $j++; ?>
-                    {
-                        label: '<?=$code?>',
-                        data: [<?=$dataset??""?>],
-                        pointStyle: true,
-                        fill: true,
-                        backgroundColor: '#4AA9E610',
-                        borderWidth: 1,
-                        borderColor: '<?=$colors[$j]??"#4AA9E6"?>',
-                        tension: 0.2
-                    },
+                <?php $j++; ?>
+                {
+                    label: '<?=$code?>',
+                    data: [<?=$dataset ?? ""?>],
+                    pointStyle: true,
+                    fill: true,
+                    backgroundColor: '#4AA9E610',
+                    borderWidth: 1,
+                    borderColor: '<?=$colors[$j] ?? "#4AA9E6"?>',
+                    tension: 0.2
+                },
                 <?php endforeach;?>
             ]
         }
-        let max= <?=$max??1?>;
+        let max = <?=$max ?? 1?>;
 
         let canvas = window.document.getElementById('chart');
         let context = canvas.getContext('2d');
         let chart = null;
 
-        createLineChart(chart,context,data,max,data.labels.length-14);
+        createLineChart(chart, context, data, max, data.labels.length - 14);
 
         let canvas2 = window.document.getElementById('chart2');
         let context2 = canvas2.getContext('2d');
         let chart2 = null;
 
-        createLineChart(chart2,context2,data,max);
+        createLineChart(chart2, context2, data, max);
     </script>
 </div>
 

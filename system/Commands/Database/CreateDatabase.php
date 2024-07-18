@@ -97,7 +97,7 @@ class CreateDatabase extends BaseCommand
             if ($db instanceof Connection) {
                 $ext = $params['ext'] ?? CLI::getOption('ext') ?? 'db';
 
-                if (! in_array($ext, ['db', 'sqlite'], true)) {
+                if (!in_array($ext, ['db', 'sqlite'], true)) {
                     $ext = CLI::prompt('Please choose a valid file extension', ['db', 'sqlite']); // @codeCoverageIgnore
                 }
 
@@ -109,7 +109,7 @@ class CreateDatabase extends BaseCommand
                 $config->{$group}['database'] = $name;
 
                 if ($name !== ':memory:') {
-                    $dbName = ! str_contains($name, DIRECTORY_SEPARATOR) ? WRITEPATH . $name : $name;
+                    $dbName = !str_contains($name, DIRECTORY_SEPARATOR) ? WRITEPATH . $name : $name;
 
                     if (is_file($dbName)) {
                         CLI::error("Database \"{$dbName}\" already exists.", 'light_gray', 'red');
@@ -125,7 +125,7 @@ class CreateDatabase extends BaseCommand
                 $db = Database::connect(null, false);
                 $db->connect();
 
-                if (! is_file($db->getDatabase()) && $name !== ':memory:') {
+                if (!is_file($db->getDatabase()) && $name !== ':memory:') {
                     // @codeCoverageIgnoreStart
                     CLI::error('Database creation failed.', 'light_gray', 'red');
                     CLI::newLine();
@@ -133,7 +133,7 @@ class CreateDatabase extends BaseCommand
                     return;
                     // @codeCoverageIgnoreEnd
                 }
-            } elseif (! Database::forge()->createDatabase($name)) {
+            } elseif (!Database::forge()->createDatabase($name)) {
                 // @codeCoverageIgnoreStart
                 CLI::error('Database creation failed.', 'light_gray', 'red');
                 CLI::newLine();

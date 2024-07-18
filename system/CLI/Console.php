@@ -40,32 +40,12 @@ class Console
         // Load Routes
         Services::routes()->loadRoutes();
 
-        $runner  = Services::commands();
-        $params  = array_merge(CLI::getSegments(), CLI::getOptions());
-        $params  = $this->parseParamsForHelpOption($params);
+        $runner = Services::commands();
+        $params = array_merge(CLI::getSegments(), CLI::getOptions());
+        $params = $this->parseParamsForHelpOption($params);
         $command = array_shift($params) ?? 'list';
 
         return $runner->run($command, $params);
-    }
-
-    /**
-     * Displays basic information about the Console.
-     *
-     * @return void
-     */
-    public function showHeader(bool $suppress = false)
-    {
-        if ($suppress) {
-            return;
-        }
-
-        CLI::write(sprintf(
-            'CodeIgniter v%s Command Line Tool - Server Time: %s UTC%s',
-            CodeIgniter::CI_VERSION,
-            date('Y-m-d H:i:s'),
-            date('P')
-        ), 'green');
-        CLI::newLine();
     }
 
     /**
@@ -86,5 +66,25 @@ class Console
         }
 
         return $params;
+    }
+
+    /**
+     * Displays basic information about the Console.
+     *
+     * @return void
+     */
+    public function showHeader(bool $suppress = false)
+    {
+        if ($suppress) {
+            return;
+        }
+
+        CLI::write(sprintf(
+            'CodeIgniter v%s Command Line Tool - Server Time: %s UTC%s',
+            CodeIgniter::CI_VERSION,
+            date('Y-m-d H:i:s'),
+            date('P')
+        ), 'green');
+        CLI::newLine();
     }
 }

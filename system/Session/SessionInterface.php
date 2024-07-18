@@ -39,7 +39,7 @@ interface SessionInterface
      * If $data is an array, it is expected to be an array of key/value pairs
      * to be set as session properties.
      *
-     * @param array|string                            $data  Property name or associative array of properties
+     * @param array|string $data Property name or associative array of properties
      * @param array|bool|float|int|object|string|null $value Property value if single key provided
      */
     public function set($data, $value = null);
@@ -86,7 +86,7 @@ interface SessionInterface
      * Otherwise, it is interpreted as the identifier of a specific
      * flashdata property, with $value containing the property value.
      *
-     * @param array|string $data  Property identifier or associative array of properties
+     * @param array|string $data Property identifier or associative array of properties
      * @param array|string $value Property value if $data is a scalar
      */
     public function setFlashdata($data, $value = null);
@@ -137,9 +137,9 @@ interface SessionInterface
      * Sets new data into the session, and marks it as temporary data
      * with a set lifespan.
      *
-     * @param array|string                            $data  Session data key or associative array of items
+     * @param array|string $data Session data key or associative array of items
      * @param array|bool|float|int|object|string|null $value Value to store
-     * @param int                                     $ttl   Time-to-live in seconds
+     * @param int $ttl Time-to-live in seconds
      */
     public function setTempdata($data, $value = null, int $ttl = 300);
 
@@ -165,7 +165,7 @@ interface SessionInterface
      * it has a set lifespan within the session.
      *
      * @param array|string $key Property identifier or array of them
-     * @param int          $ttl Time to live, in seconds
+     * @param int $ttl Time to live, in seconds
      *
      * @return bool False if any of the properties were not set
      */

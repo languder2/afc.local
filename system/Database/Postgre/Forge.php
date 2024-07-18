@@ -47,15 +47,15 @@ class Forge extends BaseForge
      * @var array
      */
     protected $_unsigned = [
-        'INT2'     => 'INTEGER',
+        'INT2' => 'INTEGER',
         'SMALLINT' => 'INTEGER',
-        'INT'      => 'BIGINT',
-        'INT4'     => 'BIGINT',
-        'INTEGER'  => 'BIGINT',
-        'INT8'     => 'NUMERIC',
-        'BIGINT'   => 'NUMERIC',
-        'REAL'     => 'DOUBLE PRECISION',
-        'FLOAT'    => 'DOUBLE PRECISION',
+        'INT' => 'BIGINT',
+        'INT4' => 'BIGINT',
+        'INTEGER' => 'BIGINT',
+        'INT8' => 'NUMERIC',
+        'BIGINT' => 'NUMERIC',
+        'REAL' => 'DOUBLE PRECISION',
+        'FLOAT' => 'DOUBLE PRECISION',
     ];
 
     /**
@@ -95,7 +95,7 @@ class Forge extends BaseForge
             return parent::_alterTable($alterType, $table, $processedFields);
         }
 
-        $sql  = 'ALTER TABLE ' . $this->db->escapeIdentifiers($table);
+        $sql = 'ALTER TABLE ' . $this->db->escapeIdentifiers($table);
         $sqls = [];
 
         foreach ($processedFields as $field) {
@@ -108,7 +108,7 @@ class Forge extends BaseForge
                     . " TYPE {$field['type']}{$field['length']}";
             }
 
-            if (! empty($field['default'])) {
+            if (!empty($field['default'])) {
                 $sqls[] = $sql . ' ALTER COLUMN ' . $this->db->escapeIdentifiers($field['name'])
                     . " SET DEFAULT {$field['default']}";
             }
@@ -120,12 +120,12 @@ class Forge extends BaseForge
             $sqls[] = $sql . ' ALTER COLUMN ' . $this->db->escapeIdentifiers($field['name'])
                 . ($nullable === true ? ' DROP' : ' SET') . ' NOT NULL';
 
-            if (! empty($field['new_name'])) {
+            if (!empty($field['new_name'])) {
                 $sqls[] = $sql . ' RENAME COLUMN ' . $this->db->escapeIdentifiers($field['name'])
                     . ' TO ' . $this->db->escapeIdentifiers($field['new_name']);
             }
 
-            if (! empty($field['comment'])) {
+            if (!empty($field['comment'])) {
                 $sqls[] = 'COMMENT ON COLUMN' . $this->db->escapeIdentifiers($table)
                     . '.' . $this->db->escapeIdentifiers($field['name'])
                     . " IS {$field['comment']}";
@@ -160,12 +160,12 @@ class Forge extends BaseForge
 
         switch (strtoupper($attributes['TYPE'])) {
             case 'TINYINT':
-                $attributes['TYPE']     = 'SMALLINT';
+                $attributes['TYPE'] = 'SMALLINT';
                 $attributes['UNSIGNED'] = false;
                 break;
 
             case 'MEDIUMINT':
-                $attributes['TYPE']     = 'INTEGER';
+                $attributes['TYPE'] = 'INTEGER';
                 $attributes['UNSIGNED'] = false;
                 break;
 
@@ -183,7 +183,7 @@ class Forge extends BaseForge
      */
     protected function _attributeAutoIncrement(array &$attributes, array &$field)
     {
-        if (! empty($attributes['AUTO_INCREMENT']) && $attributes['AUTO_INCREMENT'] === true) {
+        if (!empty($attributes['AUTO_INCREMENT']) && $attributes['AUTO_INCREMENT'] === true) {
             $field['type'] = $field['type'] === 'NUMERIC' || $field['type'] === 'BIGINT' ? 'BIGSERIAL' : 'SERIAL';
         }
     }

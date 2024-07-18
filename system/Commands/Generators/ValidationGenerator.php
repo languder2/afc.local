@@ -67,8 +67,8 @@ class ValidationGenerator extends BaseCommand
      */
     protected $options = [
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserValidation).',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserValidation).',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -78,7 +78,7 @@ class ValidationGenerator extends BaseCommand
     {
         $this->component = 'Validation';
         $this->directory = 'Validation';
-        $this->template  = 'validation.tpl.php';
+        $this->template = 'validation.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.validation';
         $this->generateClass($params);

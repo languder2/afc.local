@@ -23,6 +23,6 @@ class FloatCast extends BaseCast
      */
     public static function get($value, array $params = []): float
     {
-        return (float) $value;
+        return (float)$value;
     }
 }

@@ -143,18 +143,19 @@ class View implements RendererInterface
     protected $sectionStack = [];
 
     public function __construct(
-        ViewConfig $config,
-        ?string $viewPath = null,
+        ViewConfig            $config,
+        ?string               $viewPath = null,
         ?FileLocatorInterface $loader = null,
-        ?bool $debug = null,
-        ?LoggerInterface $logger = null
-    ) {
-        $this->config   = $config;
+        ?bool                 $debug = null,
+        ?LoggerInterface      $logger = null
+    )
+    {
+        $this->config = $config;
         $this->viewPath = rtrim($viewPath, '\\/ ') . DIRECTORY_SEPARATOR;
-        $this->loader   = $loader ?? service('locator');
-        $this->logger   = $logger ?? service('logger');
-        $this->debug    = $debug ?? CI_DEBUG;
-        $this->saveData = (bool) $config->saveData;
+        $this->loader = $loader ?? service('locator');
+        $this->logger = $logger ?? service('logger');
+        $this->debug = $debug ?? CI_DEBUG;
+        $this->saveData = (bool)$config->saveData;
     }
 
     /**
@@ -165,11 +166,11 @@ class View implements RendererInterface
      *  - cache      Number of seconds to cache for
      *  - cache_name Name to use for cache
      *
-     * @param string                    $view     File name of the view source
-     * @param array<string, mixed>|null $options  Reserved for 3rd-party uses since
+     * @param string $view File name of the view source
+     * @param array<string, mixed>|null $options Reserved for 3rd-party uses since
      *                                            it might be needed to pass additional info
      *                                            to other template engines.
-     * @param bool|null                 $saveData If true, saves data for subsequent calls,
+     * @param bool|null $saveData If true, saves data for subsequent calls,
      *                                            if false, cleans the data after displaying,
      *                                            if null, uses the config setting.
      */
@@ -209,7 +210,7 @@ class View implements RendererInterface
 
         $this->renderVars['file'] = $this->viewPath . $this->renderVars['view'];
 
-        if (! is_file($this->renderVars['file'])) {
+        if (!is_file($this->renderVars['file'])) {
             $this->renderVars['file'] = $this->loader->locateFile(
                 $this->renderVars['view'],
                 'Views',
@@ -243,11 +244,11 @@ class View implements RendererInterface
         // in $this->sections, and no other valid output
         // is allowed in $output so we'll overwrite it.
         if ($this->layout !== null && $this->sectionStack === []) {
-            $layoutView   = $this->layout;
+            $layoutView = $this->layout;
             $this->layout = null;
             // Save current vars
             $renderVars = $this->renderVars;
-            $output     = $this->render($layoutView, $options, $saveData);
+            $output = $this->render($layoutView, $options, $saveData);
             // Get back current vars
             $this->renderVars = $renderVars;
         }
@@ -261,18 +262,18 @@ class View implements RendererInterface
         );
 
         // Check if DebugToolbar is enabled.
-        $filters              = service('filters');
+        $filters = service('filters');
         $requiredAfterFilters = $filters->getRequiredFilters('after')[0];
         if (in_array('toolbar', $requiredAfterFilters, true)) {
             $debugBarEnabled = true;
         } else {
-            $afterFilters    = $filters->getFiltersClass()['after'];
+            $afterFilters = $filters->getFiltersClass()['after'];
             $debugBarEnabled = in_array(DebugToolbar::class, $afterFilters, true);
         }
 
         if (
             $this->debug && $debugBarEnabled
-            && (! isset($options['debug']) || $options['debug'] === true)
+            && (!isset($options['debug']) || $options['debug'] === true)
         ) {
             $toolbarCollectors = config(Toolbar::class)->collectors;
 
@@ -292,7 +293,7 @@ class View implements RendererInterface
             cache()->save(
                 $this->renderVars['cacheName'],
                 $output,
-                (int) $this->renderVars['options']['cache']
+                (int)$this->renderVars['options']['cache']
             );
         }
 
@@ -306,11 +307,11 @@ class View implements RendererInterface
      * data that has already been set.
      * Cache does not apply, because there is no "key".
      *
-     * @param string                    $view     The view contents
-     * @param array<string, mixed>|null $options  Reserved for 3rd-party uses since
+     * @param string $view The view contents
+     * @param array<string, mixed>|null $options Reserved for 3rd-party uses since
      *                                            it might be needed to pass additional info
      *                                            to other template engines.
-     * @param bool|null                 $saveData If true, saves data for subsequent calls,
+     * @param bool|null $saveData If true, saves data for subsequent calls,
      *                                            if false, cleans the data after displaying,
      *                                            if null, uses the config setting.
      */
@@ -345,7 +346,7 @@ class View implements RendererInterface
     /**
      * Sets several pieces of view data at once.
      *
-     * @param         non-empty-string|null                     $context The context to escape it for.
+     * @param non-empty-string|null $context The context to escape it for.
      *                                                                   If 'raw', no escaping will happen.
      * @phpstan-param null|'html'|'js'|'css'|'url'|'attr'|'raw' $context
      */
@@ -364,8 +365,8 @@ class View implements RendererInterface
     /**
      * Sets a single piece of view data.
      *
-     * @param         mixed                                     $value
-     * @param         non-empty-string|null                     $context The context to escape it for.
+     * @param mixed $value
+     * @param non-empty-string|null $context The context to escape it for.
      *                                                                   If 'raw', no escaping will happen.
      * @phpstan-param null|'html'|'js'|'css'|'url'|'attr'|'raw' $context
      */
@@ -445,7 +446,7 @@ class View implements RendererInterface
         $section = array_pop($this->sectionStack);
 
         // Ensure an array exists so we can store multiple entries for this.
-        if (! array_key_exists($section, $this->sections)) {
+        if (!array_key_exists($section, $this->sections)) {
             $this->sections[$section] = [];
         }
 
@@ -462,7 +463,7 @@ class View implements RendererInterface
      */
     public function renderSection(string $sectionName, bool $saveData = false)
     {
-        if (! isset($this->sections[$sectionName])) {
+        if (!isset($this->sections[$sectionName])) {
             echo '';
 
             return;
@@ -480,7 +481,7 @@ class View implements RendererInterface
      * Used within layout views to include additional views.
      *
      * @param array<string, mixed>|null $options
-     * @param bool                      $saveData
+     * @param bool $saveData
      */
     public function include(string $view, ?array $options = null, $saveData = true): string
     {
@@ -508,8 +509,8 @@ class View implements RendererInterface
         if ($this->debug) {
             $this->performanceData[] = [
                 'start' => $start,
-                'end'   => $end,
-                'view'  => $view,
+                'end' => $end,
+                'view' => $view,
             ];
         }
     }

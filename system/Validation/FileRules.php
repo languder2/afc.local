@@ -52,7 +52,7 @@ class FileRules
      */
     public function uploaded(?string $blank, string $name): bool
     {
-        if (! ($files = $this->request->getFileMultiple($name))) {
+        if (!($files = $this->request->getFileMultiple($name))) {
             $files = [$this->request->getFile($name)];
         }
 
@@ -68,7 +68,7 @@ class FileRules
             } else {
                 // Note: cannot unit test this; no way to over-ride ENVIRONMENT?
                 // @codeCoverageIgnoreStart
-                if (! $file->isValid()) {
+                if (!$file->isValid()) {
                     return false;
                 }
                 // @codeCoverageIgnoreEnd
@@ -91,7 +91,7 @@ class FileRules
         }
         $name = array_shift($paramArray);
 
-        if (! ($files = $this->request->getFileMultiple($name))) {
+        if (!($files = $this->request->getFileMultiple($name))) {
             $files = [$this->request->getFile($name)];
         }
 
@@ -125,9 +125,9 @@ class FileRules
         // Grab the file name off the top of the $params
         // after we split it.
         $params = explode(',', $params);
-        $name   = array_shift($params);
+        $name = array_shift($params);
 
-        if (! ($files = $this->request->getFileMultiple($name))) {
+        if (!($files = $this->request->getFileMultiple($name))) {
             $files = [$this->request->getFile($name)];
         }
 
@@ -160,9 +160,9 @@ class FileRules
         // Grab the file name off the top of the $params
         // after we split it.
         $params = explode(',', $params);
-        $name   = array_shift($params);
+        $name = array_shift($params);
 
-        if (! ($files = $this->request->getFileMultiple($name))) {
+        if (!($files = $this->request->getFileMultiple($name))) {
             $files = [$this->request->getFile($name)];
         }
 
@@ -175,7 +175,7 @@ class FileRules
                 return true;
             }
 
-            if (! in_array($file->getMimeType(), $params, true)) {
+            if (!in_array($file->getMimeType(), $params, true)) {
                 return false;
             }
         }
@@ -191,9 +191,9 @@ class FileRules
         // Grab the file name off the top of the $params
         // after we split it.
         $params = explode(',', $params);
-        $name   = array_shift($params);
+        $name = array_shift($params);
 
-        if (! ($files = $this->request->getFileMultiple($name))) {
+        if (!($files = $this->request->getFileMultiple($name))) {
             $files = [$this->request->getFile($name)];
         }
 
@@ -206,7 +206,7 @@ class FileRules
                 return true;
             }
 
-            if (! in_array($file->guessExtension(), $params, true)) {
+            if (!in_array($file->guessExtension(), $params, true)) {
                 return false;
             }
         }
@@ -223,9 +223,9 @@ class FileRules
         // Grab the file name off the top of the $params
         // after we split it.
         $params = explode(',', $params);
-        $name   = array_shift($params);
+        $name = array_shift($params);
 
-        if (! ($files = $this->request->getFileMultiple($name))) {
+        if (!($files = $this->request->getFileMultiple($name))) {
             $files = [$this->request->getFile($name)];
         }
 
@@ -239,7 +239,7 @@ class FileRules
             }
 
             // Get Parameter sizes
-            $allowedWidth  = $params[0] ?? 0;
+            $allowedWidth = $params[0] ?? 0;
             $allowedHeight = $params[1] ?? 0;
 
             // Get uploaded image size
@@ -250,7 +250,7 @@ class FileRules
                 return false;
             }
 
-            $fileWidth  = $info[0];
+            $fileWidth = $info[0];
             $fileHeight = $info[1];
 
             if ($fileWidth > $allowedWidth || $fileHeight > $allowedHeight) {

@@ -69,12 +69,12 @@ class Parser
     protected $plugins = [];
 
     /**
-     * @param int     $depth_limit Maximum depth to parse data
-     * @param ?string $caller      Caller class name
+     * @param int $depth_limit Maximum depth to parse data
+     * @param ?string $caller Caller class name
      */
     public function __construct(int $depth_limit = 0, string $caller = null)
     {
-        $this->marker = "kint\0".\random_bytes(16);
+        $this->marker = "kint\0" . \random_bytes(16);
 
         $this->depth_limit = $depth_limit;
         $this->caller_class = $caller;
@@ -116,7 +116,7 @@ class Parser
      * Parses a variable into a Kint object structure.
      *
      * @param mixed &$var The input variable
-     * @param Value $o    The base object
+     * @param Value $o The base object
      */
     public function parse(&$var, Value $o): Value
     {
@@ -253,7 +253,7 @@ class Parser
 
         foreach ($bt as $frame) {
             if (isset($frame['object']) && $frame['object'] === $this) {
-                throw new DomainException(__CLASS__.'::'.$caller_frame['function'].' cannot be called from inside a parse');
+                throw new DomainException(__CLASS__ . '::' . $caller_frame['function'] . ' cannot be called from inside a parse');
             }
         }
     }
@@ -278,7 +278,7 @@ class Parser
      * Parses a string into a Kint BlobValue structure.
      *
      * @param string &$var The input variable
-     * @param Value  $o    The base object
+     * @param Value $o The base object
      */
     private function parseString(string &$var, Value $o): Value
     {
@@ -303,7 +303,7 @@ class Parser
      * Parses an array into a Kint object structure.
      *
      * @param array &$var The input variable
-     * @param Value $o    The base object
+     * @param Value $o The base object
      */
     private function parseArray(array &$var, Value $o): Value
     {
@@ -366,10 +366,10 @@ class Parser
             $child->operator = Value::OPERATOR_ARRAY;
 
             if (null !== $array->access_path) {
-                if (\is_string($key) && (string) (int) $key === $key) {
-                    $child->access_path = 'array_values('.$array->access_path.')['.$i.']'; // @codeCoverageIgnore
+                if (\is_string($key) && (string)(int)$key === $key) {
+                    $child->access_path = 'array_values(' . $array->access_path . ')[' . $i . ']'; // @codeCoverageIgnore
                 } else {
-                    $child->access_path = $array->access_path.'['.\var_export($key, true).']';
+                    $child->access_path = $array->access_path . '[' . \var_export($key, true) . ']';
                 }
             }
 
@@ -398,12 +398,12 @@ class Parser
      * Parses an object into a Kint InstanceValue structure.
      *
      * @param object &$var The input variable
-     * @param Value  $o    The base object
+     * @param Value $o The base object
      */
     private function parseObject(&$var, Value $o): Value
     {
         $hash = \spl_object_hash($var);
-        $values = (array) $var;
+        $values = (array)$var;
 
         $object = new InstanceValue();
         $object->transplant($o);
@@ -465,9 +465,9 @@ class Parser
                     if ($rprop->isPublic()) {
                         $readonly[$rprop->getName()] = true;
                     } elseif ($rprop->isProtected()) {
-                        $readonly["\0*\0".$rprop->getName()] = true;
+                        $readonly["\0*\0" . $rprop->getName()] = true;
                     } elseif ($rprop->isPrivate()) {
-                        $readonly["\0".$rprop->getDeclaringClass()->getName()."\0".$rprop->getName()] = true;
+                        $readonly["\0" . $rprop->getDeclaringClass()->getName() . "\0" . $rprop->getName()] = true;
                     }
                 }
 
@@ -495,7 +495,7 @@ class Parser
 
                 // Can't dynamically add undefined properties, so no need to use var_export
                 if ($this->childHasPath($object, $child)) {
-                    $child->access_path .= $object->access_path.'->'.$child->name;
+                    $child->access_path .= $object->access_path . '->' . $child->name;
                 }
 
                 if ($this->applyPlugins($undefined, $child, self::TRIGGER_BEGIN)) {
@@ -527,7 +527,7 @@ class Parser
                 $child->readonly = true;
             }
 
-            $split_key = \explode("\0", (string) $key, 3);
+            $split_key = \explode("\0", (string)$key, 3);
 
             if (3 === \count($split_key) && '' === $split_key[0]) {
                 $child->name = $split_key[2];
@@ -538,7 +538,7 @@ class Parser
                     $child->owner_class = $split_key[1];
                 }
             } elseif (KINT_PHP72) {
-                $child->name = (string) $key;
+                $child->name = (string)$key;
             } else {
                 $child->name = $key; // @codeCoverageIgnore
             }
@@ -547,11 +547,11 @@ class Parser
                 $child->access_path = $object->access_path;
 
                 if (!KINT_PHP72 && \is_int($child->name)) {
-                    $child->access_path = 'array_values((array) '.$child->access_path.')['.$i.']'; // @codeCoverageIgnore
+                    $child->access_path = 'array_values((array) ' . $child->access_path . ')[' . $i . ']'; // @codeCoverageIgnore
                 } elseif (\preg_match('/^[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*$/', $child->name)) {
-                    $child->access_path .= '->'.$child->name;
+                    $child->access_path .= '->' . $child->name;
                 } else {
-                    $child->access_path .= '->{'.\var_export((string) $child->name, true).'}';
+                    $child->access_path .= '->{' . \var_export((string)$child->name, true) . '}';
                 }
             }
 
@@ -582,7 +582,7 @@ class Parser
      * Parses a resource into a Kint ResourceValue structure.
      *
      * @param resource &$var The input variable
-     * @param Value    $o    The base object
+     * @param Value $o The base object
      */
     private function parseResource(&$var, Value $o): Value
     {
@@ -599,7 +599,7 @@ class Parser
      * Parses a closed resource into a Kint object structure.
      *
      * @param mixed &$var The input variable
-     * @param Value $o    The base object
+     * @param Value $o The base object
      */
     private function parseResourceClosed(&$var, Value $o): Value
     {
@@ -612,9 +612,9 @@ class Parser
     /**
      * Applies plugins for an object type.
      *
-     * @param mixed &$var    variable
-     * @param Value $o       Kint object parsed so far
-     * @param int   $trigger The trigger to check for the plugins
+     * @param mixed &$var variable
+     * @param Value $o Kint object parsed so far
+     * @param int $trigger The trigger to check for the plugins
      *
      * @return bool Continue parsing
      */
@@ -636,7 +636,7 @@ class Parser
                 $plugin->parse($var, $o, $trigger);
             } catch (Exception $e) {
                 \trigger_error(
-                    'An exception ('.\get_class($e).') was thrown in '.$e->getFile().' on line '.$e->getLine().' while executing Kint Parser Plugin "'.\get_class($plugin).'". Error message: '.$e->getMessage(),
+                    'An exception (' . \get_class($e) . ') was thrown in ' . $e->getFile() . ' on line ' . $e->getLine() . ' while executing Kint Parser Plugin "' . \get_class($plugin) . '". Error message: ' . $e->getMessage(),
                     E_USER_WARNING
                 );
             }

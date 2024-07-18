@@ -95,8 +95,8 @@ class Forge extends BaseForge
     /**
      * ALTER TABLE
      *
-     * @param string       $alterType       ALTER type
-     * @param string       $table           Table name
+     * @param string $alterType ALTER type
+     * @param string $table Table name
      * @param array|string $processedFields Processed column definitions
      *                                      or column names to DROP
      *
@@ -111,7 +111,7 @@ class Forge extends BaseForge
             $columnNamesToDrop = $processedFields;
 
             $fields = array_map(
-                fn ($field) => $this->db->escapeIdentifiers(trim($field)),
+                fn($field) => $this->db->escapeIdentifiers(trim($field)),
                 is_string($columnNamesToDrop) ? explode(',', $columnNamesToDrop) : $columnNamesToDrop
             );
 
@@ -123,7 +123,7 @@ class Forge extends BaseForge
         }
 
         $nullableMap = array_column($this->db->getFieldData($table), 'nullable', 'name');
-        $sqls        = [];
+        $sqls = [];
 
         for ($i = 0, $c = count($processedFields); $i < $c; $i++) {
             if ($alterType === 'MODIFY') {
@@ -132,7 +132,7 @@ class Forge extends BaseForge
                 // so add null constraint is used only when it is different from the current null constraint.
                 // If a not null constraint is added to a column with a not null constraint,
                 // ORA-01442 will occur.
-                $wantToAddNull   = ! str_contains($processedFields[$i]['null'], ' NOT');
+                $wantToAddNull = !str_contains($processedFields[$i]['null'], ' NOT');
                 $currentNullable = $nullableMap[$processedFields[$i]['name']];
 
                 if ($wantToAddNull === true && $currentNullable === true) {
@@ -150,13 +150,13 @@ class Forge extends BaseForge
             } else {
                 $processedFields[$i]['_literal'] = "\n\t" . $this->_processColumn($processedFields[$i]);
 
-                if (! empty($processedFields[$i]['comment'])) {
+                if (!empty($processedFields[$i]['comment'])) {
                     $sqls[] = 'COMMENT ON COLUMN '
                         . $this->db->escapeIdentifiers($table) . '.' . $this->db->escapeIdentifiers($processedFields[$i]['name'])
                         . ' IS ' . $processedFields[$i]['comment'];
                 }
 
-                if ($alterType === 'MODIFY' && ! empty($processedFields[$i]['new_name'])) {
+                if ($alterType === 'MODIFY' && !empty($processedFields[$i]['new_name'])) {
                     $sqls[] = $sql . ' RENAME COLUMN ' . $this->db->escapeIdentifiers($processedFields[$i]['name'])
                         . ' TO ' . $this->db->escapeIdentifiers($processedFields[$i]['new_name']);
                 }
@@ -167,8 +167,8 @@ class Forge extends BaseForge
 
         $sql .= ' ' . $alterType . ' ';
         $sql .= count($processedFields) === 1
-                ? $processedFields[0]
-                : '(' . implode(',', $processedFields) . ')';
+            ? $processedFields[0]
+            : '(' . implode(',', $processedFields) . ')';
 
         // RENAME COLUMN must be executed after MODIFY
         array_unshift($sqls, $sql);
@@ -183,7 +183,7 @@ class Forge extends BaseForge
      */
     protected function _attributeAutoIncrement(array &$attributes, array &$field)
     {
-        if (! empty($attributes['AUTO_INCREMENT']) && $attributes['AUTO_INCREMENT'] === true
+        if (!empty($attributes['AUTO_INCREMENT']) && $attributes['AUTO_INCREMENT'] === true
             && stripos($field['type'], 'NUMBER') !== false
             && version_compare($this->db->getVersion(), '12.1', '>=')
         ) {
@@ -208,12 +208,12 @@ class Forge extends BaseForge
         }
 
         return $this->db->escapeIdentifiers($processedField['name'])
-           . ' ' . $processedField['type'] . $processedField['length']
-           . $processedField['unsigned']
-           . $processedField['default']
-           . $processedField['auto_increment']
-           . $processedField['null']
-           . $processedField['unique'];
+            . ' ' . $processedField['type'] . $processedField['length']
+            . $processedField['unsigned']
+            . $processedField['default']
+            . $processedField['auto_increment']
+            . $processedField['null']
+            . $processedField['unique'];
     }
 
     /**
@@ -229,33 +229,33 @@ class Forge extends BaseForge
             case 'TINYINT':
                 $attributes['CONSTRAINT'] ??= 3;
 
-                // no break
+            // no break
             case 'SMALLINT':
                 $attributes['CONSTRAINT'] ??= 5;
 
-                // no break
+            // no break
             case 'MEDIUMINT':
                 $attributes['CONSTRAINT'] ??= 7;
 
-                // no break
+            // no break
             case 'INT':
             case 'INTEGER':
                 $attributes['CONSTRAINT'] ??= 11;
 
-                // no break
+            // no break
             case 'BIGINT':
                 $attributes['CONSTRAINT'] ??= 19;
 
-                // no break
+            // no break
             case 'NUMERIC':
                 $attributes['TYPE'] = 'NUMBER';
 
                 return;
 
             case 'BOOLEAN':
-                $attributes['TYPE']       = 'NUMBER';
+                $attributes['TYPE'] = 'NUMBER';
                 $attributes['CONSTRAINT'] = 1;
-                $attributes['UNSIGNED']   = true;
+                $attributes['UNSIGNED'] = true;
 
                 return;
 
@@ -276,7 +276,7 @@ class Forge extends BaseForge
             case 'VARCHAR':
                 $attributes['CONSTRAINT'] ??= 255;
 
-                // no break
+            // no break
             case 'TEXT':
             case 'MEDIUMTEXT':
                 $attributes['CONSTRAINT'] ??= 4000;

@@ -57,10 +57,10 @@ class MigrateRefresh extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '-n'    => 'Set migration namespace',
-        '-g'    => 'Set database group',
+        '-n' => 'Set migration namespace',
+        '-g' => 'Set database group',
         '--all' => 'Set latest for all namespace, will ignore (-n) option',
-        '-f'    => 'Force command - this option allows you to bypass the confirmation question when running this command in a production environment',
+        '-f' => 'Force command - this option allows you to bypass the confirmation question when running this command in a production environment',
     ];
 
     /**
@@ -75,7 +75,7 @@ class MigrateRefresh extends BaseCommand
             // @codeCoverageIgnoreStart
             $force = array_key_exists('f', $params) || CLI::getOption('f');
 
-            if (! $force && CLI::prompt(lang('Migrations.refreshConfirm'), ['y', 'n']) === 'n') {
+            if (!$force && CLI::prompt(lang('Migrations.refreshConfirm'), ['y', 'n']) === 'n') {
                 return;
             }
 

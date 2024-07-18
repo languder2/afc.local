@@ -38,7 +38,7 @@ final class IteratorFilter extends RecursiveFilterIterator implements RecursiveI
      */
     public function accept(): bool
     {
-        if (! $this->current()->isFile()) {
+        if (!$this->current()->isFile()) {
             return true;
         }
 

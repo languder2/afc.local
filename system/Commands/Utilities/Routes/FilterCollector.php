@@ -34,14 +34,15 @@ final class FilterCollector
          * If set to true, route filters are not found.
          */
         private readonly bool $resetRoutes = false
-    ) {
+    )
+    {
     }
 
     /**
      * Returns filters for the URI
      *
      * @param string $method HTTP verb like `GET`,`POST` or `CLI`.
-     * @param string $uri    URI path to find filters for
+     * @param string $uri URI path to find filters for
      *
      * @return array{before: list<string>, after: list<string>} array of filter alias or classname
      */
@@ -64,14 +65,14 @@ final class FilterCollector
         if ($method === 'CLI') {
             return [
                 'before' => [],
-                'after'  => [],
+                'after' => [],
             ];
         }
 
         $request = Services::incomingrequest(null, false);
         $request->setMethod($method);
 
-        $router  = $this->createRouter($request);
+        $router = $this->createRouter($request);
         $filters = $this->createFilters($request);
 
         $finder = new FilterFinder($router, $filters);
@@ -89,7 +90,7 @@ final class FilterCollector
         $request = Services::incomingrequest(null, false);
         $request->setMethod(Method::GET);
 
-        $router  = $this->createRouter($request);
+        $router = $this->createRouter($request);
         $filters = $this->createFilters($request);
 
         $finder = new FilterFinder($router, $filters);

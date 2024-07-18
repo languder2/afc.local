@@ -50,41 +50,6 @@ class Commands
     }
 
     /**
-     * Runs a command given
-     *
-     * @return int|void Exit code
-     */
-    public function run(string $command, array $params)
-    {
-        if (! $this->verifyCommand($command, $this->commands)) {
-            return;
-        }
-
-        // The file would have already been loaded during the
-        // createCommandList function...
-        $className = $this->commands[$command]['class'];
-        $class     = new $className($this->logger, $this);
-
-        Events::trigger('pre_command');
-
-        $exit = $class->run($params);
-
-        Events::trigger('post_command');
-
-        return $exit;
-    }
-
-    /**
-     * Provide access to the list of commands.
-     *
-     * @return array
-     */
-    public function getCommands()
-    {
-        return $this->commands;
-    }
-
-    /**
      * Discovers all commands in the framework and within user code,
      * and collects instances of them to work with.
      *
@@ -98,7 +63,7 @@ class Commands
 
         /** @var FileLocatorInterface $locator */
         $locator = service('locator');
-        $files   = $locator->listFiles('Commands/');
+        $files = $locator->listFiles('Commands/');
 
         // If no matching command files were found, bail
         // This should never happen in unit testing.
@@ -111,14 +76,14 @@ class Commands
         foreach ($files as $file) {
             $className = $locator->findQualifiedNameFromPath($file);
 
-            if ($className === false || ! class_exists($className)) {
+            if ($className === false || !class_exists($className)) {
                 continue;
             }
 
             try {
                 $class = new ReflectionClass($className);
 
-                if (! $class->isInstantiable() || ! $class->isSubclassOf(BaseCommand::class)) {
+                if (!$class->isInstantiable() || !$class->isSubclassOf(BaseCommand::class)) {
                     continue;
                 }
 
@@ -127,9 +92,9 @@ class Commands
 
                 if (isset($class->group)) {
                     $this->commands[$class->name] = [
-                        'class'       => $className,
-                        'file'        => $file,
-                        'group'       => $class->group,
+                        'class' => $className,
+                        'file' => $file,
+                        'group' => $class->group,
                         'description' => $class->description,
                     ];
                 }
@@ -141,6 +106,31 @@ class Commands
         }
 
         asort($this->commands);
+    }
+
+    /**
+     * Runs a command given
+     *
+     * @return int|void Exit code
+     */
+    public function run(string $command, array $params)
+    {
+        if (!$this->verifyCommand($command, $this->commands)) {
+            return;
+        }
+
+        // The file would have already been loaded during the
+        // createCommandList function...
+        $className = $this->commands[$command]['class'];
+        $class = new $className($this->logger, $this);
+
+        Events::trigger('pre_command');
+
+        $exit = $class->run($params);
+
+        Events::trigger('post_command');
+
+        return $exit;
     }
 
     /**
@@ -191,5 +181,15 @@ class Commands
         ksort($alternatives, SORT_NATURAL | SORT_FLAG_CASE);
 
         return array_keys($alternatives);
+    }
+
+    /**
+     * Provide access to the list of commands.
+     *
+     * @return array
+     */
+    public function getCommands()
+    {
+        return $this->commands;
     }
 }

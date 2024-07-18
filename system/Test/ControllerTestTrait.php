@@ -99,8 +99,8 @@ trait ControllerTestTrait
             $this->appConfig = config(App::class);
         }
 
-        if (! $this->uri instanceof URI) {
-            $factory   = Services::siteurifactory($this->appConfig, service('superglobals'), false);
+        if (!$this->uri instanceof URI) {
+            $factory = Services::siteurifactory($this->appConfig, service('superglobals'), false);
             $this->uri = $factory->createFromGlobals();
         }
 
@@ -131,7 +131,7 @@ trait ControllerTestTrait
      */
     public function controller(string $name)
     {
-        if (! class_exists($name)) {
+        if (!class_exists($name)) {
             throw new InvalidArgumentException('Invalid Controller: ' . $name);
         }
 
@@ -152,7 +152,7 @@ trait ControllerTestTrait
      */
     public function execute(string $method, ...$params)
     {
-        if (! method_exists($this->controller, $method) || ! is_callable([$this->controller, $method])) {
+        if (!method_exists($this->controller, $method) || !is_callable([$this->controller, $method])) {
             throw new InvalidArgumentException('Method does not exist or is not callable in controller: ' . $method);
         }
 
@@ -181,7 +181,7 @@ trait ControllerTestTrait
         }
 
         // If the controller did not return a response then start one
-        if (! $response instanceof ResponseInterface) {
+        if (!$response instanceof ResponseInterface) {
             $response = $this->response;
         }
 
@@ -198,8 +198,7 @@ trait ControllerTestTrait
         // Check for an overriding code from exceptions
         if (isset($code)) {
             $response->setStatusCode($code);
-        }
-        // Otherwise ensure there is a status code
+        } // Otherwise ensure there is a status code
         else {
             // getStatusCode() throws for empty codes
             try {
@@ -280,7 +279,7 @@ trait ControllerTestTrait
      */
     public function withUri(string $uri)
     {
-        $factory   = service('siteurifactory');
+        $factory = service('siteurifactory');
         $this->uri = $factory->createFromString($uri);
         Services::injectMock('uri', $this->uri);
 

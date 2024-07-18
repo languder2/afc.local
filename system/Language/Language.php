@@ -94,7 +94,7 @@ class Language
     public function getLine(string $line, array $args = [])
     {
         // if no file is given, just parse the line
-        if (! str_contains($line, '.')) {
+        if (!str_contains($line, '.')) {
             return $this->formatMessage($line, $args);
         }
 
@@ -135,7 +135,7 @@ class Language
         }
 
         foreach (explode('.', $parsedLine) as $row) {
-            if (! isset($current)) {
+            if (!isset($current)) {
                 $current = $this->language[$locale][$file] ?? null;
             }
 
@@ -164,7 +164,7 @@ class Language
         $file = substr($line, 0, strpos($line, '.'));
         $line = substr($line, strlen($file) + 1);
 
-        if (! isset($this->language[$locale][$file]) || ! array_key_exists($line, $this->language[$locale][$file])) {
+        if (!isset($this->language[$locale][$file]) || !array_key_exists($line, $this->language[$locale][$file])) {
             $this->load($file, $locale);
         }
 
@@ -181,7 +181,7 @@ class Language
      */
     protected function formatMessage($message, array $args = [])
     {
-        if (! $this->intlSupport || $args === []) {
+        if (!$this->intlSupport || $args === []) {
             return $message;
         }
 
@@ -197,20 +197,20 @@ class Language
         if ($formatted === false) {
             // Format again to get the error message.
             try {
-                $fmt       = new MessageFormatter($this->locale, $message);
+                $fmt = new MessageFormatter($this->locale, $message);
                 $formatted = $fmt->format($args);
-                $fmtError  = '"' . $fmt->getErrorMessage() . '" (' . $fmt->getErrorCode() . ')';
+                $fmtError = '"' . $fmt->getErrorMessage() . '" (' . $fmt->getErrorCode() . ')';
             } catch (IntlException $e) {
                 $fmtError = '"' . $e->getMessage() . '" (' . $e->getCode() . ')';
             }
 
             $argsString = implode(
                 ', ',
-                array_map(static fn ($element) => '"' . $element . '"', $args)
+                array_map(static fn($element) => '"' . $element . '"', $args)
             );
             $argsUrlEncoded = implode(
                 ', ',
-                array_map(static fn ($element) => '"' . rawurlencode($element) . '"', $args)
+                array_map(static fn($element) => '"' . rawurlencode($element) . '"', $args)
             );
 
             log_message(
@@ -236,7 +236,7 @@ class Language
      */
     protected function load(string $file, string $locale, bool $return = false)
     {
-        if (! array_key_exists($locale, $this->loadedFiles)) {
+        if (!array_key_exists($locale, $this->loadedFiles)) {
             $this->loadedFiles[$locale] = [];
         }
 
@@ -245,11 +245,11 @@ class Language
             return [];
         }
 
-        if (! array_key_exists($locale, $this->language)) {
+        if (!array_key_exists($locale, $this->language)) {
             $this->language[$locale] = [];
         }
 
-        if (! array_key_exists($file, $this->language[$locale])) {
+        if (!array_key_exists($file, $this->language[$locale])) {
             $this->language[$locale][$file] = [];
         }
 
@@ -273,7 +273,7 @@ class Language
      */
     protected function requireFile(string $path): array
     {
-        $files   = service('locator')->search($path, 'php', false);
+        $files = service('locator')->search($path, 'php', false);
         $strings = [];
 
         foreach ($files as $file) {

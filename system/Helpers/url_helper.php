@@ -20,15 +20,15 @@ use Config\App;
 
 // CodeIgniter URL Helpers
 
-if (! function_exists('site_url')) {
+if (!function_exists('site_url')) {
     /**
      * Returns a site URL as defined by the App config.
      *
      * @param array|string $relativePath URI string or array of URI segments.
-     * @param string|null  $scheme       URI scheme. E.g., http, ftp. If empty
+     * @param string|null $scheme URI scheme. E.g., http, ftp. If empty
      *                                   string '' is set, a protocol-relative
      *                                   link is returned.
-     * @param App|null     $config       Alternate configuration to use.
+     * @param App|null $config Alternate configuration to use.
      */
     function site_url($relativePath = '', ?string $scheme = null, ?App $config = null): string
     {
@@ -40,13 +40,13 @@ if (! function_exists('site_url')) {
     }
 }
 
-if (! function_exists('base_url')) {
+if (!function_exists('base_url')) {
     /**
      * Returns the base URL as defined by the App config.
      * Base URLs are trimmed site URLs without the index page.
      *
      * @param array|string $relativePath URI string or array of URI segments.
-     * @param string|null  $scheme       URI scheme. E.g., http, ftp. If empty
+     * @param string|null $scheme URI scheme. E.g., http, ftp. If empty
      *                                   string '' is set, a protocol-relative
      *                                   link is returned.
      */
@@ -60,12 +60,12 @@ if (! function_exists('base_url')) {
     }
 }
 
-if (! function_exists('current_url')) {
+if (!function_exists('current_url')) {
     /**
      * Returns the current full URL based on the Config\App settings and IncomingRequest.
      *
-     * @param bool                 $returnObject True to return an object instead of a string
-     * @param IncomingRequest|null $request      A request to use when retrieving the path
+     * @param bool $returnObject True to return an object instead of a string
+     * @param IncomingRequest|null $request A request to use when retrieving the path
      *
      * @return string|URI When returning string, the query and fragment parts are removed.
      *                    When returning URI, the query and fragment parts are preserved.
@@ -80,7 +80,7 @@ if (! function_exists('current_url')) {
     }
 }
 
-if (! function_exists('previous_url')) {
+if (!function_exists('previous_url')) {
     /**
      * Returns the previous URL the current visitor was on. For security reasons
      * we first check in a saved session variable, if it exists, and use that.
@@ -104,7 +104,7 @@ if (! function_exists('previous_url')) {
     }
 }
 
-if (! function_exists('uri_string')) {
+if (!function_exists('uri_string')) {
     /**
      * URL String
      *
@@ -122,7 +122,7 @@ if (! function_exists('uri_string')) {
     }
 }
 
-if (! function_exists('index_page')) {
+if (!function_exists('index_page')) {
     /**
      * Index page
      *
@@ -139,16 +139,16 @@ if (! function_exists('index_page')) {
     }
 }
 
-if (! function_exists('anchor')) {
+if (!function_exists('anchor')) {
     /**
      * Anchor Link
      *
      * Creates an anchor based on the local URL.
      *
-     * @param array|string        $uri        URI string or array of URI segments
-     * @param string              $title      The link title
+     * @param array|string $uri URI string or array of URI segments
+     * @param string $title The link title
      * @param array|object|string $attributes Any attributes
-     * @param App|null            $altConfig  Alternate configuration to use
+     * @param App|null $altConfig Alternate configuration to use
      */
     function anchor($uri = '', string $title = '', $attributes = '', ?App $altConfig = null): string
     {
@@ -171,17 +171,17 @@ if (! function_exists('anchor')) {
     }
 }
 
-if (! function_exists('anchor_popup')) {
+if (!function_exists('anchor_popup')) {
     /**
      * Anchor Link - Pop-up version
      *
      * Creates an anchor based on the local URL. The link
      * opens a new window based on the attributes specified.
      *
-     * @param string                    $uri        the URL
-     * @param string                    $title      the link title
+     * @param string $uri the URL
+     * @param string $title the link title
      * @param array|false|object|string $attributes any attributes
-     * @param App|null                  $altConfig  Alternate configuration to use
+     * @param App|null $altConfig Alternate configuration to use
      */
     function anchor_popup($uri = '', string $title = '', $attributes = false, ?App $altConfig = null): string
     {
@@ -199,12 +199,12 @@ if (! function_exists('anchor_popup')) {
             return '<a href="' . $siteUrl . '" onclick="window.open(\'' . $siteUrl . "', '_blank'); return false;\">" . $title . '</a>';
         }
 
-        if (! is_array($attributes)) {
+        if (!is_array($attributes)) {
             $attributes = [$attributes];
 
             // Ref: http://www.w3schools.com/jsref/met_win_open.asp
             $windowName = '_blank';
-        } elseif (! empty($attributes['window_name'])) {
+        } elseif (!empty($attributes['window_name'])) {
             $windowName = $attributes['window_name'];
             unset($attributes['window_name']);
         } else {
@@ -219,17 +219,17 @@ if (! function_exists('anchor_popup')) {
         $attributes = stringify_attributes($attributes);
 
         return '<a href="' . $siteUrl
-                . '" onclick="window.open(\'' . $siteUrl . "', '" . $windowName . "', '" . stringify_attributes($atts, true) . "'); return false;\""
-                . $attributes . '>' . $title . '</a>';
+            . '" onclick="window.open(\'' . $siteUrl . "', '" . $windowName . "', '" . stringify_attributes($atts, true) . "'); return false;\""
+            . $attributes . '>' . $title . '</a>';
     }
 }
 
-if (! function_exists('mailto')) {
+if (!function_exists('mailto')) {
     /**
      * Mailto Link
      *
-     * @param string              $email      the email address
-     * @param string              $title      the link title
+     * @param string $email the email address
+     * @param string $title the link title
      * @param array|object|string $attributes any attributes
      */
     function mailto(string $email, string $title = '', $attributes = ''): string
@@ -242,14 +242,14 @@ if (! function_exists('mailto')) {
     }
 }
 
-if (! function_exists('safe_mailto')) {
+if (!function_exists('safe_mailto')) {
     /**
      * Encoded Mailto Link
      *
      * Create a spam-protected mailto link written in Javascript
      *
-     * @param string              $email      the email address
-     * @param string              $title      the link title
+     * @param string $email the email address
+     * @param string $title the link title
      * @param array|object|string $attributes any attributes
      */
     function safe_mailto(string $email, string $title = '', $attributes = ''): string
@@ -303,9 +303,9 @@ if (! function_exists('safe_mailto')) {
 
                 if (count($temp) === $count) {
                     $number = ($count === 3) ? (($temp[0] % 16) * 4096) + (($temp[1] % 64) * 64) + ($temp[2] % 64) : (($temp[0] % 32) * 64) + ($temp[1] % 64);
-                    $x[]    = '|' . $number;
-                    $count  = 1;
-                    $temp   = [];
+                    $x[] = '|' . $number;
+                    $count = 1;
+                    $temp = [];
                 }
             }
         }
@@ -320,8 +320,8 @@ if (! function_exists('safe_mailto')) {
         // improve obfuscation by eliminating newlines & whitespace
         $cspNonce = csp_script_nonce();
         $cspNonce = $cspNonce !== '' ? ' ' . $cspNonce : $cspNonce;
-        $output   = '<script' . $cspNonce . '>'
-                . 'var l=new Array();';
+        $output = '<script' . $cspNonce . '>'
+            . 'var l=new Array();';
 
         foreach ($x as $i => $value) {
             $output .= 'l[' . $i . "] = '" . $value . "';";
@@ -335,7 +335,7 @@ if (! function_exists('safe_mailto')) {
     }
 }
 
-if (! function_exists('auto_link')) {
+if (!function_exists('auto_link')) {
     /**
      * Auto-linker
      *
@@ -344,9 +344,9 @@ if (! function_exists('auto_link')) {
      * URLs or emails that end in a period. We'll strip these
      * off and add them after the link.
      *
-     * @param string $str   the string
-     * @param string $type  the type: email, url, or both
-     * @param bool   $popup whether to create pop-up links
+     * @param string $str the string
+     * @param string $type the type: email, url, or both
+     * @param bool $popup whether to create pop-up links
      */
     function auto_link(string $str, string $type = 'both', bool $popup = false): string
     {
@@ -364,7 +364,7 @@ if (! function_exists('auto_link')) {
                 //
                 // With PREG_OFFSET_CAPTURE, both of the above is an array,
                 // where the actual value is held in [0] and its offset at the [1] index.
-                $a   = '<a href="' . (strpos($match[1][0], '/') ? '' : 'http://') . $match[0][0] . '"' . $target . '>' . $match[0][0] . '</a>';
+                $a = '<a href="' . (strpos($match[1][0], '/') ? '' : 'http://') . $match[0][0] . '"' . $target . '>' . $match[0][0] . '</a>';
                 $str = substr_replace($str, $a, $match[0][1], strlen($match[0][0]));
             }
         }
@@ -382,15 +382,15 @@ if (! function_exists('auto_link')) {
     }
 }
 
-if (! function_exists('prep_url')) {
+if (!function_exists('prep_url')) {
     /**
      * Prep URL - Simply adds the http:// or https:// part if no scheme is included.
      *
      * Formerly used URI, but that does not play nicely with URIs missing
      * the scheme.
      *
-     * @param string $str    the URL
-     * @param bool   $secure set true if you want to force https://
+     * @param string $str the URL
+     * @param bool $secure set true if you want to force https://
      */
     function prep_url(string $str = '', bool $secure = false): string
     {
@@ -411,7 +411,7 @@ if (! function_exists('prep_url')) {
     }
 }
 
-if (! function_exists('url_title')) {
+if (!function_exists('url_title')) {
     /**
      * Create URL Title
      *
@@ -419,18 +419,18 @@ if (! function_exists('url_title')) {
      * human-friendly URL string with a "separator" string
      * as the word separator.
      *
-     * @param string $str       Input string
+     * @param string $str Input string
      * @param string $separator Word separator (usually '-' or '_')
-     * @param bool   $lowercase Whether to transform the output string to lowercase
+     * @param bool $lowercase Whether to transform the output string to lowercase
      */
     function url_title(string $str, string $separator = '-', bool $lowercase = false): string
     {
         $qSeparator = preg_quote($separator, '#');
 
         $trans = [
-            '&.+?;'                  => '',
-            '[^\w\d\pL\pM _-]'       => '',
-            '\s+'                    => $separator,
+            '&.+?;' => '',
+            '[^\w\d\pL\pM _-]' => '',
+            '\s+' => $separator,
             '(' . $qSeparator . ')+' => $separator,
         ];
 
@@ -448,7 +448,7 @@ if (! function_exists('url_title')) {
     }
 }
 
-if (! function_exists('mb_url_title')) {
+if (!function_exists('mb_url_title')) {
     /**
      * Create URL Title that takes into account accented characters
      *
@@ -456,9 +456,9 @@ if (! function_exists('mb_url_title')) {
      * human-friendly URL string with a "separator" string
      * as the word separator.
      *
-     * @param string $str       Input string
+     * @param string $str Input string
      * @param string $separator Word separator (usually '-' or '_')
-     * @param bool   $lowercase Whether to transform the output string to lowercase
+     * @param bool $lowercase Whether to transform the output string to lowercase
      */
     function mb_url_title(string $str, string $separator = '-', bool $lowercase = false): string
     {
@@ -468,7 +468,7 @@ if (! function_exists('mb_url_title')) {
     }
 }
 
-if (! function_exists('url_to')) {
+if (!function_exists('url_to')) {
     /**
      * Get the full, absolute URL to a route name or controller method
      * (with additional arguments)
@@ -476,15 +476,15 @@ if (! function_exists('url_to')) {
      * NOTE: This requires the controller/method to
      * have a route defined in the routes Config file.
      *
-     * @param string     $controller Route name or Controller::method
-     * @param int|string ...$args    One or more parameters to be passed to the route.
+     * @param string $controller Route name or Controller::method
+     * @param int|string ...$args One or more parameters to be passed to the route.
      *                               The last parameter allows you to set the locale.
      *
      * @throws RouterException
      */
     function url_to(string $controller, ...$args): string
     {
-        if (! $route = route_to($controller, ...$args)) {
+        if (!$route = route_to($controller, ...$args)) {
             $explode = explode('::', $controller);
 
             if (isset($explode[1])) {
@@ -498,7 +498,7 @@ if (! function_exists('url_to')) {
     }
 }
 
-if (! function_exists('url_is')) {
+if (!function_exists('url_is')) {
     /**
      * Determines if current url path contains
      * the given path. It may contain a wildcard (*)
@@ -510,9 +510,9 @@ if (! function_exists('url_is')) {
     function url_is(string $path): bool
     {
         // Setup our regex to allow wildcards
-        $path        = '/' . trim(str_replace('*', '(\S)*', $path), '/ ');
+        $path = '/' . trim(str_replace('*', '(\S)*', $path), '/ ');
         $currentPath = '/' . trim(uri_string(), '/ ');
 
-        return (bool) preg_match("|^{$path}$|", $currentPath, $matches);
+        return (bool)preg_match("|^{$path}$|", $currentPath, $matches);
     }
 }

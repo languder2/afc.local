@@ -108,12 +108,12 @@ class Connection extends BaseConnection
         $charset = in_array(strtolower($this->charset), ['utf-8', 'utf8'], true) ? 'UTF-8' : SQLSRV_ENC_CHAR;
 
         $connection = [
-            'UID'                  => empty($this->username) ? '' : $this->username,
-            'PWD'                  => empty($this->password) ? '' : $this->password,
-            'Database'             => $this->database,
-            'ConnectionPooling'    => $persistent ? 1 : 0,
-            'CharacterSet'         => $charset,
-            'Encrypt'              => $this->encrypt === true ? 1 : 0,
+            'UID' => empty($this->username) ? '' : $this->username,
+            'PWD' => empty($this->password) ? '' : $this->password,
+            'Database' => $this->database,
+            'ConnectionPooling' => $persistent ? 1 : 0,
+            'CharacterSet' => $charset,
+            'Encrypt' => $this->encrypt === true ? 1 : 0,
             'ReturnDatesAsStrings' => 1,
         ];
 
@@ -123,7 +123,7 @@ class Connection extends BaseConnection
             unset($connection['UID'], $connection['PWD']);
         }
 
-        if (! str_contains($this->hostname, ',') && $this->port !== '') {
+        if (!str_contains($this->hostname, ',') && $this->port !== '') {
             $this->hostname .= ', ' . $this->port;
         }
 
@@ -135,8 +135,8 @@ class Connection extends BaseConnection
             $query = $this->query('SELECT CASE WHEN (@@OPTIONS | 256) = @@OPTIONS THEN 1 ELSE 0 END AS qi');
             $query = $query->getResultObject();
 
-            $this->_quoted_identifier = empty($query) ? false : (bool) $query[0]->qi;
-            $this->escapeChar         = ($this->_quoted_identifier) ? '"' : ['[', ']'];
+            $this->_quoted_identifier = empty($query) ? false : (bool)$query[0]->qi;
+            $this->escapeChar = ($this->_quoted_identifier) ? '"' : ['[', ']'];
 
             return $this->connID;
         }
@@ -194,7 +194,7 @@ class Connection extends BaseConnection
      */
     public function insertID(): int
     {
-        return (int) ($this->query('SELECT SCOPE_IDENTITY() AS insert_id')->getRow()->insert_id ?? 0);
+        return (int)($this->query('SELECT SCOPE_IDENTITY() AS insert_id')->getRow()->insert_id ?? 0);
     }
 
     /**
@@ -251,11 +251,11 @@ class Connection extends BaseConnection
         $retVal = [];
 
         foreach ($query as $row) {
-            $obj       = new stdClass();
+            $obj = new stdClass();
             $obj->name = $row->index_name;
 
-            $_fields     = explode(',', trim($row->index_keys));
-            $obj->fields = array_map(static fn ($v) => trim($v), $_fields);
+            $_fields = explode(',', trim($row->index_keys));
+            $obj->fields = array_map(static fn($v) => trim($v), $_fields);
 
             if (str_contains($row->index_description, 'primary key located on')) {
                 $obj->type = 'PRIMARY';
@@ -299,18 +299,18 @@ class Connection extends BaseConnection
             throw new DatabaseException(lang('Database.failGetForeignKeyData'));
         }
 
-        $query   = $query->getResultObject();
+        $query = $query->getResultObject();
         $indexes = [];
 
         foreach ($query as $row) {
-            $indexes[$row->constraint_name]['constraint_name']       = $row->constraint_name;
-            $indexes[$row->constraint_name]['table_name']            = $row->table_name;
-            $indexes[$row->constraint_name]['column_name'][]         = $row->column_name;
-            $indexes[$row->constraint_name]['foreign_table_name']    = $row->foreign_table_name;
+            $indexes[$row->constraint_name]['constraint_name'] = $row->constraint_name;
+            $indexes[$row->constraint_name]['table_name'] = $row->table_name;
+            $indexes[$row->constraint_name]['column_name'][] = $row->column_name;
+            $indexes[$row->constraint_name]['foreign_table_name'] = $row->foreign_table_name;
             $indexes[$row->constraint_name]['foreign_column_name'][] = $row->foreign_column_name;
-            $indexes[$row->constraint_name]['on_delete']             = $row->delete_rule;
-            $indexes[$row->constraint_name]['on_update']             = $row->update_rule;
-            $indexes[$row->constraint_name]['match']                 = $row->match_option;
+            $indexes[$row->constraint_name]['on_delete'] = $row->delete_rule;
+            $indexes[$row->constraint_name]['on_update'] = $row->update_rule;
+            $indexes[$row->constraint_name]['match'] = $row->match_option;
         }
 
         return $this->foreignKeyDataToObjects($indexes);
@@ -355,7 +355,7 @@ class Connection extends BaseConnection
             throw new DatabaseException(lang('Database.failGetFieldData'));
         }
 
-        $query  = $query->getResultObject();
+        $query = $query->getResultObject();
         $retVal = [];
 
         for ($i = 0, $c = count($query); $i < $c; $i++) {
@@ -369,7 +369,7 @@ class Connection extends BaseConnection
                 : $query[$i]->NUMERIC_PRECISION;
 
             $retVal[$i]->nullable = $query[$i]->IS_NULLABLE !== 'NO';
-            $retVal[$i]->default  = $query[$i]->COLUMN_DEFAULT;
+            $retVal[$i]->default = $query[$i]->COLUMN_DEFAULT;
         }
 
         return $retVal;
@@ -409,13 +409,13 @@ class Connection extends BaseConnection
     public function error(): array
     {
         $error = [
-            'code'    => '00000',
+            'code' => '00000',
             'message' => '',
         ];
 
         $sqlsrvErrors = sqlsrv_errors(SQLSRV_ERR_ERRORS);
 
-        if (! is_array($sqlsrvErrors)) {
+        if (!is_array($sqlsrvErrors)) {
             return $error;
         }
 
@@ -457,7 +457,7 @@ class Connection extends BaseConnection
         }
 
         if ($this->execute('USE ' . $this->_escapeString($databaseName))) {
-            $this->database  = $databaseName;
+            $this->database = $databaseName;
             $this->dataCache = [];
 
             return true;
@@ -500,13 +500,13 @@ class Connection extends BaseConnection
     public function getError()
     {
         $error = [
-            'code'    => '00000',
+            'code' => '00000',
             'message' => '',
         ];
 
         $sqlsrvErrors = sqlsrv_errors(SQLSRV_ERR_ERRORS);
 
-        if (! is_array($sqlsrvErrors)) {
+        if (!is_array($sqlsrvErrors)) {
             return $error;
         }
 
@@ -542,7 +542,7 @@ class Connection extends BaseConnection
             return $this->dataCache['version'];
         }
 
-        if (! $this->connID || ($info = sqlsrv_server_info($this->connID)) === []) {
+        if (!$this->connID || ($info = sqlsrv_server_info($this->connID)) === []) {
             $this->initialize();
         }
 

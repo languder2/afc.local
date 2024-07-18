@@ -64,7 +64,7 @@ class PostgreHandler extends DatabaseHandler
     public function gc($max_lifetime)
     {
         $separator = '\'';
-        $interval  = implode($separator, ['', "{$max_lifetime} second", '']);
+        $interval = implode($separator, ['', "{$max_lifetime} second", '']);
 
         return $this->db->table($this->table)->where('timestamp <', "now() - INTERVAL {$interval}", false)->delete() ? 1 : $this->fail();
     }
@@ -89,7 +89,7 @@ class PostgreHandler extends DatabaseHandler
      */
     protected function releaseLock(): bool
     {
-        if (! $this->lock) {
+        if (!$this->lock) {
             return true;
         }
 

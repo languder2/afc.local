@@ -27,7 +27,7 @@ class ArrayCast extends BaseCast
             $value = unserialize($value);
         }
 
-        return (array) $value;
+        return (array)$value;
     }
 
     /**

@@ -69,7 +69,7 @@ class FileHandler extends BaseHandler
     {
         parent::__construct($config, $ipAddress);
 
-        if (! empty($this->savePath)) {
+        if (!empty($this->savePath)) {
             $this->savePath = rtrim($this->savePath, '/\\');
             ini_set('session.save_path', $this->savePath);
         } else {
@@ -95,11 +95,11 @@ class FileHandler extends BaseHandler
      */
     public function open($path, $name): bool
     {
-        if (! is_dir($path) && ! mkdir($path, 0700, true)) {
+        if (!is_dir($path) && !mkdir($path, 0700, true)) {
             throw SessionException::forInvalidSavePath($this->savePath);
         }
 
-        if (! is_writable($path)) {
+        if (!is_writable($path)) {
             throw SessionException::forWriteProtectedSavePath($this->savePath);
         }
 
@@ -125,7 +125,7 @@ class FileHandler extends BaseHandler
         // This might seem weird, but PHP 5.6 introduced session_reset(),
         // which re-reads session data
         if ($this->fileHandle === null) {
-            $this->fileNew = ! is_file($this->filePath . $id);
+            $this->fileNew = !is_file($this->filePath . $id);
 
             if (($this->fileHandle = fopen($this->filePath . $id, 'c+b')) === false) {
                 $this->logger->error("Session: Unable to open file '" . $this->filePath . $id . "'.");
@@ -141,7 +141,7 @@ class FileHandler extends BaseHandler
                 return false;
             }
 
-            if (! isset($this->sessionID)) {
+            if (!isset($this->sessionID)) {
                 $this->sessionID = $id;
             }
 
@@ -155,7 +155,7 @@ class FileHandler extends BaseHandler
             rewind($this->fileHandle);
         }
 
-        $data   = '';
+        $data = '';
         $buffer = 0;
         clearstatcache(); // Address https://github.com/codeigniter4/CodeIgniter4/issues/2056
 
@@ -175,7 +175,7 @@ class FileHandler extends BaseHandler
     /**
      * Writes the session data to the session storage.
      *
-     * @param string $id   The session ID
+     * @param string $id The session ID
      * @param string $data The encoded session data
      */
     public function write($id, $data): bool
@@ -185,7 +185,7 @@ class FileHandler extends BaseHandler
             $this->sessionID = $id;
         }
 
-        if (! is_resource($this->fileHandle)) {
+        if (!is_resource($this->fileHandle)) {
             return false;
         }
 
@@ -193,7 +193,7 @@ class FileHandler extends BaseHandler
             return ($this->fileNew) ? true : touch($this->filePath . $id);
         }
 
-        if (! $this->fileNew) {
+        if (!$this->fileNew) {
             ftruncate($this->fileHandle, 0);
             rewind($this->fileHandle);
         }
@@ -207,7 +207,7 @@ class FileHandler extends BaseHandler
                 }
             }
 
-            if (! is_int($result)) {
+            if (!is_int($result)) {
                 $this->fingerprint = md5(substr($data, 0, $written));
                 $this->logger->error('Session: Unable to write data.');
 
@@ -230,7 +230,7 @@ class FileHandler extends BaseHandler
             fclose($this->fileHandle);
 
             $this->fileHandle = null;
-            $this->fileNew    = false;
+            $this->fileNew = false;
         }
 
         return true;
@@ -271,7 +271,7 @@ class FileHandler extends BaseHandler
     #[ReturnTypeWillChange]
     public function gc($max_lifetime)
     {
-        if (! is_dir($this->savePath) || ($directory = opendir($this->savePath)) === false) {
+        if (!is_dir($this->savePath) || ($directory = opendir($this->savePath)) === false) {
             $this->logger->debug("Session: Garbage collector couldn't list files under directory '" . $this->savePath . "'.");
 
             return false;
@@ -290,8 +290,8 @@ class FileHandler extends BaseHandler
 
         while (($file = readdir($directory)) !== false) {
             // If the filename doesn't match this pattern, it's either not a session file or is not ours
-            if (! preg_match($pattern, $file)
-                || ! is_file($this->savePath . DIRECTORY_SEPARATOR . $file)
+            if (!preg_match($pattern, $file)
+                || !is_file($this->savePath . DIRECTORY_SEPARATOR . $file)
                 || ($mtime = filemtime($this->savePath . DIRECTORY_SEPARATOR . $file)) === false
                 || $mtime > $ts
             ) {
@@ -312,13 +312,13 @@ class FileHandler extends BaseHandler
      */
     protected function configureSessionIDRegex()
     {
-        $bitsPerCharacter = (int) ini_get('session.sid_bits_per_character');
-        $SIDLength        = (int) ini_get('session.sid_length');
+        $bitsPerCharacter = (int)ini_get('session.sid_bits_per_character');
+        $SIDLength = (int)ini_get('session.sid_length');
 
         if (($bits = $SIDLength * $bitsPerCharacter) < 160) {
             // Add as many more characters as necessary to reach at least 160 bits
-            $SIDLength += (int) ceil((160 % $bits) / $bitsPerCharacter);
-            ini_set('session.sid_length', (string) $SIDLength);
+            $SIDLength += (int)ceil((160 % $bits) / $bitsPerCharacter);
+            ini_set('session.sid_length', (string)$SIDLength);
         }
 
         switch ($bitsPerCharacter) {

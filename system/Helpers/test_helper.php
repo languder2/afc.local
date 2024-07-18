@@ -18,13 +18,13 @@ use Config\Services;
 
 // CodeIgniter Test Helpers
 
-if (! function_exists('fake')) {
+if (!function_exists('fake')) {
     /**
      * Creates a single item using Fabricator.
      *
-     * @param Model|object|string $model     Instance or name of the model
-     * @param array|null          $overrides Overriding data to pass to Fabricator::setOverrides()
-     * @param bool                $persist
+     * @param Model|object|string $model Instance or name of the model
+     * @param array|null $overrides Overriding data to pass to Fabricator::setOverrides()
+     * @param bool $persist
      *
      * @return array|object
      */
@@ -44,7 +44,7 @@ if (! function_exists('fake')) {
     }
 }
 
-if (! function_exists('mock')) {
+if (!function_exists('mock')) {
     /**
      * Used within our test suite to mock certain system tools.
      *
@@ -54,16 +54,16 @@ if (! function_exists('mock')) {
      */
     function mock(string $className)
     {
-        $mockClass   = $className::$mockClass;
+        $mockClass = $className::$mockClass;
         $mockService = $className::$mockServiceName ?? '';
 
-        if (empty($mockClass) || ! class_exists($mockClass)) {
+        if (empty($mockClass) || !class_exists($mockClass)) {
             throw TestException::forInvalidMockClass($mockClass);
         }
 
         $mock = new $mockClass();
 
-        if (! empty($mockService)) {
+        if (!empty($mockService)) {
             Services::injectMock($mockService, $mock);
         }
 

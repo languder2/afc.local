@@ -57,11 +57,11 @@ abstract class BaseExceptionHandler
      * @return void
      */
     abstract public function handle(
-        Throwable $exception,
-        RequestInterface $request,
+        Throwable         $exception,
+        RequestInterface  $request,
         ResponseInterface $response,
-        int $statusCode,
-        int $exitCode
+        int               $statusCode,
+        int               $exitCode
     );
 
     /**
@@ -83,13 +83,13 @@ abstract class BaseExceptionHandler
         }
 
         return [
-            'title'   => $exception::class,
-            'type'    => $exception::class,
-            'code'    => $statusCode,
+            'title' => $exception::class,
+            'type' => $exception::class,
+            'code' => $statusCode,
             'message' => $exception->getMessage(),
-            'file'    => $exception->getFile(),
-            'line'    => $exception->getLine(),
-            'trace'   => $trace,
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => $trace,
         ];
     }
 
@@ -114,7 +114,7 @@ abstract class BaseExceptionHandler
     {
         foreach ($keysToMask as $keyToMask) {
             $explode = explode('/', $keyToMask);
-            $index   = end($explode);
+            $index = end($explode);
 
             if (str_starts_with(strrev($path . '/' . $index), strrev($keyToMask))) {
                 if (is_array($args) && array_key_exists($index, $args)) {
@@ -163,7 +163,7 @@ abstract class BaseExceptionHandler
      */
     protected static function highlightFile(string $file, int $lineNumber, int $lines = 15)
     {
-        if ($file === '' || ! is_readable($file)) {
+        if ($file === '' || !is_readable($file)) {
             return false;
         }
 
@@ -195,13 +195,13 @@ abstract class BaseExceptionHandler
         }
 
         // Get just the part to show
-        $start = max($lineNumber - (int) round($lines / 2), 0);
+        $start = max($lineNumber - (int)round($lines / 2), 0);
 
         // Get just the lines we need to display, while keeping line numbers...
         $source = array_splice($source, $start, $lines, true);
 
         // Used to format the line number in the source
-        $format = '% ' . strlen((string) ($start + $lines)) . 'd';
+        $format = '% ' . strlen((string)($start + $lines)) . 'd';
 
         $out = '';
         // Because the highlighting may have an uneven number
@@ -251,7 +251,7 @@ abstract class BaseExceptionHandler
             exit(1);
         }
 
-        if (! is_file($viewFile)) {
+        if (!is_file($viewFile)) {
             echo 'The error view file "' . $viewFile . '" was not found. Cannot display error view.';
 
             exit(1);

@@ -68,7 +68,7 @@ class CellGenerator extends BaseCommand
      */
     protected $options = [
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--force'     => 'Force overwrite existing file.',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -81,19 +81,19 @@ class CellGenerator extends BaseCommand
 
         $params = array_merge($params, ['suffix' => null]);
 
-        $this->templatePath  = config(Generators::class)->views[$this->name]['class'];
-        $this->template      = 'cell.tpl.php';
+        $this->templatePath = config(Generators::class)->views[$this->name]['class'];
+        $this->template = 'cell.tpl.php';
         $this->classNameLang = 'CLI.generator.className.cell';
 
         $this->generateClass($params);
 
-        $this->templatePath  = config(Generators::class)->views[$this->name]['view'];
-        $this->template      = 'cell_view.tpl.php';
+        $this->templatePath = config(Generators::class)->views[$this->name]['view'];
+        $this->template = 'cell_view.tpl.php';
         $this->classNameLang = 'CLI.generator.viewName.cell';
 
         $className = $this->qualifyClassName();
-        $viewName  = decamelize(class_basename($className));
-        $viewName  = preg_replace(
+        $viewName = decamelize(class_basename($className));
+        $viewName = preg_replace(
             '/([a-z][a-z0-9_\/\\\\]+)(_cell)$/i',
             '$1',
             $viewName

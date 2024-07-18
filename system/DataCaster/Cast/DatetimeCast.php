@@ -26,15 +26,16 @@ use InvalidArgumentException;
 class DatetimeCast extends BaseCast
 {
     public static function get(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): Time {
-        if (! is_string($value)) {
+    ): Time
+    {
+        if (!is_string($value)) {
             self::invalidTypeValueError($value);
         }
 
-        if (! $helper instanceof BaseConnection) {
+        if (!$helper instanceof BaseConnection) {
             $message = 'The parameter $helper must be BaseConnection.';
 
             throw new InvalidArgumentException($message);
@@ -44,9 +45,9 @@ class DatetimeCast extends BaseCast
          * @see https://www.php.net/manual/en/datetimeimmutable.createfromformat.php#datetimeimmutable.createfromformat.parameters
          */
         $format = match ($params[0] ?? '') {
-            ''      => $helper->dateFormat['datetime'],
-            'ms'    => $helper->dateFormat['datetime-ms'],
-            'us'    => $helper->dateFormat['datetime-us'],
+            '' => $helper->dateFormat['datetime'],
+            'ms' => $helper->dateFormat['datetime-ms'],
+            'us' => $helper->dateFormat['datetime-us'],
             default => throw new InvalidArgumentException('Invalid parameter: ' . $params[0]),
         };
 
@@ -54,14 +55,15 @@ class DatetimeCast extends BaseCast
     }
 
     public static function set(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): string {
-        if (! $value instanceof Time) {
+    ): string
+    {
+        if (!$value instanceof Time) {
             self::invalidTypeValueError($value);
         }
 
-        return (string) $value;
+        return (string)$value;
     }
 }

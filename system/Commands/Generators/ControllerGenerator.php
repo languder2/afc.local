@@ -70,11 +70,11 @@ class ControllerGenerator extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '--bare'      => 'Extends from CodeIgniter\Controller instead of BaseController.',
-        '--restful'   => 'Extends from a RESTful resource, Options: [controller, presenter]. Default: "controller".',
+        '--bare' => 'Extends from CodeIgniter\Controller instead of BaseController.',
+        '--restful' => 'Extends from a RESTful resource, Options: [controller, presenter]. Default: "controller".',
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserController).',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserController).',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -84,7 +84,7 @@ class ControllerGenerator extends BaseCommand
     {
         $this->component = 'Controller';
         $this->directory = 'Controllers';
-        $this->template  = 'controller.tpl.php';
+        $this->template = 'controller.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.controller';
         $this->generateClass($params);
@@ -99,17 +99,17 @@ class ControllerGenerator extends BaseCommand
         $rest = $this->getOption('restful');
 
         $useStatement = trim(APP_NAMESPACE, '\\') . '\Controllers\BaseController';
-        $extends      = 'BaseController';
+        $extends = 'BaseController';
 
         // Gets the appropriate parent class to extend.
         if ($bare || $rest) {
             if ($bare) {
                 $useStatement = Controller::class;
-                $extends      = 'Controller';
+                $extends = 'Controller';
             } elseif ($rest) {
                 $rest = is_string($rest) ? $rest : 'controller';
 
-                if (! in_array($rest, ['controller', 'presenter'], true)) {
+                if (!in_array($rest, ['controller', 'presenter'], true)) {
                     // @codeCoverageIgnoreStart
                     $rest = CLI::prompt(lang('CLI.generator.parentClass'), ['controller', 'presenter'], 'required');
                     CLI::newLine();
@@ -118,10 +118,10 @@ class ControllerGenerator extends BaseCommand
 
                 if ($rest === 'controller') {
                     $useStatement = ResourceController::class;
-                    $extends      = 'ResourceController';
+                    $extends = 'ResourceController';
                 } elseif ($rest === 'presenter') {
                     $useStatement = ResourcePresenter::class;
-                    $extends      = 'ResourcePresenter';
+                    $extends = 'ResourcePresenter';
                 }
             }
         }

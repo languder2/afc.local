@@ -58,61 +58,6 @@ trait ResponseTrait
     protected $bodyFormat = 'html';
 
     /**
-     * Return an instance with the specified status code and, optionally, reason phrase.
-     *
-     * If no reason phrase is specified, will default recommended reason phrase for
-     * the response's status code.
-     *
-     * @see http://tools.ietf.org/html/rfc7231#section-6
-     * @see http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     *
-     * @param int    $code   The 3-digit integer result code to set.
-     * @param string $reason The reason phrase to use with the
-     *                       provided status code; if none is provided, will
-     *                       default to the IANA name.
-     *
-     * @return $this
-     *
-     * @throws HTTPException For invalid status code arguments.
-     */
-    public function setStatusCode(int $code, string $reason = '')
-    {
-        // Valid range?
-        if ($code < 100 || $code > 599) {
-            throw HTTPException::forInvalidStatusCode($code);
-        }
-
-        // Unknown and no message?
-        if (! array_key_exists($code, static::$statusCodes) && ($reason === '')) {
-            throw HTTPException::forUnkownStatusCode($code);
-        }
-
-        $this->statusCode = $code;
-
-        $this->reason = ($reason !== '') ? $reason : static::$statusCodes[$code];
-
-        return $this;
-    }
-
-    // --------------------------------------------------------------------
-    // Convenience Methods
-    // --------------------------------------------------------------------
-
-    /**
-     * Sets the date header
-     *
-     * @return $this
-     */
-    public function setDate(DateTime $date)
-    {
-        $date->setTimezone(new DateTimeZone('UTC'));
-
-        $this->setHeader('Date', $date->format('D, d M Y H:i:s') . ' GMT');
-
-        return $this;
-    }
-
-    /**
      * Set the Link Header
      *
      * @see http://tools.ietf.org/html/rfc5988
@@ -144,6 +89,49 @@ trait ResponseTrait
         return $this;
     }
 
+    // --------------------------------------------------------------------
+    // Convenience Methods
+    // --------------------------------------------------------------------
+
+    /**
+     * Converts the $body into JSON and sets the Content Type header.
+     *
+     * @param array|object|string $body
+     *
+     * @return $this
+     */
+    public function setJSON($body, bool $unencoded = false)
+    {
+        $this->body = $this->formatBody($body, 'json' . ($unencoded ? '-unencoded' : ''));
+
+        return $this;
+    }
+
+    /**
+     * Handles conversion of the data into the appropriate format,
+     * and sets the correct Content-Type header for our response.
+     *
+     * @param array|object|string $body
+     * @param string $format Valid: json, xml
+     *
+     * @return false|string
+     *
+     * @throws InvalidArgumentException If the body property is not string or array.
+     */
+    protected function formatBody($body, string $format)
+    {
+        $this->bodyFormat = ($format === 'json-unencoded' ? 'json' : $format);
+        $mime = "application/{$this->bodyFormat}";
+        $this->setContentType($mime);
+
+        // Nothing much to do for a string...
+        if (!is_string($body) || $format === 'json-unencoded') {
+            $body = service('format')->getFormatter($mime)->format($body);
+        }
+
+        return $body;
+    }
+
     /**
      * Sets the Content Type header for this response with the mime type
      * and, optionally, the charset.
@@ -159,20 +147,6 @@ trait ResponseTrait
 
         $this->removeHeader('Content-Type'); // replace existing content type
         $this->setHeader('Content-Type', $mime);
-
-        return $this;
-    }
-
-    /**
-     * Converts the $body into JSON and sets the Content Type header.
-     *
-     * @param array|object|string $body
-     *
-     * @return $this
-     */
-    public function setJSON($body, bool $unencoded = false)
-    {
-        $this->body = $this->formatBody($body, 'json' . ($unencoded ? '-unencoded' : ''));
 
         return $this;
     }
@@ -226,37 +200,6 @@ trait ResponseTrait
 
         return $body;
     }
-
-    /**
-     * Handles conversion of the data into the appropriate format,
-     * and sets the correct Content-Type header for our response.
-     *
-     * @param array|object|string $body
-     * @param string              $format Valid: json, xml
-     *
-     * @return false|string
-     *
-     * @throws InvalidArgumentException If the body property is not string or array.
-     */
-    protected function formatBody($body, string $format)
-    {
-        $this->bodyFormat = ($format === 'json-unencoded' ? 'json' : $format);
-        $mime             = "application/{$this->bodyFormat}";
-        $this->setContentType($mime);
-
-        // Nothing much to do for a string...
-        if (! is_string($body) || $format === 'json-unencoded') {
-            $body = service('format')->getFormatter($mime)->format($body);
-        }
-
-        return $body;
-    }
-
-    // --------------------------------------------------------------------
-    // Cache Control Methods
-    //
-    // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9
-    // --------------------------------------------------------------------
 
     /**
      * Sets the appropriate headers to ensure this response
@@ -329,6 +272,12 @@ trait ResponseTrait
         return $this;
     }
 
+    // --------------------------------------------------------------------
+    // Cache Control Methods
+    //
+    // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9
+    // --------------------------------------------------------------------
+
     /**
      * Sets the Last-Modified date header.
      *
@@ -350,10 +299,6 @@ trait ResponseTrait
 
         return $this;
     }
-
-    // --------------------------------------------------------------------
-    // Output Methods
-    // --------------------------------------------------------------------
 
     /**
      * Sends the output to the browser.
@@ -391,8 +336,8 @@ trait ResponseTrait
 
         // Per spec, MUST be sent with each request, if possible.
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html
-        if (! isset($this->headers['Date']) && PHP_SAPI !== 'cli-server') {
-            $this->setDate(DateTime::createFromFormat('U', (string) Time::now()->getTimestamp()));
+        if (!isset($this->headers['Date']) && PHP_SAPI !== 'cli-server') {
+            $this->setDate(DateTime::createFromFormat('U', (string)Time::now()->getTimestamp()));
         }
 
         // HTTP Status
@@ -420,6 +365,82 @@ trait ResponseTrait
         return $this;
     }
 
+    // --------------------------------------------------------------------
+    // Output Methods
+    // --------------------------------------------------------------------
+
+    /**
+     * Sets the date header
+     *
+     * @return $this
+     */
+    public function setDate(DateTime $date)
+    {
+        $date->setTimezone(new DateTimeZone('UTC'));
+
+        $this->setHeader('Date', $date->format('D, d M Y H:i:s') . ' GMT');
+
+        return $this;
+    }
+
+    /**
+     * Actually sets the cookies.
+     *
+     * @return void
+     */
+    protected function sendCookies()
+    {
+        if ($this->pretend) {
+            return;
+        }
+
+        $this->dispatchCookies();
+    }
+
+    private function dispatchCookies(): void
+    {
+        /** @var IncomingRequest $request */
+        $request = service('request');
+
+        foreach ($this->cookieStore->display() as $cookie) {
+            if ($cookie->isSecure() && !$request->isSecure()) {
+                throw SecurityException::forInsecureCookie();
+            }
+
+            $name = $cookie->getPrefixedName();
+            $value = $cookie->getValue();
+            $options = $cookie->getOptions();
+
+            if ($cookie->isRaw()) {
+                $this->doSetRawCookie($name, $value, $options);
+            } else {
+                $this->doSetCookie($name, $value, $options);
+            }
+        }
+
+        $this->cookieStore->clear();
+    }
+
+    /**
+     * Extracted call to `setrawcookie()` in order to run unit tests on it.
+     *
+     * @codeCoverageIgnore
+     */
+    private function doSetRawCookie(string $name, string $value, array $options): void
+    {
+        setrawcookie($name, $value, $options);
+    }
+
+    /**
+     * Extracted call to `setcookie()` in order to run unit tests on it.
+     *
+     * @codeCoverageIgnore
+     */
+    private function doSetCookie(string $name, string $value, array $options): void
+    {
+        setcookie($name, $value, $options);
+    }
+
     /**
      * Sends the Body of the message to the browser.
      *
@@ -435,7 +456,7 @@ trait ResponseTrait
     /**
      * Perform a redirect to a new URL, in two flavors: header or location.
      *
-     * @param string   $uri  The URI to redirect to
+     * @param string $uri The URI to redirect to
      * @param int|null $code The type of redirection, defaults to 302
      *
      * @return $this
@@ -474,7 +495,7 @@ trait ResponseTrait
 
         match ($method) {
             'refresh' => $this->setHeader('Refresh', '0;url=' . $uri),
-            default   => $this->setHeader('Location', $uri),
+            default => $this->setHeader('Location', $uri),
         };
 
         $this->setStatusCode($code);
@@ -483,70 +504,38 @@ trait ResponseTrait
     }
 
     /**
-     * Set a cookie
+     * Return an instance with the specified status code and, optionally, reason phrase.
      *
-     * Accepts an arbitrary number of binds (up to 7) or an associative
-     * array in the first parameter containing all the values.
+     * If no reason phrase is specified, will default recommended reason phrase for
+     * the response's status code.
      *
-     * @param array|Cookie|string $name     Cookie name / array containing binds / Cookie object
-     * @param string              $value    Cookie value
-     * @param int                 $expire   Cookie expiration time in seconds
-     * @param string              $domain   Cookie domain (e.g.: '.yourdomain.com')
-     * @param string              $path     Cookie path (default: '/')
-     * @param string              $prefix   Cookie name prefix ('': the default prefix)
-     * @param bool|null           $secure   Whether to only transfer cookies via SSL
-     * @param bool|null           $httponly Whether only make the cookie accessible via HTTP (no javascript)
-     * @param string|null         $samesite
+     * @see http://tools.ietf.org/html/rfc7231#section-6
+     * @see http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+     *
+     * @param int $code The 3-digit integer result code to set.
+     * @param string $reason The reason phrase to use with the
+     *                       provided status code; if none is provided, will
+     *                       default to the IANA name.
      *
      * @return $this
+     *
+     * @throws HTTPException For invalid status code arguments.
      */
-    public function setCookie(
-        $name,
-        $value = '',
-        $expire = 0,
-        $domain = '',
-        $path = '/',
-        $prefix = '',
-        $secure = null,
-        $httponly = null,
-        $samesite = null
-    ) {
-        if ($name instanceof Cookie) {
-            $this->cookieStore = $this->cookieStore->put($name);
-
-            return $this;
+    public function setStatusCode(int $code, string $reason = '')
+    {
+        // Valid range?
+        if ($code < 100 || $code > 599) {
+            throw HTTPException::forInvalidStatusCode($code);
         }
 
-        $cookieConfig = config(CookieConfig::class);
-
-        $secure ??= $cookieConfig->secure;
-        $httponly ??= $cookieConfig->httponly;
-        $samesite ??= $cookieConfig->samesite;
-
-        if (is_array($name)) {
-            // always leave 'name' in last place, as the loop will break otherwise, due to ${$item}
-            foreach (['samesite', 'value', 'expire', 'domain', 'path', 'prefix', 'secure', 'httponly', 'name'] as $item) {
-                if (isset($name[$item])) {
-                    ${$item} = $name[$item];
-                }
-            }
+        // Unknown and no message?
+        if (!array_key_exists($code, static::$statusCodes) && ($reason === '')) {
+            throw HTTPException::forUnkownStatusCode($code);
         }
 
-        if (is_numeric($expire)) {
-            $expire = $expire > 0 ? Time::now()->getTimestamp() + $expire : 0;
-        }
+        $this->statusCode = $code;
 
-        $cookie = new Cookie($name, $value, [
-            'expires'  => $expire ?: 0,
-            'domain'   => $domain,
-            'path'     => $path,
-            'prefix'   => $prefix,
-            'secure'   => $secure,
-            'httponly' => $httponly,
-            'samesite' => $samesite ?? '',
-        ]);
-
-        $this->cookieStore = $this->cookieStore->put($cookie);
+        $this->reason = ($reason !== '') ? $reason : static::$statusCodes[$code];
 
         return $this;
     }
@@ -581,7 +570,7 @@ trait ResponseTrait
      */
     public function getCookie(?string $name = null, string $prefix = '')
     {
-        if ((string) $name === '') {
+        if ((string)$name === '') {
             return $this->cookieStore->display();
         }
 
@@ -590,7 +579,7 @@ trait ResponseTrait
 
             return $this->cookieStore->get($name, $prefix);
         } catch (CookieException $e) {
-            log_message('error', (string) $e);
+            log_message('error', (string)$e);
 
             return null;
         }
@@ -610,8 +599,8 @@ trait ResponseTrait
         $prefix = $prefix ?: Cookie::setDefaults()['prefix']; // to retain BC
 
         $prefixed = $prefix . $name;
-        $store    = $this->cookieStore;
-        $found    = false;
+        $store = $this->cookieStore;
+        $found = false;
 
         /** @var Cookie $cookie */
         foreach ($store as $cookie) {
@@ -625,16 +614,86 @@ trait ResponseTrait
                 }
 
                 $cookie = $cookie->withValue('')->withExpired();
-                $found  = true;
+                $found = true;
 
                 $this->cookieStore = $store->put($cookie);
                 break;
             }
         }
 
-        if (! $found) {
+        if (!$found) {
             $this->setCookie($name, '', 0, $domain, $path, $prefix);
         }
+
+        return $this;
+    }
+
+    /**
+     * Set a cookie
+     *
+     * Accepts an arbitrary number of binds (up to 7) or an associative
+     * array in the first parameter containing all the values.
+     *
+     * @param array|Cookie|string $name Cookie name / array containing binds / Cookie object
+     * @param string $value Cookie value
+     * @param int $expire Cookie expiration time in seconds
+     * @param string $domain Cookie domain (e.g.: '.yourdomain.com')
+     * @param string $path Cookie path (default: '/')
+     * @param string $prefix Cookie name prefix ('': the default prefix)
+     * @param bool|null $secure Whether to only transfer cookies via SSL
+     * @param bool|null $httponly Whether only make the cookie accessible via HTTP (no javascript)
+     * @param string|null $samesite
+     *
+     * @return $this
+     */
+    public function setCookie(
+        $name,
+        $value = '',
+        $expire = 0,
+        $domain = '',
+        $path = '/',
+        $prefix = '',
+        $secure = null,
+        $httponly = null,
+        $samesite = null
+    )
+    {
+        if ($name instanceof Cookie) {
+            $this->cookieStore = $this->cookieStore->put($name);
+
+            return $this;
+        }
+
+        $cookieConfig = config(CookieConfig::class);
+
+        $secure ??= $cookieConfig->secure;
+        $httponly ??= $cookieConfig->httponly;
+        $samesite ??= $cookieConfig->samesite;
+
+        if (is_array($name)) {
+            // always leave 'name' in last place, as the loop will break otherwise, due to ${$item}
+            foreach (['samesite', 'value', 'expire', 'domain', 'path', 'prefix', 'secure', 'httponly', 'name'] as $item) {
+                if (isset($name[$item])) {
+                    ${$item} = $name[$item];
+                }
+            }
+        }
+
+        if (is_numeric($expire)) {
+            $expire = $expire > 0 ? Time::now()->getTimestamp() + $expire : 0;
+        }
+
+        $cookie = new Cookie($name, $value, [
+            'expires' => $expire ?: 0,
+            'domain' => $domain,
+            'path' => $path,
+            'prefix' => $prefix,
+            'secure' => $secure,
+            'httponly' => $httponly,
+            'samesite' => $samesite ?? '',
+        ]);
+
+        $this->cookieStore = $this->cookieStore->put($cookie);
 
         return $this;
     }
@@ -650,73 +709,15 @@ trait ResponseTrait
     }
 
     /**
-     * Actually sets the cookies.
-     *
-     * @return void
-     */
-    protected function sendCookies()
-    {
-        if ($this->pretend) {
-            return;
-        }
-
-        $this->dispatchCookies();
-    }
-
-    private function dispatchCookies(): void
-    {
-        /** @var IncomingRequest $request */
-        $request = service('request');
-
-        foreach ($this->cookieStore->display() as $cookie) {
-            if ($cookie->isSecure() && ! $request->isSecure()) {
-                throw SecurityException::forInsecureCookie();
-            }
-
-            $name    = $cookie->getPrefixedName();
-            $value   = $cookie->getValue();
-            $options = $cookie->getOptions();
-
-            if ($cookie->isRaw()) {
-                $this->doSetRawCookie($name, $value, $options);
-            } else {
-                $this->doSetCookie($name, $value, $options);
-            }
-        }
-
-        $this->cookieStore->clear();
-    }
-
-    /**
-     * Extracted call to `setrawcookie()` in order to run unit tests on it.
-     *
-     * @codeCoverageIgnore
-     */
-    private function doSetRawCookie(string $name, string $value, array $options): void
-    {
-        setrawcookie($name, $value, $options);
-    }
-
-    /**
-     * Extracted call to `setcookie()` in order to run unit tests on it.
-     *
-     * @codeCoverageIgnore
-     */
-    private function doSetCookie(string $name, string $value, array $options): void
-    {
-        setcookie($name, $value, $options);
-    }
-
-    /**
      * Force a download.
      *
      * Generates the headers that force a download to happen. And
      * sends the file to the browser.
      *
-     * @param string      $filename The name you want the downloaded file to be named
+     * @param string $filename The name you want the downloaded file to be named
      *                              or the path to the file to send
-     * @param string|null $data     The data to be downloaded. Set null if the $filename is the file path
-     * @param bool        $setMime  Whether to try and send the actual MIME type
+     * @param string|null $data The data to be downloaded. Set null if the $filename is the file path
+     * @param bool $setMime Whether to try and send the actual MIME type
      *
      * @return DownloadResponse|null
      */

@@ -52,7 +52,7 @@ class FsPathPlugin extends AbstractPlugin
             return;
         }
 
-        if (!\preg_match('/[\\/\\'.DIRECTORY_SEPARATOR.']/', $var)) {
+        if (!\preg_match('/[\\/\\' . DIRECTORY_SEPARATOR . ']/', $var)) {
             return;
         }
 

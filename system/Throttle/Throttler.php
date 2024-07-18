@@ -86,10 +86,10 @@ class Throttler implements ThrottlerInterface
      *      die('You submitted over 60 requests within a minute.');
      *  }
      *
-     * @param string $key      The name to use as the "bucket" name.
-     * @param int    $capacity The number of requests the "bucket" can hold
-     * @param int    $seconds  The time it takes the "bucket" to completely refill
-     * @param int    $cost     The number of tokens this action uses.
+     * @param string $key The name to use as the "bucket" name.
+     * @param int $capacity The number of requests the "bucket" can hold
+     * @param int $seconds The time it takes the "bucket" to completely refill
+     * @param int $cost The number of tokens this action uses.
      *
      * @internal param int $maxRequests
      */
@@ -118,7 +118,7 @@ class Throttler implements ThrottlerInterface
         // If $tokens > 0, then we need to replenish the bucket
         // based on how long it's been since the last update.
         $throttleTime = $this->cache->get($tokenName . 'Time');
-        $elapsed      = $this->time() - $throttleTime;
+        $elapsed = $this->time() - $throttleTime;
 
         // Add tokens based up on number per second that
         // should be refilled, then checked against capacity
@@ -141,8 +141,8 @@ class Throttler implements ThrottlerInterface
         // How many seconds till a new token is available.
         // We must have a minimum wait of 1 second for a new token.
         // Primarily stored to allow devs to report back to users.
-        $newTokenAvailable = (int) round((1 - $tokens) * $refresh);
-        $this->tokenTime   = max(1, $newTokenAvailable);
+        $newTokenAvailable = (int)round((1 - $tokens) * $refresh);
+        $this->tokenTime = max(1, $newTokenAvailable);
 
         return false;
     }

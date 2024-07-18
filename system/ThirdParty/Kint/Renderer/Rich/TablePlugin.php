@@ -69,30 +69,30 @@ class TablePlugin extends AbstractPlugin implements TabPluginInterface
 
                     if ($field->reference) {
                         $ref = '&amp;';
-                        $type = $ref.$type;
+                        $type = $ref . $type;
                     }
 
                     if (null !== ($s = $field->getSize())) {
-                        $size .= ' ('.$this->renderer->escape($s).')';
+                        $size .= ' (' . $this->renderer->escape($s) . ')';
                     }
                 }
 
                 if ($type) {
-                    $out .= ' title="'.$type.$size.'"';
+                    $out .= ' title="' . $type . $size . '"';
                 }
 
                 $out .= '>';
 
                 switch ($field->type) {
                     case 'boolean':
-                        $out .= $field->value->contents ? '<var>'.$ref.'true</var>' : '<var>'.$ref.'false</var>';
+                        $out .= $field->value->contents ? '<var>' . $ref . 'true</var>' : '<var>' . $ref . 'false</var>';
                         break;
                     case 'integer':
                     case 'double':
-                        $out .= (string) $field->value->contents;
+                        $out .= (string)$field->value->contents;
                         break;
                     case 'null':
-                        $out .= '<var>'.$ref.'null</var>';
+                        $out .= '<var>' . $ref . 'null</var>';
                         break;
                     case 'string':
                         if ($field->encoding) {
@@ -103,20 +103,20 @@ class TablePlugin extends AbstractPlugin implements TabPluginInterface
 
                             $out .= $this->renderer->escape($val);
                         } else {
-                            $out .= '<var>'.$type.'</var>';
+                            $out .= '<var>' . $type . '</var>';
                         }
                         break;
                     case 'array':
-                        $out .= '<var>'.$ref.'array</var>'.$size;
+                        $out .= '<var>' . $ref . 'array</var>' . $size;
                         break;
                     case 'object':
-                        $out .= '<var>'.$ref.$this->renderer->escape($field->classname).'</var>'.$size;
+                        $out .= '<var>' . $ref . $this->renderer->escape($field->classname) . '</var>' . $size;
                         break;
                     case 'resource':
-                        $out .= '<var>'.$ref.'resource</var>';
+                        $out .= '<var>' . $ref . 'resource</var>';
                         break;
                     default:
-                        $out .= '<var>'.$ref.'unknown</var>';
+                        $out .= '<var>' . $ref . 'unknown</var>';
                         break;
                 }
 

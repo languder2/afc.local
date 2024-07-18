@@ -43,9 +43,9 @@ class Config extends BaseConfig
     /**
      * Returns the database connection
      *
-     * @param array|BaseConnection|non-empty-string|null $group     The name of the connection group to use,
+     * @param array|BaseConnection|non-empty-string|null $group The name of the connection group to use,
      *                                                              or an array of configuration settings.
-     * @param bool                                       $getShared Whether to return a shared instance of the connection.
+     * @param bool $getShared Whether to return a shared instance of the connection.
      *
      * @return BaseConnection
      */
@@ -58,7 +58,7 @@ class Config extends BaseConfig
 
         if (is_array($group)) {
             $config = $group;
-            $group  = 'custom-' . md5(json_encode($config));
+            $group = 'custom-' . md5(json_encode($config));
         } else {
             $dbConfig = config(DbConfig::class);
 
@@ -68,7 +68,7 @@ class Config extends BaseConfig
 
             assert(is_string($group));
 
-            if (! isset($dbConfig->{$group})) {
+            if (!isset($dbConfig->{$group})) {
                 throw new InvalidArgumentException('"' . $group . '" is not a valid database connection group.');
             }
 

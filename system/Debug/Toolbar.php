@@ -55,7 +55,7 @@ class Toolbar
         $this->config = $config;
 
         foreach ($config->collectors as $collector) {
-            if (! class_exists($collector)) {
+            if (!class_exists($collector)) {
                 log_message(
                     'critical',
                     'Toolbar collector does not exist (' . $collector . ').'
@@ -72,7 +72,7 @@ class Toolbar
     /**
      * Returns all the data required by Debug Bar
      *
-     * @param float           $startTime App start time
+     * @param float $startTime App start time
      * @param IncomingRequest $request
      *
      * @return string JSON encoded data
@@ -81,16 +81,16 @@ class Toolbar
     {
         $data = [];
         // Data items used within the view.
-        $data['url']             = current_url();
-        $data['method']          = $request->getMethod();
-        $data['isAJAX']          = $request->isAJAX();
-        $data['startTime']       = $startTime;
-        $data['totalTime']       = $totalTime * 1000;
-        $data['totalMemory']     = number_format(memory_get_peak_usage() / 1024 / 1024, 3);
+        $data['url'] = current_url();
+        $data['method'] = $request->getMethod();
+        $data['isAJAX'] = $request->isAJAX();
+        $data['startTime'] = $startTime;
+        $data['totalTime'] = $totalTime * 1000;
+        $data['totalMemory'] = number_format(memory_get_peak_usage() / 1024 / 1024, 3);
         $data['segmentDuration'] = $this->roundTo($data['totalTime'] / 7);
-        $data['segmentCount']    = (int) ceil($data['totalTime'] / $data['segmentDuration']);
-        $data['CI_VERSION']      = CodeIgniter::CI_VERSION;
-        $data['collectors']      = [];
+        $data['segmentCount'] = (int)ceil($data['totalTime'] / $data['segmentDuration']);
+        $data['CI_VERSION'] = CodeIgniter::CI_VERSION;
+        $data['collectors'] = [];
 
         foreach ($this->collectors as $collector) {
             $data['collectors'][] = $collector->getAsArray();
@@ -104,16 +104,16 @@ class Toolbar
                     if (is_string($value)) {
                         $varData[esc($key)] = esc($value);
                     } else {
-                        $oldKintMode       = Kint::$mode_default;
+                        $oldKintMode = Kint::$mode_default;
                         $oldKintCalledFrom = Kint::$display_called_from;
 
-                        Kint::$mode_default        = Kint::MODE_RICH;
+                        Kint::$mode_default = Kint::MODE_RICH;
                         Kint::$display_called_from = false;
 
                         $kint = @Kint::dump($value);
                         $kint = substr($kint, strpos($kint, '</style>') + 8);
 
-                        Kint::$mode_default        = $oldKintMode;
+                        Kint::$mode_default = $oldKintMode;
                         Kint::$display_called_from = $oldKintCalledFrom;
 
                         $varData[esc($key)] = $kint;
@@ -163,10 +163,10 @@ class Toolbar
         $data['vars']['request'] = ($request->isSecure() ? 'HTTPS' : 'HTTP') . '/' . $request->getProtocolVersion();
 
         $data['vars']['response'] = [
-            'statusCode'  => $response->getStatusCode(),
-            'reason'      => esc($response->getReasonPhrase()),
+            'statusCode' => $response->getStatusCode(),
+            'reason' => esc($response->getReasonPhrase()),
             'contentType' => esc($response->getHeaderLine('content-type')),
-            'headers'     => [],
+            'headers' => [],
         ];
 
         foreach ($response->headers() as $name => $value) {
@@ -194,7 +194,7 @@ class Toolbar
      */
     protected function renderTimeline(array $collectors, float $startTime, int $segmentCount, int $segmentDuration, array &$styles): string
     {
-        $rows       = $this->collectTimelineData($collectors);
+        $rows = $this->collectTimelineData($collectors);
         $styleCount = 0;
 
         // Use recursive render function
@@ -211,8 +211,8 @@ class Toolbar
         $output = '';
 
         foreach ($rows as $row) {
-            $hasChildren = isset($row['children']) && ! empty($row['children']);
-            $isQuery     = isset($row['query']) && ! empty($row['query']);
+            $hasChildren = isset($row['children']) && !empty($row['children']);
+            $isQuery = isset($row['query']) && !empty($row['query']);
 
             // Open controller timeline by default
             $open = $row['name'] === 'Controller';
@@ -228,8 +228,8 @@ class Toolbar
             $output .= '<td class="' . ($isChild ? 'debug-bar-width10 ' : '') . 'debug-bar-alignRight">' . number_format($row['duration'] * 1000, 2) . ' ms</td>';
             $output .= "<td class='debug-bar-noverflow' colspan='{$segmentCount}'>";
 
-            $offset = ((((float) $row['start'] - $startTime) * 1000) / $displayTime) * 100;
-            $length = (((float) $row['duration'] * 1000) / $displayTime) * 100;
+            $offset = ((((float)$row['start'] - $startTime) * 1000) / $displayTime) * 100;
+            $length = (((float)$row['duration'] * 1000) / $displayTime) * 100;
 
             $styles['debug-bar-timeline-' . $styleCount] = "left: {$offset}%; width: {$length}%;";
 
@@ -277,7 +277,7 @@ class Toolbar
 
         // Collect it
         foreach ($collectors as $collector) {
-            if (! $collector['hasTimelineData']) {
+            if (!$collector['hasTimelineData']) {
                 continue;
             }
 
@@ -337,14 +337,14 @@ class Toolbar
      */
     protected function collectVarData(): array
     {
-        if (! ($this->config->collectVarData ?? true)) {
+        if (!($this->config->collectVarData ?? true)) {
             return [];
         }
 
         $data = [];
 
         foreach ($this->collectors as $collector) {
-            if (! $collector->hasVarData()) {
+            if (!$collector->hasVarData()) {
                 continue;
             }
 
@@ -374,7 +374,7 @@ class Toolbar
         /**
          * @var IncomingRequest|null $request
          */
-        if (CI_DEBUG && ! is_cli()) {
+        if (CI_DEBUG && !is_cli()) {
             $app = service('codeigniter');
 
             $request ??= service('request');
@@ -387,8 +387,8 @@ class Toolbar
             }
 
             $toolbar = Services::toolbar(config(ToolbarConfig::class));
-            $stats   = $app->getPerformanceStats();
-            $data    = $toolbar->run(
+            $stats = $app->getPerformanceStats();
+            $data = $toolbar->run(
                 $stats['startTime'],
                 $stats['totalTime'],
                 $request,
@@ -400,7 +400,7 @@ class Toolbar
             // Updated to microtime() so we can get history
             $time = sprintf('%.6f', Time::now()->format('U.u'));
 
-            if (! is_dir(WRITEPATH . 'debugbar')) {
+            if (!is_dir(WRITEPATH . 'debugbar')) {
                 mkdir(WRITEPATH . 'debugbar', 0777);
             }
 
@@ -411,19 +411,19 @@ class Toolbar
             // Non-HTML formats should not include the debugbar
             // then we send headers saying where to find the debug data
             // for this response
-            if ($request->isAJAX() || ! str_contains($format, 'html')) {
+            if ($request->isAJAX() || !str_contains($format, 'html')) {
                 $response->setHeader('Debugbar-Time', "{$time}")
                     ->setHeader('Debugbar-Link', site_url("?debugbar_time={$time}"));
 
                 return;
             }
 
-            $oldKintMode        = Kint::$mode_default;
+            $oldKintMode = Kint::$mode_default;
             Kint::$mode_default = Kint::MODE_RICH;
-            $kintScript         = @Kint::dump('');
+            $kintScript = @Kint::dump('');
             Kint::$mode_default = $oldKintMode;
-            $kintScript         = substr($kintScript, 0, strpos($kintScript, '</style>') + 8);
-            $kintScript         = ($kintScript === '0') ? '' : $kintScript;
+            $kintScript = substr($kintScript, 0, strpos($kintScript, '</style>') + 8);
+            $kintScript = ($kintScript === '0') ? '' : $kintScript;
 
             $script = PHP_EOL
                 . '<script ' . csp_script_nonce() . ' id="debugbar_loader" '
@@ -434,7 +434,7 @@ class Toolbar
                 . $kintScript
                 . PHP_EOL;
 
-            if (str_contains((string) $response->getBody(), '<head>')) {
+            if (str_contains((string)$response->getBody(), '<head>')) {
                 $response->setBody(
                     preg_replace(
                         '/<head>/',
@@ -513,7 +513,7 @@ class Toolbar
     {
         $data = json_decode($data, true);
 
-        if ($this->config->maxHistory !== 0 && preg_match('/\d+\.\d{6}/s', (string) service('request')->getGet('debugbar_time'), $debugbarTime)) {
+        if ($this->config->maxHistory !== 0 && preg_match('/\d+\.\d{6}/s', (string)service('request')->getGet('debugbar_time'), $debugbarTime)) {
             $history = new History();
             $history->setFiles(
                 $debugbarTime[0],
@@ -537,12 +537,12 @@ class Toolbar
 
             case 'json':
                 $formatter = new JSONFormatter();
-                $output    = $formatter->format($data);
+                $output = $formatter->format($data);
                 break;
 
             case 'xml':
                 $formatter = new XMLFormatter();
-                $output    = $formatter->format($data);
+                $output = $formatter->format($data);
                 break;
         }
 

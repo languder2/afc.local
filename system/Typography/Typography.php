@@ -99,7 +99,7 @@ class Typography
         if (str_contains($str, '<!--') && preg_match_all('#(<!\-\-.*?\-\->)#s', $str, $matches)) {
             for ($i = 0, $total = count($matches[0]); $i < $total; $i++) {
                 $htmlComments[] = $matches[0][$i];
-                $str            = str_replace($matches[0][$i], '{@HC' . $i . '}', $str);
+                $str = str_replace($matches[0][$i], '{@HC' . $i . '}', $str);
             }
         }
 
@@ -135,7 +135,7 @@ class Typography
         $chunks = preg_split('/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/', $str, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         // Build our finalized string.  We cycle through the array, skipping tags, and processing the contained text
-        $str     = '';
+        $str = '';
         $process = true;
 
         for ($i = 0, $c = count($chunks) - 1; $i <= $c; $i++) {
@@ -171,7 +171,7 @@ class Typography
         }
 
         // No opening block level tag? Add it if needed.
-        if (! preg_match('/^\s*<(?:' . $this->blockElements . ')/i', $str)) {
+        if (!preg_match('/^\s*<(?:' . $this->blockElements . ')/i', $str)) {
             $str = preg_replace('/^(.*?)<(' . $this->blockElements . ')/i', '<p>$1</p><$2', $str);
         }
 
@@ -191,7 +191,7 @@ class Typography
             // we will retain them instead of using our tags.
             '/(<p[^>*?]>)<p>/' => '$1', // <?php BBEdit syntax coloring bug fix
             // Reduce multiple instances of opening/closing paragraph tags to a single one
-            '#(</p>)+#'      => '</p>',
+            '#(</p>)+#' => '</p>',
             '/(<p>\W*<p>)+/' => '<p>',
             // Clean up stray paragraph tags that appear before block level elements
             '#<p></p><(' . $this->blockElements . ')#' => '<$1',
@@ -199,9 +199,9 @@ class Typography
             '#(&nbsp;\s*)+<(' . $this->blockElements . ')#' => '  <$2',
             // Replace the temporary markers we added earlier
             '/\{@TAG\}/' => '<',
-            '/\{@DQ\}/'  => '"',
-            '/\{@SQ\}/'  => "'",
-            '/\{@DD\}/'  => '--',
+            '/\{@DQ\}/' => '"',
+            '/\{@SQ\}/' => "'",
+            '/\{@DD\}/' => '--',
             '/\{@NBS\}/' => '  ',
             // An unintended consequence of the _format_newlines function is that
             // some of the newlines get truncated, resulting in <p> tags
@@ -236,7 +236,7 @@ class Typography
     {
         static $table;
 
-        if (! isset($table)) {
+        if (!isset($table)) {
             $table = [
                 // nested smart quotes, opening and closing
                 // note that rules for grammar (English) allow only for two levels deep
@@ -245,29 +245,29 @@ class Typography
                 // Note that in all cases, whitespace is the primary determining factor
                 // on which direction to curl, with non-word characters like punctuation
                 // being a secondary factor only after whitespace is addressed.
-                '/\'"(\s|$)/'     => '&#8217;&#8221;$1',
+                '/\'"(\s|$)/' => '&#8217;&#8221;$1',
                 '/(^|\s|<p>)\'"/' => '$1&#8216;&#8220;',
-                '/\'"(\W)/'       => '&#8217;&#8221;$1',
-                '/(\W)\'"/'       => '$1&#8216;&#8220;',
-                '/"\'(\s|$)/'     => '&#8221;&#8217;$1',
+                '/\'"(\W)/' => '&#8217;&#8221;$1',
+                '/(\W)\'"/' => '$1&#8216;&#8220;',
+                '/"\'(\s|$)/' => '&#8221;&#8217;$1',
                 '/(^|\s|<p>)"\'/' => '$1&#8220;&#8216;',
-                '/"\'(\W)/'       => '&#8221;&#8217;$1',
-                '/(\W)"\'/'       => '$1&#8220;&#8216;',
+                '/"\'(\W)/' => '&#8221;&#8217;$1',
+                '/(\W)"\'/' => '$1&#8220;&#8216;',
                 // single quote smart quotes
-                '/\'(\s|$)/'     => '&#8217;$1',
+                '/\'(\s|$)/' => '&#8217;$1',
                 '/(^|\s|<p>)\'/' => '$1&#8216;',
-                '/\'(\W)/'       => '&#8217;$1',
-                '/(\W)\'/'       => '$1&#8216;',
+                '/\'(\W)/' => '&#8217;$1',
+                '/(\W)\'/' => '$1&#8216;',
                 // double quote smart quotes
-                '/"(\s|$)/'     => '&#8221;$1',
+                '/"(\s|$)/' => '&#8221;$1',
                 '/(^|\s|<p>)"/' => '$1&#8220;',
-                '/"(\W)/'       => '&#8221;$1',
-                '/(\W)"/'       => '$1&#8220;',
+                '/"(\W)/' => '&#8221;$1',
+                '/(\W)"/' => '$1&#8220;',
                 // apostrophes
                 '/(\w)\'(\w)/' => '$1&#8217;$2',
                 // Em dash and ellipses dots
                 '/\s?\-\-\s?/' => '&#8212;',
-                '/(\w)\.{3}/'  => '$1&#8230;',
+                '/(\w)\.{3}/' => '$1&#8230;',
                 // double space after sentences
                 '/(\W)  /' => '$1&nbsp; ',
                 // ampersands, if not a character entity
@@ -285,7 +285,7 @@ class Typography
      */
     protected function formatNewLines(string $str): string
     {
-        if ($str === '' || (! str_contains($str, "\n") && ! in_array($this->lastBlockElement, $this->innerBlockRequired, true))) {
+        if ($str === '' || (!str_contains($str, "\n") && !in_array($this->lastBlockElement, $this->innerBlockRequired, true))) {
             return $str;
         }
 
@@ -293,7 +293,7 @@ class Typography
         $str = str_replace("\n\n", "</p>\n\n<p>", $str);
 
         // Convert single spaces to <br> tags
-        $br  = '<br' . _solidus() . '>';
+        $br = '<br' . _solidus() . '>';
         $str = preg_replace("/([^\n])(\n)([^\n])/", '\\1' . $br . '\\2\\3', $str);
 
         // Wrap the whole enchilada in enclosing paragraphs
@@ -327,11 +327,11 @@ class Typography
      */
     public function nl2brExceptPre(string $str): string
     {
-        $newstr   = '';
+        $newstr = '';
         $docTypes = new DocTypes();
 
         for ($ex = explode('pre>', $str), $ct = count($ex), $i = 0; $i < $ct; $i++) {
-            $xhtml = ! ($docTypes->html5 ?? false);
+            $xhtml = !($docTypes->html5 ?? false);
             $newstr .= (($i % 2) === 0) ? nl2br($ex[$i], $xhtml) : $ex[$i];
 
             if ($ct - 1 !== $i) {

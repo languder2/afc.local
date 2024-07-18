@@ -82,7 +82,7 @@ class Forge extends BaseForge
     public function dropDatabase(string $dbName): bool
     {
         // In SQLite, a database is dropped when we delete a file
-        if (! is_file($dbName)) {
+        if (!is_file($dbName)) {
             if ($this->db->DBDebug) {
                 throw new DatabaseException('Unable to drop the specified database.');
             }
@@ -92,7 +92,7 @@ class Forge extends BaseForge
 
         // We need to close the pseudo-connection first
         $this->db->close();
-        if (! @unlink($dbName)) {
+        if (!@unlink($dbName)) {
             if ($this->db->DBDebug) {
                 throw new DatabaseException('Unable to drop the specified database.');
             }
@@ -100,7 +100,7 @@ class Forge extends BaseForge
             return false;
         }
 
-        if (! empty($this->db->dataCache['db_names'])) {
+        if (!empty($this->db->dataCache['db_names'])) {
             $key = array_search(strtolower($dbName), array_map('strtolower', $this->db->dataCache['db_names']), true);
             if ($key !== false) {
                 unset($this->db->dataCache['db_names'][$key]);
@@ -136,11 +136,11 @@ class Forge extends BaseForge
                 $fieldsToModify = [];
 
                 foreach ($processedFields as $processedField) {
-                    $name    = $processedField['name'];
+                    $name = $processedField['name'];
                     $newName = $processedField['new_name'];
 
-                    $field             = $this->fields[$name];
-                    $field['name']     = $name;
+                    $field = $this->fields[$name];
+                    $field['name'] = $name;
                     $field['new_name'] = $newName;
 
                     // Unlike when creating a table, if `null` is not specified,
@@ -210,14 +210,14 @@ class Forge extends BaseForge
     protected function _attributeAutoIncrement(array &$attributes, array &$field)
     {
         if (
-            ! empty($attributes['AUTO_INCREMENT'])
+            !empty($attributes['AUTO_INCREMENT'])
             && $attributes['AUTO_INCREMENT'] === true
             && stripos($field['type'], 'int') !== false
         ) {
-            $field['type']           = 'INTEGER PRIMARY KEY';
-            $field['default']        = '';
-            $field['null']           = '';
-            $field['unique']         = '';
+            $field['type'] = 'INTEGER PRIMARY KEY';
+            $field['default'] = '';
+            $field['null'] = '';
+            $field['unique'] = '';
             $field['auto_increment'] = ' AUTOINCREMENT';
 
             $this->primaryKeys = [];
@@ -301,7 +301,7 @@ class Forge extends BaseForge
 
         foreach ($this->foreignKeys as $name) {
             foreach ($name['field'] as $f) {
-                if (! isset($this->fields[$f])) {
+                if (!isset($this->fields[$f])) {
                     $errorNames[] = $f;
                 }
             }

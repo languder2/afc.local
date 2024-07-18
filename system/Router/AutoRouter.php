@@ -34,7 +34,7 @@ final class AutoRouter implements AutoRouterInterface
          *
          * @var array<string, (Closure(mixed...): (ResponseInterface|string|void))|string> [routeKey => handler]
          */
-        private readonly array $cliRoutes,
+        private readonly array  $cliRoutes,
         /**
          * Default namespace for controllers.
          */
@@ -42,17 +42,18 @@ final class AutoRouter implements AutoRouterInterface
         /**
          * The name of the controller class.
          */
-        private string $controller,
+        private string          $controller,
         /**
          * The name of the method to use.
          */
-        private string $method,
+        private string          $method,
         /**
          * Whether dashes in URI's should be converted
          * to underscores when determining method names.
          */
-        private bool $translateURIDashes
-    ) {
+        private bool            $translateURIDashes
+    )
+    {
     }
 
     /**
@@ -78,7 +79,7 @@ final class AutoRouter implements AutoRouterInterface
 
         $controllerName = $this->controllerName();
 
-        if (! $this->isValidSegment($controllerName)) {
+        if (!$this->isValidSegment($controllerName)) {
             throw new PageNotFoundException($this->controller . ' is not a valid controller name');
         }
 
@@ -140,7 +141,7 @@ final class AutoRouter implements AutoRouterInterface
         // Load the file so that it's available for CodeIgniter.
         $file = APPPATH . 'Controllers/' . $this->directory . $controllerName . '.php';
 
-        if (! is_file($file)) {
+        if (!is_file($file)) {
             throw PageNotFoundException::forControllerNotFound($this->controller, $this->method);
         }
 
@@ -148,15 +149,15 @@ final class AutoRouter implements AutoRouterInterface
 
         // Ensure the controller stores the fully-qualified class name
         // We have to check for a length over 1, since by default it will be '\'
-        if (! str_contains($this->controller, '\\') && strlen($this->defaultNamespace) > 1) {
+        if (!str_contains($this->controller, '\\') && strlen($this->defaultNamespace) > 1) {
             $this->controller = '\\' . ltrim(
-                str_replace(
-                    '/',
-                    '\\',
-                    $this->defaultNamespace . $this->directory . $controllerName
-                ),
-                '\\'
-            );
+                    str_replace(
+                        '/',
+                        '\\',
+                        $this->defaultNamespace . $this->directory . $controllerName
+                    ),
+                    '\\'
+                );
         }
 
         return [$this->directory, $this->controllerName(), $this->methodName(), $params];
@@ -184,7 +185,7 @@ final class AutoRouter implements AutoRouterInterface
      */
     private function scanControllers(array $segments): array
     {
-        $segments = array_filter($segments, static fn ($segment) => $segment !== '');
+        $segments = array_filter($segments, static fn($segment) => $segment !== '');
         // numerically reindex the array, removing gaps
         $segments = array_values($segments);
 
@@ -202,14 +203,14 @@ final class AutoRouter implements AutoRouterInterface
                 $this->translateURIDashes ? str_replace('-', '_', $segments[0]) : $segments[0]
             );
             // as soon as we encounter any segment that is not PSR-4 compliant, stop searching
-            if (! $this->isValidSegment($segmentConvert)) {
+            if (!$this->isValidSegment($segmentConvert)) {
                 return $segments;
             }
 
             $test = APPPATH . 'Controllers/' . $this->directory . $segmentConvert;
 
             // as long as each segment is *not* a controller file but does match a directory, add it to $this->directory
-            if (! is_file($test . '.php') && is_dir($test)) {
+            if (!is_file($test . '.php') && is_dir($test)) {
                 $this->setDirectory($segmentConvert, true, false);
                 array_shift($segments);
 
@@ -230,7 +231,7 @@ final class AutoRouter implements AutoRouterInterface
      */
     private function isValidSegment(string $segment): bool
     {
-        return (bool) preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $segment);
+        return (bool)preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $segment);
     }
 
     /**
@@ -238,9 +239,9 @@ final class AutoRouter implements AutoRouterInterface
      *
      * @param bool $validate if true, checks to make sure $dir consists of only PSR4 compliant segments
      *
+     * @return void
      * @deprecated This method should be removed.
      *
-     * @return void
      */
     public function setDirectory(?string $dir = null, bool $append = false, bool $validate = true)
     {
@@ -254,7 +255,7 @@ final class AutoRouter implements AutoRouterInterface
             $segments = explode('/', trim($dir, '/'));
 
             foreach ($segments as $segment) {
-                if (! $this->isValidSegment($segment)) {
+                if (!$this->isValidSegment($segment)) {
                     return;
                 }
             }

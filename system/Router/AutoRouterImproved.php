@@ -104,14 +104,14 @@ final class AutoRouterImproved implements AutoRouterInterface
 
     /**
      * @param list<class-string> $protectedControllers
-     * @param string             $defaultController    Short classname
+     * @param string $defaultController Short classname
      */
     public function __construct(
         /**
          * List of controllers in Defined Routes that should not be accessed via this Auto-Routing.
          */
-        private readonly array $protectedControllers,
-        string $namespace,
+        private readonly array  $protectedControllers,
+        string                  $namespace,
         private readonly string $defaultController,
         /**
          * The name of the default method without HTTP verb prefix.
@@ -121,12 +121,13 @@ final class AutoRouterImproved implements AutoRouterInterface
          * Whether dashes in URI's should be converted
          * to underscores when determining method names.
          */
-        private readonly bool $translateURIDashes
-    ) {
+        private readonly bool   $translateURIDashes
+    )
+    {
         $this->namespace = rtrim($namespace, '\\');
 
-        $routingConfig                 = config(Routing::class);
-        $this->moduleRoutes            = $routingConfig->moduleRoutes;
+        $routingConfig = config(Routing::class);
+        $this->moduleRoutes = $routingConfig->moduleRoutes;
         $this->translateUriToCamelCase = $routingConfig->translateUriToCamelCase;
 
         // Set the default values
@@ -136,7 +137,7 @@ final class AutoRouterImproved implements AutoRouterInterface
     private function createSegments(string $uri): array
     {
         $segments = explode('/', $uri);
-        $segments = array_filter($segments, static fn ($segment) => $segment !== '');
+        $segments = array_filter($segments, static fn($segment) => $segment !== '');
 
         // numerically reindex the array, removing gaps
         return array_values($segments);
@@ -165,14 +166,14 @@ final class AutoRouterImproved implements AutoRouterInterface
             $class = $this->translateURIDashes($segment);
 
             // as soon as we encounter any segment that is not PSR-4 compliant, stop searching
-            if (! $this->isValidSegment($class)) {
+            if (!$this->isValidSegment($class)) {
                 return false;
             }
 
             $controller .= '\\' . $class;
 
             if (class_exists($controller)) {
-                $this->controller    = $controller;
+                $this->controller = $controller;
                 $this->controllerPos = $controllerPos;
 
                 $this->checkUriForController($controller);
@@ -200,8 +201,8 @@ final class AutoRouterImproved implements AutoRouterInterface
         $segments = $this->segments;
 
         $segmentCount = count($this->segments);
-        $paramPos     = null;
-        $params       = [];
+        $paramPos = null;
+        $params = [];
 
         while ($segments !== []) {
             if ($segmentCount > count($segments)) {
@@ -209,7 +210,7 @@ final class AutoRouterImproved implements AutoRouterInterface
             }
 
             $namespaces = array_map(
-                fn ($segment) => $this->translateURIDashes($segment),
+                fn($segment) => $this->translateURIDashes($segment),
                 $segments
             );
 
@@ -219,7 +220,7 @@ final class AutoRouterImproved implements AutoRouterInterface
 
             if (class_exists($controller)) {
                 $this->controller = $controller;
-                $this->params     = $params;
+                $this->params = $params;
 
                 if ($params !== []) {
                     $this->paramPos = $paramPos;
@@ -238,7 +239,7 @@ final class AutoRouterImproved implements AutoRouterInterface
 
         if (class_exists($controller)) {
             $this->controller = $controller;
-            $this->params     = $params;
+            $this->params = $params;
 
             if ($params !== []) {
                 $this->paramPos = 0;
@@ -260,13 +261,13 @@ final class AutoRouterImproved implements AutoRouterInterface
     public function getRoute(string $uri, string $httpVerb): array
     {
         $this->uri = $uri;
-        $httpVerb  = strtolower($httpVerb);
+        $httpVerb = strtolower($httpVerb);
 
         // Reset Controller method params.
         $this->params = [];
 
         $defaultMethod = $httpVerb . ucfirst($this->defaultMethod);
-        $this->method  = $defaultMethod;
+        $this->method = $defaultMethod;
 
         $this->segments = $this->createSegments($uri);
 
@@ -275,7 +276,7 @@ final class AutoRouterImproved implements AutoRouterInterface
             $this->segments !== []
             && array_key_exists($this->segments[0], $this->moduleRoutes)
         ) {
-            $uriSegment      = array_shift($this->segments);
+            $uriSegment = array_shift($this->segments);
             $this->namespace = rtrim($this->moduleRoutes[$uriSegment], '\\');
         }
 
@@ -370,16 +371,16 @@ final class AutoRouterImproved implements AutoRouterInterface
     }
 
     /**
+     * @return array<string, int|null>
      * @internal For test purpose only.
      *
-     * @return array<string, int|null>
      */
     public function getPos(): array
     {
         return [
             'controller' => $this->controllerPos,
-            'method'     => $this->methodPos,
-            'params'     => $this->paramPos,
+            'method' => $this->methodPos,
+            'params' => $this->paramPos,
         ];
     }
 
@@ -438,7 +439,7 @@ final class AutoRouterImproved implements AutoRouterInterface
             throw new MethodNotFoundException();
         }
 
-        if (! $refMethod->isPublic()) {
+        if (!$refMethod->isPublic()) {
             throw new MethodNotFoundException();
         }
 
@@ -500,7 +501,7 @@ final class AutoRouterImproved implements AutoRouterInterface
             return;
         }
 
-        if (! in_array(ltrim($classname, '\\'), get_declared_classes(), true)) {
+        if (!in_array(ltrim($classname, '\\'), get_declared_classes(), true)) {
             throw new PageNotFoundException(
                 '"' . $classname . '" is not found.'
             );
@@ -519,7 +520,7 @@ final class AutoRouterImproved implements AutoRouterInterface
             return;
         }
 
-        if (! in_array($method, get_class_methods($this->controller), true)) {
+        if (!in_array($method, get_class_methods($this->controller), true)) {
             throw new PageNotFoundException(
                 '"' . $this->controller . '::' . $method . '()" is not found.'
             );
@@ -533,7 +534,7 @@ final class AutoRouterImproved implements AutoRouterInterface
      */
     private function isValidSegment(string $segment): bool
     {
-        return (bool) preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $segment);
+        return (bool)preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $segment);
     }
 
     private function translateURIDashes(string $segment): string

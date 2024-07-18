@@ -50,18 +50,18 @@ class MethodDefinitionPlugin extends AbstractPlugin implements TabPluginInterfac
 
         $addendum = [];
         if (isset($r->class) && $r->inherited) {
-            $addendum[] = 'Inherited from '.$this->renderer->escape($r->class);
+            $addendum[] = 'Inherited from ' . $this->renderer->escape($r->class);
         }
 
         if (isset($r->file, $r->line)) {
-            $addendum[] = 'Defined in '.$this->renderer->escape(Kint::shortenPath($r->file)).':'.((int) $r->line);
+            $addendum[] = 'Defined in ' . $this->renderer->escape(Kint::shortenPath($r->file)) . ':' . ((int)$r->line);
         }
 
         if ($addendum) {
-            $addendum = '<small>'.\implode("\n", $addendum).'</small>';
+            $addendum = '<small>' . \implode("\n", $addendum) . '</small>';
 
             if (isset($docstring)) {
-                $docstring .= "\n\n".$addendum;
+                $docstring .= "\n\n" . $addendum;
             } else {
                 $docstring = $addendum;
             }
@@ -71,6 +71,6 @@ class MethodDefinitionPlugin extends AbstractPlugin implements TabPluginInterfac
             return null;
         }
 
-        return '<pre>'.$docstring.'</pre>';
+        return '<pre>' . $docstring . '</pre>';
     }
 }

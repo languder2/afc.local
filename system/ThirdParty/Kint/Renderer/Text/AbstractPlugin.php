@@ -47,13 +47,13 @@ abstract class AbstractPlugin implements PluginInterface
         $out = '';
 
         if (0 == $o->depth) {
-            $out .= $this->renderer->colorTitle($this->renderer->renderTitle($o)).PHP_EOL;
+            $out .= $this->renderer->colorTitle($this->renderer->renderTitle($o)) . PHP_EOL;
         }
 
         $out .= $this->renderer->renderHeader($o);
 
         if (null !== $content) {
-            $out .= ' '.$this->renderer->colorValue($content);
+            $out .= ' ' . $this->renderer->colorValue($content);
         }
 
         $out .= PHP_EOL;

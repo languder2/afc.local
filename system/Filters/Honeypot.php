@@ -36,7 +36,7 @@ class Honeypot implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (! $request instanceof IncomingRequest) {
+        if (!$request instanceof IncomingRequest) {
             return;
         }
 

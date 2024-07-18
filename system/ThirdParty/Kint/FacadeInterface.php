@@ -42,7 +42,7 @@ interface FacadeInterface
     /**
      * Renders a list of vars including the pre and post renders.
      *
-     * @param array   $vars Data to dump
+     * @param array $vars Data to dump
      * @param Value[] $base The base value objects
      */
     public function dumpAll(array $vars, array $base): string;

@@ -44,7 +44,7 @@ class WincacheHandler extends BaseHandler
      */
     public function get(string $key)
     {
-        $key     = static::validateKey($key, $this->prefix);
+        $key = static::validateKey($key, $this->prefix);
         $success = false;
 
         $data = wincache_ucache_get($key, $success);
@@ -127,15 +127,15 @@ class WincacheHandler extends BaseHandler
         $key = static::validateKey($key, $this->prefix);
 
         if ($stored = wincache_ucache_info(false, $key)) {
-            $age      = $stored['ucache_entries'][1]['age_seconds'];
-            $ttl      = $stored['ucache_entries'][1]['ttl_seconds'];
+            $age = $stored['ucache_entries'][1]['age_seconds'];
+            $ttl = $stored['ucache_entries'][1]['ttl_seconds'];
             $hitcount = $stored['ucache_entries'][1]['hitcount'];
 
             return [
-                'expire'   => $ttl > 0 ? Time::now()->getTimestamp() + $ttl : null,
+                'expire' => $ttl > 0 ? Time::now()->getTimestamp() + $ttl : null,
                 'hitcount' => $hitcount,
-                'age'      => $age,
-                'ttl'      => $ttl,
+                'age' => $age,
+                'ttl' => $ttl,
             ];
         }
 

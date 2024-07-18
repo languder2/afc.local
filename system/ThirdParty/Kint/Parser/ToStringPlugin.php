@@ -62,7 +62,7 @@ class ToStringPlugin extends AbstractPlugin
         }
 
         $r = new Representation('toString');
-        $r->contents = (string) $var;
+        $r->contents = (string)$var;
 
         $o->addRepresentation($r);
     }

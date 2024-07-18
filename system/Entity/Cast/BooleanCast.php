@@ -23,6 +23,6 @@ class BooleanCast extends BaseCast
      */
     public static function get($value, array $params = []): bool
     {
-        return (bool) $value;
+        return (bool)$value;
     }
 }

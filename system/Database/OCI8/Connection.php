@@ -120,7 +120,7 @@ class Connection extends BaseConnection
      */
     public function connect(bool $persistent = false)
     {
-        if (empty($this->DSN) && ! $this->isValidDSN()) {
+        if (empty($this->DSN) && !$this->isValidDSN()) {
             $this->buildDSN();
         }
 
@@ -174,7 +174,7 @@ class Connection extends BaseConnection
             return $this->dataCache['version'];
         }
 
-        if (! $this->connID || ($versionString = oci_server_version($this->connID)) === false) {
+        if (!$this->connID || ($versionString = oci_server_version($this->connID)) === false) {
             return '';
         }
         if (preg_match('#Release\s(\d+(?:\.\d+)+)#', $versionString, $match)) {
@@ -198,7 +198,7 @@ class Connection extends BaseConnection
 
             oci_set_prefetch($this->stmtId, 1000);
 
-            $result          = oci_execute($this->stmtId, $this->commitMode) ? $this->stmtId : false;
+            $result = oci_execute($this->stmtId, $this->commitMode) ? $this->stmtId : false;
             $insertTableName = $this->parseInsertTableName($sql);
 
             if ($result && $insertTableName !== '') {
@@ -207,7 +207,7 @@ class Connection extends BaseConnection
 
             return $result;
         } catch (ErrorException $e) {
-            log_message('error', (string) $e);
+            log_message('error', (string)$e);
 
             if ($this->DBDebug) {
                 throw new DatabaseException($e->getMessage(), $e->getCode(), $e);
@@ -223,9 +223,9 @@ class Connection extends BaseConnection
     public function parseInsertTableName(string $sql): string
     {
         $commentStrippedSql = preg_replace(['/\/\*(.|\n)*?\*\//m', '/--.+/'], '', $sql);
-        $isInsertQuery      = str_starts_with(strtoupper(ltrim($commentStrippedSql)), 'INSERT');
+        $isInsertQuery = str_starts_with(strtoupper(ltrim($commentStrippedSql)), 'INSERT');
 
-        if (! $isInsertQuery) {
+        if (!$isInsertQuery) {
             return '';
         }
 
@@ -258,7 +258,7 @@ class Connection extends BaseConnection
 
         if ($prefixLimit !== false && $this->DBPrefix !== '') {
             return $sql . ' WHERE "TABLE_NAME" LIKE \'' . $this->escapeLikeString($this->DBPrefix) . "%' "
-                    . sprintf($this->likeEscapeStr, $this->likeEscapeChar);
+                . sprintf($this->likeEscapeStr, $this->likeEscapeChar);
         }
 
         return $sql;
@@ -308,7 +308,7 @@ class Connection extends BaseConnection
         $retval = [];
 
         for ($i = 0, $c = count($query); $i < $c; $i++) {
-            $retval[$i]       = new stdClass();
+            $retval[$i] = new stdClass();
             $retval[$i]->name = $query[$i]->COLUMN_NAME;
             $retval[$i]->type = $query[$i]->DATA_TYPE;
 
@@ -318,7 +318,7 @@ class Connection extends BaseConnection
             $retval[$i]->max_length = $length;
 
             $retval[$i]->nullable = $query[$i]->NULLABLE === 'Y';
-            $retval[$i]->default  = $query[$i]->DATA_DEFAULT;
+            $retval[$i]->default = $query[$i]->DATA_DEFAULT;
         }
 
         return $retval;
@@ -351,7 +351,7 @@ class Connection extends BaseConnection
         }
         $query = $query->getResultObject();
 
-        $retVal          = [];
+        $retVal = [];
         $constraintTypes = [
             'P' => 'PRIMARY',
             'U' => 'UNIQUE',
@@ -364,10 +364,10 @@ class Connection extends BaseConnection
                 continue;
             }
 
-            $retVal[$row->INDEX_NAME]         = new stdClass();
-            $retVal[$row->INDEX_NAME]->name   = $row->INDEX_NAME;
+            $retVal[$row->INDEX_NAME] = new stdClass();
+            $retVal[$row->INDEX_NAME]->name = $row->INDEX_NAME;
             $retVal[$row->INDEX_NAME]->fields = [$row->COLUMN_NAME];
-            $retVal[$row->INDEX_NAME]->type   = $constraintTypes[$row->CONSTRAINT_TYPE] ?? 'INDEX';
+            $retVal[$row->INDEX_NAME]->type = $constraintTypes[$row->CONSTRAINT_TYPE] ?? 'INDEX';
         }
 
         return $retVal;
@@ -406,18 +406,18 @@ class Connection extends BaseConnection
             throw new DatabaseException(lang('Database.failGetForeignKeyData'));
         }
 
-        $query   = $query->getResultObject();
+        $query = $query->getResultObject();
         $indexes = [];
 
         foreach ($query as $row) {
-            $indexes[$row->CONSTRAINT_NAME]['constraint_name']       = $row->CONSTRAINT_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['table_name']            = $row->TABLE_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['column_name'][]         = $row->COLUMN_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['foreign_table_name']    = $row->FOREIGN_TABLE_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['constraint_name'] = $row->CONSTRAINT_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['table_name'] = $row->TABLE_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['column_name'][] = $row->COLUMN_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['foreign_table_name'] = $row->FOREIGN_TABLE_NAME;
             $indexes[$row->CONSTRAINT_NAME]['foreign_column_name'][] = $row->FOREIGN_COLUMN_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['on_delete']             = $row->DELETE_RULE;
-            $indexes[$row->CONSTRAINT_NAME]['on_update']             = null;
-            $indexes[$row->CONSTRAINT_NAME]['match']                 = null;
+            $indexes[$row->CONSTRAINT_NAME]['on_delete'] = $row->DELETE_RULE;
+            $indexes[$row->CONSTRAINT_NAME]['on_update'] = null;
+            $indexes[$row->CONSTRAINT_NAME]['match'] = null;
         }
 
         return $this->foreignKeyDataToObjects($indexes);
@@ -485,7 +485,7 @@ class Connection extends BaseConnection
      * Executes a stored procedure
      *
      * @param string $procedureName procedure name to execute
-     * @param array  $params        params array keys
+     * @param array $params params array keys
      *                              KEY      OPTIONAL  NOTES
      *                              name     no        the name of the parameter should be in :<param_name> format
      *                              value    no        the value of the parameter.  If this is an OUT or IN OUT parameter,
@@ -505,13 +505,13 @@ class Connection extends BaseConnection
         $sql = sprintf(
             'BEGIN %s (' . substr(str_repeat(',%s', count($params)), 1) . '); END;',
             $procedureName,
-            ...array_map(static fn ($row) => $row['name'], $params)
+            ...array_map(static fn($row) => $row['name'], $params)
         );
 
         $this->resetStmtId = false;
-        $this->stmtId      = oci_parse($this->connID, $sql);
+        $this->stmtId = oci_parse($this->connID, $sql);
         $this->bindParams($params);
-        $result            = $this->query($sql);
+        $result = $this->query($sql);
         $this->resetStmtId = true;
 
         return $result;
@@ -526,7 +526,7 @@ class Connection extends BaseConnection
      */
     protected function bindParams($params)
     {
-        if (! is_array($params) || ! is_resource($this->stmtId)) {
+        if (!is_array($params) || !is_resource($this->stmtId)) {
             return;
         }
 
@@ -553,7 +553,7 @@ class Connection extends BaseConnection
         // oci_error() returns an array that already contains
         // 'code' and 'message' keys, but it can return false
         // if there was no error ....
-        $error     = oci_error();
+        $error = oci_error();
         $resources = [$this->cursorId, $this->stmtId, $this->connID];
 
         foreach ($resources as $resource) {
@@ -566,7 +566,7 @@ class Connection extends BaseConnection
         return is_array($error)
             ? $error
             : [
-                'code'    => '',
+                'code' => '',
                 'message' => '',
             ];
     }
@@ -577,14 +577,14 @@ class Connection extends BaseConnection
             return 0;
         }
 
-        $indexs     = $this->getIndexData($this->lastInsertedTableName);
+        $indexs = $this->getIndexData($this->lastInsertedTableName);
         $fieldDatas = $this->getFieldData($this->lastInsertedTableName);
 
         if ($indexs === [] || $fieldDatas === []) {
             return 0;
         }
 
-        $columnTypeList    = array_column($fieldDatas, 'type', 'name');
+        $columnTypeList = array_column($fieldDatas, 'type', 'name');
         $primaryColumnName = '';
 
         foreach ($indexs as $index) {
@@ -604,11 +604,11 @@ class Connection extends BaseConnection
             return 0;
         }
 
-        $query           = $this->query('SELECT DATA_DEFAULT FROM USER_TAB_COLUMNS WHERE TABLE_NAME = ? AND COLUMN_NAME = ?', [$this->lastInsertedTableName, $primaryColumnName])->getRow();
+        $query = $this->query('SELECT DATA_DEFAULT FROM USER_TAB_COLUMNS WHERE TABLE_NAME = ? AND COLUMN_NAME = ?', [$this->lastInsertedTableName, $primaryColumnName])->getRow();
         $lastInsertValue = str_replace('nextval', 'currval', $query->DATA_DEFAULT ?? '0');
-        $query           = $this->query(sprintf('SELECT %s SEQ FROM DUAL', $lastInsertValue))->getRow();
+        $query = $this->query(sprintf('SELECT %s SEQ FROM DUAL', $lastInsertValue))->getRow();
 
-        return (int) ($query->SEQ ?? 0);
+        return (int)($query->SEQ ?? 0);
     }
 
     /**
@@ -631,9 +631,9 @@ class Connection extends BaseConnection
             return;
         }
 
-        $isEasyConnectableHostName = $this->hostname !== '' && ! str_contains($this->hostname, '/') && ! str_contains($this->hostname, ':');
-        $easyConnectablePort       = ! empty($this->port) && ctype_digit($this->port) ? ':' . $this->port : '';
-        $easyConnectableDatabase   = $this->database !== '' ? '/' . ltrim($this->database, '/') : '';
+        $isEasyConnectableHostName = $this->hostname !== '' && !str_contains($this->hostname, '/') && !str_contains($this->hostname, ':');
+        $easyConnectablePort = !empty($this->port) && ctype_digit($this->port) ? ':' . $this->port : '';
+        $easyConnectableDatabase = $this->database !== '' ? '/' . ltrim($this->database, '/') : '';
 
         if ($isEasyConnectableHostName && ($easyConnectablePort !== '' || $easyConnectableDatabase !== '')) {
             /* If the hostname field isn't empty, doesn't contain
@@ -709,7 +709,7 @@ class Connection extends BaseConnection
      */
     public function getDatabase(): string
     {
-        if (! empty($this->database)) {
+        if (!empty($this->database)) {
             return $this->database;
         }
 

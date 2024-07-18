@@ -29,7 +29,8 @@ final class ControllerFinder
      */
     public function __construct(
         private readonly string $namespace
-    ) {
+    )
+    {
         $this->locator = service('locator');
     }
 
@@ -39,9 +40,9 @@ final class ControllerFinder
     public function find(): array
     {
         $nsArray = explode('\\', trim($this->namespace, '\\'));
-        $count   = count($nsArray);
-        $ns      = '';
-        $files   = [];
+        $count = count($nsArray);
+        $ns = '';
+        $files = [];
 
         for ($i = 0; $i < $count; $i++) {
             $ns .= '\\' . array_shift($nsArray);

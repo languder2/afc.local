@@ -1,8 +1,10 @@
 <?php
 
-use CodeIgniter\Router\RouteCollection;
+use App\Controllers\AFCSpec;
+use App\Controllers\Test;
 use App\Controllers\UserController;
-use App\Controllers\AFCController;
+use CodeIgniter\Router\RouteCollection;
+
 
 /**
  * @var RouteCollection $routes
@@ -11,11 +13,12 @@ use App\Controllers\AFCController;
 $routes->get('/admin/exit/', [UserController::class, 'exit']);
 $routes->get('/exit/', [UserController::class, 'exit']);
 /** ADMIN: AUTH  */
-$routes->match(['get','post'],'/admin/', [UserController::class, 'auth']);
-$routes->match(['get','post'],'/', [AFCController::class, 'summary']);
-$routes->match(['get','post'],'/afc/spec/(:num)', [AFCController::class, 'chartSpecByDays/$1']);
-$routes->match(['get','post'],'/byDays/(:any)', [AFCController::class, 'byDays/$1']);
+$routes->match(['get', 'post'], '/admin/', [UserController::class, 'auth']);
+$routes->match(['get', 'post'], '/', [Test::class, 'summary']);
+$routes->match(['get', 'post'], '/afc/spec/(:num)', [Test::class, 'chartSpecByDays/$1']);
+$routes->match(['get', 'post'], '/byDays/(:any)', [Test::class, 'byDays/$1']);
+
+$routes->get('/specs/', [Test::class, 'specList']);
 
 
-
-$routes->get(   '/specs/',                              [AFCController::class, 'specList']);
+$routes->get('/spec/',                                  [AFCSpec::class, "list"]);

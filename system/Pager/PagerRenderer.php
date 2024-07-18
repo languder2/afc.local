@@ -90,13 +90,13 @@ class PagerRenderer
         // `first` and `last` will be updated by `setSurroundCount()`.
         // You must call `setSurroundCount()` after instantiation.
         $this->first = 1;
-        $this->last  = $details['pageCount'];
+        $this->last = $details['pageCount'];
 
-        $this->current      = $details['currentPage'];
-        $this->total        = $details['total'];
-        $this->uri          = $details['uri'];
-        $this->pageCount    = $details['pageCount'];
-        $this->segment      = $details['segment'] ?? 0;
+        $this->current = $details['currentPage'];
+        $this->total = $details['total'];
+        $this->uri = $details['uri'];
+        $this->pageCount = $details['pageCount'];
+        $this->segment = $details['segment'] ?? 0;
         $this->pageSelector = $details['pageSelector'] ?? 'page';
     }
 
@@ -131,7 +131,7 @@ class PagerRenderer
      */
     public function getPrevious()
     {
-        if (! $this->hasPrevious()) {
+        if (!$this->hasPrevious()) {
             return null;
         }
 
@@ -169,7 +169,7 @@ class PagerRenderer
      */
     public function getNext()
     {
-        if (! $this->hasNext()) {
+        if (!$this->hasNext()) {
             return null;
         }
 
@@ -271,7 +271,7 @@ class PagerRenderer
         $uri = clone $this->uri;
 
         for ($i = $this->first; $i <= $this->last; $i++) {
-            $uri     = $this->segment === 0 ? $uri->addQuery($this->pageSelector, $i) : $uri->setSegment($this->segment, $i);
+            $uri = $this->segment === 0 ? $uri->addQuery($this->pageSelector, $i) : $uri->setSegment($this->segment, $i);
             $links[] = [
                 'uri' => URI::createURIString(
                     $uri->getScheme(),
@@ -280,7 +280,7 @@ class PagerRenderer
                     $uri->getQuery(),
                     $uri->getFragment()
                 ),
-                'title'  => $i,
+                'title' => $i,
                 'active' => ($i === $this->current),
             ];
         }
@@ -304,7 +304,7 @@ class PagerRenderer
         }
 
         $this->first = $this->current - $count > 0 ? $this->current - $count : 1;
-        $this->last  = $this->current + $count <= $this->pageCount ? $this->current + $count : (int) $this->pageCount;
+        $this->last = $this->current + $count <= $this->pageCount ? $this->current + $count : (int)$this->pageCount;
     }
 
     /**
@@ -324,7 +324,7 @@ class PagerRenderer
      */
     public function getPreviousPage()
     {
-        if (! $this->hasPreviousPage()) {
+        if (!$this->hasPreviousPage()) {
             return null;
         }
 
@@ -362,7 +362,7 @@ class PagerRenderer
      */
     public function getNextPage()
     {
-        if (! $this->hasNextPage()) {
+        if (!$this->hasNextPage()) {
             return null;
         }
 

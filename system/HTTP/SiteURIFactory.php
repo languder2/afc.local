@@ -43,39 +43,6 @@ final class SiteURIFactory
     }
 
     /**
-     * Create the SiteURI object from URI string.
-     *
-     * @internal Used for testing purposes only.
-     * @testTag
-     */
-    public function createFromString(string $uri): SiteURI
-    {
-        // Validate URI
-        if (filter_var($uri, FILTER_VALIDATE_URL) === false) {
-            throw HTTPException::forUnableToParseURI($uri);
-        }
-
-        $parts = parse_url($uri);
-
-        if ($parts === false) {
-            throw HTTPException::forUnableToParseURI($uri);
-        }
-
-        $query = $fragment = '';
-        if (isset($parts['query'])) {
-            $query = '?' . $parts['query'];
-        }
-        if (isset($parts['fragment'])) {
-            $fragment = '#' . $parts['fragment'];
-        }
-
-        $relativePath = ($parts['path'] ?? '') . $query . $fragment;
-        $host         = $this->getValidHost($parts['host']);
-
-        return new SiteURI($this->appConfig, $relativePath, $host, $parts['scheme']);
-    }
-
-    /**
      * Detects the current URI path relative to baseURL based on the URIProtocol
      * Config setting.
      *
@@ -93,9 +60,9 @@ final class SiteURIFactory
         }
 
         $routePath = match ($protocol) {
-            'REQUEST_URI'  => $this->parseRequestURI(),
+            'REQUEST_URI' => $this->parseRequestURI(),
             'QUERY_STRING' => $this->parseQueryString(),
-            default        => $this->superglobals->server($protocol) ?? $this->parseRequestURI(),
+            default => $this->superglobals->server($protocol) ?? $this->parseRequestURI(),
         };
 
         return ($routePath === '/' || $routePath === '') ? '/' : ltrim($routePath, '/');
@@ -124,7 +91,7 @@ final class SiteURIFactory
         // parse out the query string and path.
         $parts = parse_url('http://dummy' . $this->superglobals->server('REQUEST_URI'));
         $query = $parts['query'] ?? '';
-        $path  = $parts['path'] ?? '';
+        $path = $parts['path'] ?? '';
 
         // Strip the SCRIPT_NAME path from the URI
         if (
@@ -136,7 +103,7 @@ final class SiteURIFactory
 
             foreach (explode('/', $this->superglobals->server('SCRIPT_NAME')) as $i => $segment) {
                 // If these segments are not the same then we're done
-                if (! isset($segments[$i]) || $segment !== $segments[$i]) {
+                if (!isset($segments[$i]) || $segment !== $segments[$i]) {
                     break;
                 }
 
@@ -150,8 +117,8 @@ final class SiteURIFactory
         // contain the query string (Nginx) a correct URI is found, and also
         // fixes the QUERY_STRING Server var and $_GET array.
         if (trim($path, '/') === '' && str_starts_with($query, '/')) {
-            $parts    = explode('?', $query, 2);
-            $path     = $parts[0];
+            $parts = explode('?', $query, 2);
+            $path = $parts[0];
             $newQuery = $query[1] ?? '';
 
             $this->superglobals->setServer('QUERY_STRING', $newQuery);
@@ -175,15 +142,15 @@ final class SiteURIFactory
      */
     private function parseQueryString(): string
     {
-        $query = $this->superglobals->server('QUERY_STRING') ?? (string) getenv('QUERY_STRING');
+        $query = $this->superglobals->server('QUERY_STRING') ?? (string)getenv('QUERY_STRING');
 
         if (trim($query, '/') === '') {
             return '/';
         }
 
         if (str_starts_with($query, '/')) {
-            $parts    = explode('?', $query, 2);
-            $path     = $parts[0];
+            $parts = explode('?', $query, 2);
+            $path = $parts[0];
             $newQuery = $parts[1] ?? '';
 
             $this->superglobals->setServer('QUERY_STRING', $newQuery);
@@ -238,5 +205,38 @@ final class SiteURIFactory
         }
 
         return null;
+    }
+
+    /**
+     * Create the SiteURI object from URI string.
+     *
+     * @internal Used for testing purposes only.
+     * @testTag
+     */
+    public function createFromString(string $uri): SiteURI
+    {
+        // Validate URI
+        if (filter_var($uri, FILTER_VALIDATE_URL) === false) {
+            throw HTTPException::forUnableToParseURI($uri);
+        }
+
+        $parts = parse_url($uri);
+
+        if ($parts === false) {
+            throw HTTPException::forUnableToParseURI($uri);
+        }
+
+        $query = $fragment = '';
+        if (isset($parts['query'])) {
+            $query = '?' . $parts['query'];
+        }
+        if (isset($parts['fragment'])) {
+            $fragment = '#' . $parts['fragment'];
+        }
+
+        $relativePath = ($parts['path'] ?? '') . $query . $fragment;
+        $host = $this->getValidHost($parts['host']);
+
+        return new SiteURI($this->appConfig, $relativePath, $host, $parts['scheme']);
     }
 }

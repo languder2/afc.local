@@ -82,7 +82,7 @@ class MigrateStatus extends BaseCommand
      */
     public function run(array $params)
     {
-        $runner     = service('migrations');
+        $runner = service('migrations');
         $paramGroup = $params['g'] ?? CLI::getOption('g');
 
         // Get all namespaces
@@ -112,13 +112,13 @@ class MigrateStatus extends BaseCommand
             }
 
             $runner->setNamespace($namespace);
-            $history = $runner->getHistory((string) $paramGroup);
+            $history = $runner->getHistory((string)$paramGroup);
             ksort($migrations);
 
             foreach ($migrations as $uid => $migration) {
-                $migrations[$uid]->name = mb_substr($migration->name, (int) mb_strpos($migration->name, $uid . '_'));
+                $migrations[$uid]->name = mb_substr($migration->name, (int)mb_strpos($migration->name, $uid . '_'));
 
-                $date  = '---';
+                $date = '---';
                 $group = '---';
                 $batch = '---';
 
@@ -128,7 +128,7 @@ class MigrateStatus extends BaseCommand
                         continue;
                     }
 
-                    $date  = date('Y-m-d H:i:s', (int) $row->time);
+                    $date = date('Y-m-d H:i:s', (int)$row->time);
                     $group = $row->group;
                     $batch = $row->batch;
                     // @codeCoverageIgnoreEnd

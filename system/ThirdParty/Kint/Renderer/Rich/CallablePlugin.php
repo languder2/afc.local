@@ -59,11 +59,11 @@ class CallablePlugin extends ClosurePlugin
 
             $header = $this->renderer->renderHeaderWrapper(
                 $o,
-                (bool) \strlen($children),
+                (bool)\strlen($children),
                 self::$method_cache[$o->owner_class][$o->name]['header']
             );
 
-            return '<dl>'.$header.$children.'</dl>';
+            return '<dl>' . $header . $children . '</dl>';
         }
 
         $children = $this->renderer->renderChildren($o);
@@ -71,7 +71,7 @@ class CallablePlugin extends ClosurePlugin
         $header = '';
 
         if (null !== ($s = $o->getModifiers()) || $o->return_reference) {
-            $header .= '<var>'.$s;
+            $header .= '<var>' . $s;
 
             if ($o->return_reference) {
                 if ($s) {
@@ -84,13 +84,13 @@ class CallablePlugin extends ClosurePlugin
         }
 
         if (null !== ($s = $o->getName())) {
-            $function = $this->renderer->escape($s).'('.$this->renderer->escape($o->getParams()).')';
+            $function = $this->renderer->escape($s) . '(' . $this->renderer->escape($o->getParams()) . ')';
 
             if (null !== ($url = $o->getPhpDocUrl())) {
-                $function = '<a href="'.$url.'" target=_blank>'.$function.'</a>';
+                $function = '<a href="' . $url . '" target=_blank>' . $function . '</a>';
             }
 
-            $header .= '<dfn>'.$function.'</dfn>';
+            $header .= '<dfn>' . $function . '</dfn>';
         }
 
         if (!empty($o->returntype)) {
@@ -100,11 +100,11 @@ class CallablePlugin extends ClosurePlugin
                 $header .= $this->renderer->escape('&');
             }
 
-            $header .= $this->renderer->escape($o->returntype).'</var>';
+            $header .= $this->renderer->escape($o->returntype) . '</var>';
         } elseif ($o->docstring) {
             if (\preg_match('/@return\\s+(.*)\\r?\\n/m', $o->docstring, $matches)) {
                 if (\trim($matches[1])) {
-                    $header .= ': <var>'.$this->renderer->escape(\trim($matches[1])).'</var>';
+                    $header .= ': <var>' . $this->renderer->escape(\trim($matches[1])) . '</var>';
                 }
             }
         }
@@ -113,7 +113,7 @@ class CallablePlugin extends ClosurePlugin
             if (RichRenderer::$strlen_max) {
                 $s = Utils::truncateString($s, RichRenderer::$strlen_max);
             }
-            $header .= ' '.$this->renderer->escape($s);
+            $header .= ' ' . $this->renderer->escape($s);
         }
 
         if (\strlen($o->owner_class) && \strlen($o->name)) {
@@ -123,8 +123,8 @@ class CallablePlugin extends ClosurePlugin
             ];
         }
 
-        $header = $this->renderer->renderHeaderWrapper($o, (bool) \strlen($children), $header);
+        $header = $this->renderer->renderHeaderWrapper($o, (bool)\strlen($children), $header);
 
-        return '<dl>'.$header.$children.'</dl>';
+        return '<dl>' . $header . $children . '</dl>';
     }
 }

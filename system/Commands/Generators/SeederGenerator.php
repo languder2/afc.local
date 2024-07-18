@@ -67,8 +67,8 @@ class SeederGenerator extends BaseCommand
      */
     protected $options = [
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserSeeder).',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserSeeder).',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -78,7 +78,7 @@ class SeederGenerator extends BaseCommand
     {
         $this->component = 'Seeder';
         $this->directory = 'Database\Seeds';
-        $this->template  = 'seeder.tpl.php';
+        $this->template = 'seeder.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.seeder';
         $this->generateClass($params);

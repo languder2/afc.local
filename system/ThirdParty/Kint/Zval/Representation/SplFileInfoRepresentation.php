@@ -147,11 +147,11 @@ class SplFileInfoRepresentation extends Representation
             $this->flags[] = ($this->perms & 01000) ? 'S' : '-';
         }
 
-        $this->contents = \implode($this->flags).' '.$this->owner.' '.$this->group;
-        $this->contents .= ' '.$this->getSize().' '.$this->getMTime().' ';
+        $this->contents = \implode($this->flags) . ' ' . $this->owner . ' ' . $this->group;
+        $this->contents .= ' ' . $this->getSize() . ' ' . $this->getMTime() . ' ';
 
         if ($this->is_link && $this->linktarget) {
-            $this->contents .= $this->path.' -> '.$this->linktarget;
+            $this->contents .= $this->path . ' -> ' . $this->linktarget;
         } elseif (null !== $this->realpath && \strlen($this->realpath) < \strlen($this->path)) {
             $this->contents .= $this->realpath;
         } else {
@@ -162,7 +162,7 @@ class SplFileInfoRepresentation extends Representation
     public function getLabel(): string
     {
         if ($size = $this->getSize()) {
-            return $this->typename.' ('.$size.')';
+            return $this->typename . ' (' . $size . ')';
         }
 
         return $this->typename;
@@ -173,7 +173,7 @@ class SplFileInfoRepresentation extends Representation
         if ($this->size) {
             $size = Utils::getHumanReadableBytes($this->size);
 
-            return \round($size['value'], 2).$size['unit'];
+            return \round($size['value'], 2) . $size['unit'];
         }
 
         return null;

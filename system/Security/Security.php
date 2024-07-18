@@ -37,9 +37,9 @@ use LogicException;
  */
 class Security implements SecurityInterface
 {
-    public const CSRF_PROTECTION_COOKIE  = 'cookie';
+    public const CSRF_PROTECTION_COOKIE = 'cookie';
     public const CSRF_PROTECTION_SESSION = 'session';
-    protected const CSRF_HASH_BYTES      = 16;
+    protected const CSRF_HASH_BYTES = 16;
 
     /**
      * CSRF Protection Method
@@ -206,7 +206,7 @@ class Security implements SecurityInterface
             $this->configureSession();
         }
 
-        $this->request      = service('request');
+        $this->request = service('request');
         $this->hashInCookie = $this->request->getCookie($this->cookieName);
 
         $this->restoreHash();
@@ -227,7 +227,7 @@ class Security implements SecurityInterface
 
     private function configureCookie(CookieConfig $cookie): void
     {
-        $cookiePrefix     = $cookie->prefix;
+        $cookiePrefix = $cookie->prefix;
         $this->cookieName = $cookiePrefix . $this->rawCookieName;
         Cookie::setDefaults($cookie);
     }
@@ -242,9 +242,9 @@ class Security implements SecurityInterface
     public function verify(RequestInterface $request)
     {
         // Protects POST, PUT, DELETE, PATCH
-        $method           = $request->getMethod();
+        $method = $request->getMethod();
         $methodsToProtect = [Method::POST, Method::PUT, Method::DELETE, Method::PATCH];
-        if (! in_array($method, $methodsToProtect, true)) {
+        if (!in_array($method, $methodsToProtect, true)) {
             return $this;
         }
 
@@ -258,7 +258,7 @@ class Security implements SecurityInterface
         }
 
         // Do the tokens match?
-        if (! isset($token, $this->hash) || ! hash_equals($this->hash, $token)) {
+        if (!isset($token, $this->hash) || !hash_equals($this->hash, $token)) {
             throw SecurityException::forDisallowedAction();
         }
 
@@ -316,7 +316,7 @@ class Security implements SecurityInterface
             return $request->header($this->config->headerName)->getValue();
         }
 
-        $body = (string) $request->getBody();
+        $body = (string)$request->getBody();
 
         if ($body !== '') {
             $json = json_decode($body);
@@ -349,7 +349,7 @@ class Security implements SecurityInterface
      */
     protected function randomize(string $hash): string
     {
-        $keyBinary  = random_bytes(static::CSRF_HASH_BYTES);
+        $keyBinary = random_bytes(static::CSRF_HASH_BYTES);
         $hashBinary = hex2bin($hash);
 
         if ($hashBinary === false) {
@@ -370,7 +370,7 @@ class Security implements SecurityInterface
      */
     protected function derandomize(string $token): string
     {
-        $key   = substr($token, -static::CSRF_HASH_BYTES * 2);
+        $key = substr($token, -static::CSRF_HASH_BYTES * 2);
         $value = substr($token, 0, static::CSRF_HASH_BYTES * 2);
 
         try {
@@ -424,8 +424,8 @@ class Security implements SecurityInterface
      * e.g. file/in/some/approved/folder.txt, you can set the second optional
      * parameter, $relative_path to TRUE.
      *
-     * @param string $str          Input file name
-     * @param bool   $relativePath Whether to preserve paths
+     * @param string $str Input file name
+     * @param bool $relativePath Whether to preserve paths
      */
     public function sanitizeFilename(string $str, bool $relativePath = false): string
     {
@@ -464,7 +464,7 @@ class Security implements SecurityInterface
             '%3d',
         ];
 
-        if (! $relativePath) {
+        if (!$relativePath) {
             $bad[] = './';
             $bad[] = '/';
         }
@@ -517,7 +517,7 @@ class Security implements SecurityInterface
             return false;
         }
 
-        $length  = static::CSRF_HASH_BYTES * 2;
+        $length = static::CSRF_HASH_BYTES * 2;
         $pattern = '#^[0-9a-f]{' . $length . '}$#iS';
 
         return preg_match($pattern, $this->hashInCookie) === 1;

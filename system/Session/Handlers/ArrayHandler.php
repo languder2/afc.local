@@ -51,7 +51,7 @@ class ArrayHandler extends BaseHandler
     /**
      * Writes the session data to the session storage.
      *
-     * @param string $id   The session ID
+     * @param string $id The session ID
      * @param string $data The encoded session data
      */
     public function write($id, $data): bool

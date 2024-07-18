@@ -61,7 +61,7 @@ trait PropertiesTrait
      */
     final public function getNonPublicProperties(): array
     {
-        $exclude    = ['view'];
+        $exclude = ['view'];
         $properties = [];
 
         $reflection = new ReflectionClass($this);

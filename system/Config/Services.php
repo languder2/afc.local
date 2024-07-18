@@ -228,7 +228,7 @@ class Services extends BaseService
             return static::getSharedInstance('email', $config);
         }
 
-        if (empty($config) || ! (is_array($config) || $config instanceof EmailConfig)) {
+        if (empty($config) || !(is_array($config) || $config instanceof EmailConfig)) {
             $config = config(EmailConfig::class);
         }
 
@@ -265,8 +265,9 @@ class Services extends BaseService
      */
     public static function exceptions(
         ?ExceptionsConfig $config = null,
-        bool $getShared = true
-    ) {
+        bool              $getShared = true
+    )
+    {
         if ($getShared) {
             return static::getSharedInstance('exceptions', $config);
         }
@@ -344,7 +345,7 @@ class Services extends BaseService
         assert($config instanceof Images);
 
         $handler = $handler ?: $config->defaultHandler;
-        $class   = $config->handlers[$handler];
+        $class = $config->handlers[$handler];
 
         return new $class($config);
     }
@@ -674,7 +675,7 @@ class Services extends BaseService
 
         if ($driverName === DatabaseHandler::class) {
             $DBGroup = $config->DBGroup ?? config(Database::class)->defaultGroup;
-            $db      = Database::connect($DBGroup);
+            $db = Database::connect($DBGroup);
 
             $driver = $db->getPlatform();
 
@@ -710,10 +711,11 @@ class Services extends BaseService
      * @return SiteURIFactory
      */
     public static function siteurifactory(
-        ?App $config = null,
+        ?App          $config = null,
         ?Superglobals $superglobals = null,
-        bool $getShared = true
-    ) {
+        bool          $getShared = true
+    )
+    {
         if ($getShared) {
             return static::getSharedInstance('siteurifactory', $config, $superglobals);
         }
@@ -732,8 +734,9 @@ class Services extends BaseService
     public static function superglobals(
         ?array $server = null,
         ?array $get = null,
-        bool $getShared = true
-    ) {
+        bool   $getShared = true
+    )
+    {
         if ($getShared) {
             return static::getSharedInstance('superglobals', $server, $get);
         }
@@ -802,7 +805,7 @@ class Services extends BaseService
 
         if ($uri === null) {
             $appConfig = config(App::class);
-            $factory   = AppServices::siteurifactory($appConfig, AppServices::get('superglobals'));
+            $factory = AppServices::siteurifactory($appConfig, AppServices::get('superglobals'));
 
             return $factory->createFromGlobals();
         }

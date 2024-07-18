@@ -37,7 +37,7 @@ class Result extends BaseResult
      */
     public function getFieldNames(): array
     {
-        return array_map(fn ($fieldIndex) => oci_field_name($this->resultID, $fieldIndex), range(1, $this->getFieldCount()));
+        return array_map(fn($fieldIndex) => oci_field_name($this->resultID, $fieldIndex), range(1, $this->getFieldCount()));
     }
 
     /**
@@ -45,9 +45,9 @@ class Result extends BaseResult
      */
     public function getFieldData(): array
     {
-        return array_map(fn ($fieldIndex) => (object) [
-            'name'       => oci_field_name($this->resultID, $fieldIndex),
-            'type'       => oci_field_type($this->resultID, $fieldIndex),
+        return array_map(fn($fieldIndex) => (object)[
+            'name' => oci_field_name($this->resultID, $fieldIndex),
+            'type' => oci_field_type($this->resultID, $fieldIndex),
             'max_length' => oci_field_size($this->resultID, $fieldIndex),
         ], range(1, $this->getFieldCount()));
     }
@@ -101,11 +101,11 @@ class Result extends BaseResult
     {
         $row = oci_fetch_object($this->resultID);
 
-        if ($className === 'stdClass' || ! $row) {
+        if ($className === 'stdClass' || !$row) {
             return $row;
         }
         if (is_subclass_of($className, Entity::class)) {
-            return (new $className())->injectRawData((array) $row);
+            return (new $className())->injectRawData((array)$row);
         }
 
         $instance = new $className();

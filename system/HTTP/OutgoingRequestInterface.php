@@ -84,7 +84,7 @@ interface OutgoingRequestInterface extends MessageInterface
      *
      * @see http://tools.ietf.org/html/rfc3986#section-4.3
      *
-     * @param URI  $uri          New request URI to use.
+     * @param URI $uri New request URI to use.
      * @param bool $preserveHost Preserve the original state of the Host header.
      *
      * @return static

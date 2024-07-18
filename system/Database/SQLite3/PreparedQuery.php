@@ -47,8 +47,8 @@ class PreparedQuery extends BasePreparedQuery
      */
     public function _prepare(string $sql, array $options = []): PreparedQuery
     {
-        if (! ($this->statement = $this->db->connID->prepare($sql))) {
-            $this->errorCode   = $this->db->connID->lastErrorCode();
+        if (!($this->statement = $this->db->connID->prepare($sql))) {
+            $this->errorCode = $this->db->connID->lastErrorCode();
             $this->errorString = $this->db->connID->lastErrorMsg();
 
             if ($this->db->DBDebug) {
@@ -65,7 +65,7 @@ class PreparedQuery extends BasePreparedQuery
      */
     public function _execute(array $data): bool
     {
-        if (! isset($this->statement)) {
+        if (!isset($this->statement)) {
             throw new BadMethodCallException('You must call prepare before trying to execute a prepared statement.');
         }
 

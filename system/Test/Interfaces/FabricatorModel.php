@@ -47,9 +47,9 @@ interface FabricatorModel
      * Inserts data into the current table. If an object is provided,
      * it will attempt to convert it to an array.
      *
-     * @param         array|object|null     $row
+     * @param array|object|null $row
      * @phpstan-param row_array|object|null $row
-     * @param         bool                  $returnID Whether insert ID should be returned or not.
+     * @param bool $returnID Whether insert ID should be returned or not.
      *
      * @return bool|int|string
      *
@@ -61,7 +61,7 @@ interface FabricatorModel
      * The following properties and methods are optional, but if present should
      * adhere to their definitions.
      *
-     * @property array  $allowedFields
+     * @property array $allowedFields
      * @property string $useSoftDeletes
      * @property string $useTimestamps
      * @property string $createdField

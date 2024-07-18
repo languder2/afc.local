@@ -50,12 +50,12 @@ trait ParameterHoldingTrait
 
             $default = $p->getDefault();
             if ($default) {
-                $default = ' = '.$default;
+                $default = ' = ' . $default;
             }
 
             $ref = $p->reference ? '&' : '';
 
-            $out[] = $type.$ref.$p->getName().$default;
+            $out[] = $type . $ref . $p->getName() . $default;
         }
 
         return $this->paramcache = \implode(', ', $out);

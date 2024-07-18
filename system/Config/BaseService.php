@@ -243,7 +243,7 @@ class BaseService
             return static::$mocks[$key];
         }
 
-        if (! isset(static::$instances[$key])) {
+        if (!isset(static::$instances[$key])) {
             // Make sure $getShared is false
             $params[] = false;
 
@@ -329,7 +329,7 @@ class BaseService
         static::buildServicesCache();
 
         $services = array_merge(self::$serviceNames, [Services::class]);
-        $name     = strtolower($name);
+        $name = strtolower($name);
 
         foreach ($services as $service) {
             if (method_exists($service, $name)) {
@@ -349,7 +349,7 @@ class BaseService
      */
     public static function reset(bool $initAutoloader = true)
     {
-        static::$mocks     = [];
+        static::$mocks = [];
         static::$instances = [];
         static::$factories = [];
 
@@ -378,16 +378,16 @@ class BaseService
      */
     public static function injectMock(string $name, $mock)
     {
-        static::$instances[$name]         = $mock;
+        static::$instances[$name] = $mock;
         static::$mocks[strtolower($name)] = $mock;
     }
 
     protected static function buildServicesCache(): void
     {
-        if (! static::$discovered) {
+        if (!static::$discovered) {
             if ((new Modules())->shouldDiscover('services')) {
                 $locator = static::locator();
-                $files   = $locator->search('Config/Services');
+                $files = $locator->search('Config/Services');
 
                 $systemPath = static::autoloader()->getNamespace('CodeIgniter')[0];
 

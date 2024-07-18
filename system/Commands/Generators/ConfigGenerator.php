@@ -67,8 +67,8 @@ class ConfigGenerator extends BaseCommand
      */
     protected $options = [
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserConfig).',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserConfig).',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -78,7 +78,7 @@ class ConfigGenerator extends BaseCommand
     {
         $this->component = 'Config';
         $this->directory = 'Config';
-        $this->template  = 'config.tpl.php';
+        $this->template = 'config.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.config';
         $this->generateClass($params);

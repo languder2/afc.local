@@ -65,8 +65,8 @@ class PageCache implements FilterInterface
         assert($request instanceof CLIRequest || $request instanceof IncomingRequest);
 
         if (
-            ! $response instanceof DownloadResponse
-            && ! $response instanceof RedirectResponse
+            !$response instanceof DownloadResponse
+            && !$response instanceof RedirectResponse
         ) {
             // Cache it without the performance metrics replaced
             // so that we can have live speed updates along the way.

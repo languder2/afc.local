@@ -67,8 +67,8 @@ class FilterGenerator extends BaseCommand
      */
     protected $options = [
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserFilter).',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserFilter).',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -78,7 +78,7 @@ class FilterGenerator extends BaseCommand
     {
         $this->component = 'Filter';
         $this->directory = 'Filters';
-        $this->template  = 'filter.tpl.php';
+        $this->template = 'filter.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.filter';
         $this->generateClass($params);

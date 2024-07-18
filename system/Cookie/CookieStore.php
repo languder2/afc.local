@@ -52,7 +52,7 @@ class CookieStore implements Countable, IteratorAggregate
             try {
                 return Cookie::fromHeaderString($header, $raw);
             } catch (CookieException $e) {
-                log_message('error', (string) $e);
+                log_message('error', (string)$e);
 
                 return false;
             }
@@ -167,8 +167,8 @@ class CookieStore implements Countable, IteratorAggregate
     public function dispatch(): void
     {
         foreach ($this->cookies as $cookie) {
-            $name    = $cookie->getPrefixedName();
-            $value   = $cookie->getValue();
+            $name = $cookie->getPrefixedName();
+            $value = $cookie->getValue();
             $options = $cookie->getOptions();
 
             if ($cookie->isRaw()) {
@@ -227,7 +227,7 @@ class CookieStore implements Countable, IteratorAggregate
         foreach ($cookies as $index => $cookie) {
             $type = get_debug_type($cookie);
 
-            if (! $cookie instanceof Cookie) {
+            if (!$cookie instanceof Cookie) {
                 throw CookieException::forInvalidCookieInstance([static::class, Cookie::class, $type, $index]);
             }
         }

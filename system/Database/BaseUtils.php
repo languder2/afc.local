@@ -155,8 +155,8 @@ abstract class BaseUtils
             if (empty($res)) {
                 $key = $tableName;
             } else {
-                $res  = current($res);
-                $key  = str_replace($this->db->database . '.', '', current($res));
+                $res = current($res);
+                $key = str_replace($this->db->database . '.', '', current($res));
                 $keys = array_keys($res);
                 unset($res[$keys[0]]);
             }
@@ -215,10 +215,10 @@ abstract class BaseUtils
 
             foreach ($row as $item) {
                 $line[] = $enclosure . str_replace(
-                    $enclosure,
-                    $enclosure . $enclosure,
-                    (string) $item
-                ) . $enclosure;
+                        $enclosure,
+                        $enclosure . $enclosure,
+                        (string)$item
+                    ) . $enclosure;
             }
 
             $out .= implode($delim, $line) . $newline;
@@ -233,14 +233,14 @@ abstract class BaseUtils
     public function getXMLFromResult(ResultInterface $query, array $params = []): string
     {
         foreach (['root' => 'root', 'element' => 'element', 'newline' => "\n", 'tab' => "\t"] as $key => $val) {
-            if (! isset($params[$key])) {
+            if (!isset($params[$key])) {
                 $params[$key] = $val;
             }
         }
 
-        $root    = $params['root'];
+        $root = $params['root'];
         $newline = $params['newline'];
-        $tab     = $params['tab'];
+        $tab = $params['tab'];
         $element = $params['element'];
 
         helper('xml');
@@ -250,7 +250,7 @@ abstract class BaseUtils
             $xml .= $tab . '<' . $element . '>' . $newline;
 
             foreach ($row as $key => $val) {
-                $val = (! empty($val)) ? xml_convert((string) $val) : '';
+                $val = (!empty($val)) ? xml_convert((string)$val) : '';
 
                 $xml .= $tab . $tab . '<' . $key . '>' . $val . '</' . $key . '>' . $newline;
             }
@@ -277,17 +277,17 @@ abstract class BaseUtils
         }
 
         $prefs = [
-            'tables'             => [],
-            'ignore'             => [],
-            'filename'           => '',
-            'format'             => 'gzip', // gzip, txt
-            'add_drop'           => true,
-            'add_insert'         => true,
-            'newline'            => "\n",
+            'tables' => [],
+            'ignore' => [],
+            'filename' => '',
+            'format' => 'gzip', // gzip, txt
+            'add_drop' => true,
+            'add_insert' => true,
+            'newline' => "\n",
             'foreign_key_checks' => true,
         ];
 
-        if (! empty($params)) {
+        if (!empty($params)) {
             foreach (array_keys($prefs) as $key) {
                 if (isset($params[$key])) {
                     $prefs[$key] = $params[$key];
@@ -299,11 +299,11 @@ abstract class BaseUtils
             $prefs['tables'] = $this->db->listTables();
         }
 
-        if (! in_array($prefs['format'], ['gzip', 'txt'], true)) {
+        if (!in_array($prefs['format'], ['gzip', 'txt'], true)) {
             $prefs['format'] = 'txt';
         }
 
-        if ($prefs['format'] === 'gzip' && ! function_exists('gzencode')) {
+        if ($prefs['format'] === 'gzip' && !function_exists('gzencode')) {
             if ($this->db->DBDebug) {
                 throw new DatabaseException('The file compression format you chose is not supported by your server.');
             }

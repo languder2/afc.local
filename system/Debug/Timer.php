@@ -38,7 +38,7 @@ class Timer
      * Multiple calls can be made to this method so that several
      * execution points can be measured.
      *
-     * @param string     $name The name of this timer.
+     * @param string $name The name of this timer.
      * @param float|null $time Allows user to provide time.
      *
      * @return Timer
@@ -46,8 +46,8 @@ class Timer
     public function start(string $name, ?float $time = null)
     {
         $this->timers[strtolower($name)] = [
-            'start' => ! empty($time) ? $time : microtime(true),
-            'end'   => null,
+            'start' => !empty($time) ? $time : microtime(true),
+            'end' => null,
         ];
 
         return $this;
@@ -79,8 +79,8 @@ class Timer
     /**
      * Returns the duration of a recorded timer.
      *
-     * @param string $name     The name of the timer.
-     * @param int    $decimals Number of decimal places.
+     * @param string $name The name of the timer.
+     * @param int $decimals Number of decimal places.
      *
      * @return float|null Returns null if timer does not exist by that name.
      *                    Returns a float representing the number of
@@ -100,7 +100,7 @@ class Timer
             $timer['end'] = microtime(true);
         }
 
-        return (float) number_format($timer['end'] - $timer['start'], $decimals, '.', '');
+        return (float)number_format($timer['end'] - $timer['start'], $decimals, '.', '');
     }
 
     /**
@@ -117,7 +117,7 @@ class Timer
                 $timer['end'] = microtime(true);
             }
 
-            $timer['duration'] = (float) number_format($timer['end'] - $timer['start'], $decimals);
+            $timer['duration'] = (float)number_format($timer['end'] - $timer['start'], $decimals);
         }
 
         return $timers;
@@ -135,7 +135,7 @@ class Timer
      * Executes callable and measures its time.
      * Returns its return value if any.
      *
-     * @param string            $name     The name of the timer
+     * @param string $name The name of the timer
      * @param callable(): mixed $callable callable to be executed
      *
      * @return mixed

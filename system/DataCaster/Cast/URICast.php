@@ -24,11 +24,12 @@ use CodeIgniter\HTTP\URI;
 class URICast extends BaseCast
 {
     public static function get(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): URI {
-        if (! is_string($value)) {
+    ): URI
+    {
+        if (!is_string($value)) {
             self::invalidTypeValueError($value);
         }
 
@@ -36,14 +37,15 @@ class URICast extends BaseCast
     }
 
     public static function set(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): string {
-        if (! $value instanceof URI) {
+    ): string
+    {
+        if (!$value instanceof URI) {
             self::invalidTypeValueError($value);
         }
 
-        return (string) $value;
+        return (string)$value;
     }
 }

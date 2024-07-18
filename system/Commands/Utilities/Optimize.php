@@ -108,7 +108,7 @@ final class Optimize extends BaseCommand
         $result = $publisher->replace(
             $config,
             [
-                'public bool $configCacheEnabled = false;'  => 'public bool $configCacheEnabled = true;',
+                'public bool $configCacheEnabled = false;' => 'public bool $configCacheEnabled = true;',
                 'public bool $locatorCacheEnabled = false;' => 'public bool $locatorCacheEnabled = true;',
             ]
         );
@@ -129,7 +129,7 @@ final class Optimize extends BaseCommand
 
     private function removeDevPackages(): void
     {
-        if (! defined('VENDORPATH')) {
+        if (!defined('VENDORPATH')) {
             return;
         }
 

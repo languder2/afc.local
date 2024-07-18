@@ -77,85 +77,28 @@ class Negotiate
     }
 
     /**
-     * Determines the best charset to use based on the $supported
-     * types the application says it supports, and the types requested
-     * by the client.
-     *
-     * If no match is found, the first, highest-ranking client requested
-     * type is returned.
-     */
-    public function charset(array $supported): string
-    {
-        $match = $this->getBestMatch(
-            $supported,
-            $this->request->getHeaderLine('accept-charset'),
-            false,
-            true
-        );
-
-        // If no charset is shown as a match, ignore the directive
-        // as allowed by the RFC, and tell it a default value.
-        if ($match === '') {
-            return 'utf-8';
-        }
-
-        return $match;
-    }
-
-    /**
-     * Determines the best encoding type to use based on the $supported
-     * types the application says it supports, and the types requested
-     * by the client.
-     *
-     * If no match is found, the first, highest-ranking client requested
-     * type is returned.
-     */
-    public function encoding(array $supported = []): string
-    {
-        $supported[] = 'identity';
-
-        return $this->getBestMatch($supported, $this->request->getHeaderLine('accept-encoding'));
-    }
-
-    /**
-     * Determines the best language to use based on the $supported
-     * types the application says it supports, and the types requested
-     * by the client.
-     *
-     * If no match is found, the first, highest-ranking client requested
-     * type is returned.
-     */
-    public function language(array $supported): string
-    {
-        return $this->getBestMatch($supported, $this->request->getHeaderLine('accept-language'), false, false, true);
-    }
-
-    // --------------------------------------------------------------------
-    // Utility Methods
-    // --------------------------------------------------------------------
-
-    /**
      * Does the grunt work of comparing any of the app-supported values
      * against a given Accept* header string.
      *
      * Portions of this code base on Aura.Accept library.
      *
-     * @param array  $supported    App-supported values
-     * @param string $header       header string
-     * @param bool   $enforceTypes If TRUE, will compare media types and sub-types.
-     * @param bool   $strictMatch  If TRUE, will return empty string on no match.
+     * @param array $supported App-supported values
+     * @param string $header header string
+     * @param bool $enforceTypes If TRUE, will compare media types and sub-types.
+     * @param bool $strictMatch If TRUE, will return empty string on no match.
      *                             If FALSE, will return the first supported element.
-     * @param bool   $matchLocales If TRUE, will match locale sub-types to a broad type (fr-FR = fr)
+     * @param bool $matchLocales If TRUE, will match locale sub-types to a broad type (fr-FR = fr)
      *
      * @return string Best match
      */
     protected function getBestMatch(
-        array $supported,
+        array   $supported,
         ?string $header = null,
-        bool $enforceTypes = false,
-        bool $strictMatch = false,
-        bool $matchLocales = false
-    ): string {
+        bool    $enforceTypes = false,
+        bool    $strictMatch = false,
+        bool    $matchLocales = false
+    ): string
+    {
         if ($supported === []) {
             throw HTTPException::forEmptySupportedNegotiations();
         }
@@ -196,7 +139,7 @@ class Negotiate
      */
     public function parseHeader(string $header): array
     {
-        $results    = [];
+        $results = [];
         $acceptable = explode(',', $header);
 
         foreach ($acceptable as $value) {
@@ -226,8 +169,8 @@ class Negotiate
             }
 
             $results[] = [
-                'value'  => trim($value),
-                'q'      => (float) $quality,
+                'value' => trim($value),
+                'q' => (float)$quality,
                 'params' => $parameters,
             ];
         }
@@ -299,6 +242,10 @@ class Negotiate
         return false;
     }
 
+    // --------------------------------------------------------------------
+    // Utility Methods
+    // --------------------------------------------------------------------
+
     /**
      * Checks two Accept values with matching 'values' to see if their
      * 'params' are the same.
@@ -310,7 +257,7 @@ class Negotiate
         }
 
         foreach ($supported['params'] as $label => $value) {
-            if (! isset($acceptable['params'][$label])
+            if (!isset($acceptable['params'][$label])
                 || $acceptable['params'][$label] !== $value
             ) {
                 return false;
@@ -359,5 +306,59 @@ class Negotiate
             : $supported['value'];
 
         return strtolower($aBroad) === strtolower($sBroad);
+    }
+
+    /**
+     * Determines the best charset to use based on the $supported
+     * types the application says it supports, and the types requested
+     * by the client.
+     *
+     * If no match is found, the first, highest-ranking client requested
+     * type is returned.
+     */
+    public function charset(array $supported): string
+    {
+        $match = $this->getBestMatch(
+            $supported,
+            $this->request->getHeaderLine('accept-charset'),
+            false,
+            true
+        );
+
+        // If no charset is shown as a match, ignore the directive
+        // as allowed by the RFC, and tell it a default value.
+        if ($match === '') {
+            return 'utf-8';
+        }
+
+        return $match;
+    }
+
+    /**
+     * Determines the best encoding type to use based on the $supported
+     * types the application says it supports, and the types requested
+     * by the client.
+     *
+     * If no match is found, the first, highest-ranking client requested
+     * type is returned.
+     */
+    public function encoding(array $supported = []): string
+    {
+        $supported[] = 'identity';
+
+        return $this->getBestMatch($supported, $this->request->getHeaderLine('accept-encoding'));
+    }
+
+    /**
+     * Determines the best language to use based on the $supported
+     * types the application says it supports, and the types requested
+     * by the client.
+     *
+     * If no match is found, the first, highest-ranking client requested
+     * type is returned.
+     */
+    public function language(array $supported): string
+    {
+        return $this->getBestMatch($supported, $this->request->getHeaderLine('accept-language'), false, false, true);
     }
 }

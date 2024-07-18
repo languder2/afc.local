@@ -101,7 +101,7 @@ class Builder extends BaseBuilder
         if ($type !== '') {
             $type = strtoupper(trim($type));
 
-            if (! in_array($type, $this->joinTypes, true)) {
+            if (!in_array($type, $this->joinTypes, true)) {
                 $type = '';
             } else {
                 $type .= ' ';
@@ -112,11 +112,11 @@ class Builder extends BaseBuilder
         // in the protectIdentifiers to know whether to add a table prefix
         $this->trackAliases($table);
 
-        if (! is_bool($escape)) {
+        if (!is_bool($escape)) {
             $escape = $this->db->protectIdentifiers;
         }
 
-        if (! $this->hasOperator($cond)) {
+        if (!$this->hasOperator($cond)) {
             $cond = ' USING (' . ($escape ? $this->db->escapeIdentifiers($cond) : $cond) . ')';
         } elseif ($escape === false) {
             $cond = ' ON ' . $cond;
@@ -124,20 +124,20 @@ class Builder extends BaseBuilder
             // Split multiple conditions
             if (preg_match_all('/\sAND\s|\sOR\s/i', $cond, $joints, PREG_OFFSET_CAPTURE)) {
                 $conditions = [];
-                $joints     = $joints[0];
+                $joints = $joints[0];
                 array_unshift($joints, ['', 0]);
 
                 for ($i = count($joints) - 1, $pos = strlen($cond); $i >= 0; $i--) {
                     $joints[$i][1] += strlen($joints[$i][0]); // offset
                     $conditions[$i] = substr($cond, $joints[$i][1], $pos - $joints[$i][1]);
-                    $pos            = $joints[$i][1] - strlen($joints[$i][0]);
-                    $joints[$i]     = $joints[$i][0];
+                    $pos = $joints[$i][1] - strlen($joints[$i][0]);
+                    $joints[$i] = $joints[$i][0];
                 }
 
                 ksort($conditions);
             } else {
                 $conditions = [$cond];
-                $joints     = [''];
+                $joints = [''];
             }
 
             $cond = ' ON ';
@@ -248,7 +248,7 @@ class Builder extends BaseBuilder
 
         $sql = $this->_update($this->QBFrom[0], $values);
 
-        if (! $this->testMode) {
+        if (!$this->testMode) {
             $this->resetWrite();
 
             return $this->db->query($sql, $this->binds, false);
@@ -274,7 +274,7 @@ class Builder extends BaseBuilder
 
         $sql = $this->_update($this->QBFrom[0], $values);
 
-        if (! $this->testMode) {
+        if (!$this->testMode) {
             $this->resetWrite();
 
             return $this->db->query($sql, $this->binds, false);
@@ -297,17 +297,17 @@ class Builder extends BaseBuilder
         }
 
         if ($this->db->escapeChar === '"') {
-            if (str_contains($table, '.') && ! str_starts_with($table, '.') && ! str_ends_with($table, '.')) {
-                $dbInfo   = explode('.', $table);
+            if (str_contains($table, '.') && !str_starts_with($table, '.') && !str_ends_with($table, '.')) {
+                $dbInfo = explode('.', $table);
                 $database = $this->db->getDatabase();
-                $table    = $dbInfo[0];
+                $table = $dbInfo[0];
 
                 if (count($dbInfo) === 3) {
-                    $database  = str_replace('"', '', $dbInfo[0]);
-                    $schema    = str_replace('"', '', $dbInfo[1]);
+                    $database = str_replace('"', '', $dbInfo[0]);
+                    $schema = str_replace('"', '', $dbInfo[1]);
                     $tableName = str_replace('"', '', $dbInfo[2]);
                 } else {
-                    $schema    = str_replace('"', '', $dbInfo[0]);
+                    $schema = str_replace('"', '', $dbInfo[0]);
                     $tableName = str_replace('"', '', $dbInfo[1]);
                 }
 
@@ -338,7 +338,7 @@ class Builder extends BaseBuilder
         //   [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]The number of
         //   rows provided for a FETCH clause must be greater then zero.
         $limitZeroAsAll = config(Feature::class)->limitZeroAsAll ?? true;
-        if (! $limitZeroAsAll && $this->QBLimit === 0) {
+        if (!$limitZeroAsAll && $this->QBLimit === 0) {
             return "SELECT * \nFROM " . $this->_fromTables() . ' WHERE 1=0 ';
         }
 
@@ -402,7 +402,7 @@ class Builder extends BaseBuilder
     {
         // check whether the existing keys are part of the primary key.
         // if so then use them for the "ON" part and exclude them from the $values and $keys
-        $pKeys     = $this->db->getIndexData($table);
+        $pKeys = $this->db->getIndexData($table);
         $keyFields = [];
 
         foreach ($pKeys as $key) {
@@ -416,7 +416,7 @@ class Builder extends BaseBuilder
         }
 
         // Get the unique field names
-        $escKeyFields = array_map(fn (string $field): string => $this->db->protectIdentifiers($field), array_values(array_unique($keyFields)));
+        $escKeyFields = array_map(fn(string $field): string => $this->db->protectIdentifiers($field), array_values(array_unique($keyFields)));
 
         // Get the binds
         $binds = $this->binds;
@@ -426,7 +426,7 @@ class Builder extends BaseBuilder
 
         // Get the common field and values from the keys data and index fields
         $common = array_intersect($keys, $escKeyFields);
-        $bingo  = [];
+        $bingo = [];
 
         foreach ($common as $v) {
             $k = array_search($v, $keys, true);
@@ -485,7 +485,7 @@ class Builder extends BaseBuilder
 
         $sql = $type . '( CAST( ' . $this->db->protectIdentifiers(trim($select)) . ' AS FLOAT ) ) AS ' . $this->db->escapeIdentifiers(trim($alias));
 
-        $this->QBSelect[]   = $sql;
+        $this->QBSelect[] = $sql;
         $this->QBNoEscape[] = null;
 
         return $this;
@@ -522,7 +522,7 @@ class Builder extends BaseBuilder
             $this->resetSelect();
         }
 
-        return (int) $query->numrows;
+        return (int)$query->numrows;
     }
 
     /**
@@ -584,7 +584,7 @@ class Builder extends BaseBuilder
         if ($selectOverride !== false) {
             $sql = $selectOverride;
         } else {
-            $sql = (! $this->QBDistinct) ? 'SELECT ' : 'SELECT DISTINCT ';
+            $sql = (!$this->QBDistinct) ? 'SELECT ' : 'SELECT DISTINCT ';
 
             // SQL Server can't work with select * if group by is specified
             if (empty($this->QBSelect) && $this->QBGroupBy !== [] && is_array($this->QBGroupBy)) {
@@ -600,7 +600,7 @@ class Builder extends BaseBuilder
                 // The reason we protect identifiers here rather than in the select() function
                 // is because until the user calls the from() function we don't know if there are aliases
                 foreach ($this->QBSelect as $key => $val) {
-                    $noEscape             = $this->QBNoEscape[$key] ?? null;
+                    $noEscape = $this->QBNoEscape[$key] ?? null;
                     $this->QBSelect[$key] = $this->db->protectIdentifiers($val, false, $noEscape);
                 }
 
@@ -614,7 +614,7 @@ class Builder extends BaseBuilder
         }
 
         // Write the "JOIN" portion of the query
-        if (! empty($this->QBJoin)) {
+        if (!empty($this->QBJoin)) {
             $sql .= "\n" . implode("\n", $this->QBJoin);
         }
 
@@ -681,7 +681,7 @@ class Builder extends BaseBuilder
             $constraints = $this->QBOptions['constraints'] ?? [];
 
             $tableIdentity = $this->QBOptions['tableIdentity'] ?? '';
-            $sql           = "SELECT name from syscolumns where id = Object_ID('" . $table . "') and colstat = 1";
+            $sql = "SELECT name from syscolumns where id = Object_ID('" . $table . "') and colstat = 1";
             if (($query = $this->db->query($sql)) === false) {
                 throw new DatabaseException('Failed to get table identity');
             }
@@ -694,7 +694,7 @@ class Builder extends BaseBuilder
 
             $identityInFields = in_array($tableIdentity, $keys, true);
 
-            $fieldNames = array_map(static fn ($columnName) => trim($columnName, '"'), $keys);
+            $fieldNames = array_map(static fn($columnName) => trim($columnName, '"'), $keys);
 
             if (empty($constraints)) {
                 $tableIndexes = $this->db->getIndexData($table);
@@ -748,34 +748,34 @@ class Builder extends BaseBuilder
             $sql .= "\nON (";
 
             $sql .= implode(
-                ' AND ',
-                array_map(
-                    static fn ($key, $value) => (
+                    ' AND ',
+                    array_map(
+                        static fn($key, $value) => (
                         ($value instanceof RawSql && is_string($key))
-                        ?
-                        $fullTableName . '.' . $key . ' = ' . $value
-                        :
-                        (
-                            $value instanceof RawSql
                             ?
-                            $value
+                            $fullTableName . '.' . $key . ' = ' . $value
                             :
-                            $fullTableName . '.' . $value . ' = ' . $alias . '.' . $value
-                        )
-                    ),
-                    array_keys($constraints),
-                    $constraints
-                )
-            ) . ")\n";
+                            (
+                            $value instanceof RawSql
+                                ?
+                                $value
+                                :
+                                $fullTableName . '.' . $value . ' = ' . $alias . '.' . $value
+                            )
+                        ),
+                        array_keys($constraints),
+                        $constraints
+                    )
+                ) . ")\n";
 
             $sql .= "WHEN MATCHED THEN UPDATE SET\n";
 
             $sql .= implode(
                 ",\n",
                 array_map(
-                    static fn ($key, $value) => $key . ($value instanceof RawSql ?
-                        ' = ' . $value :
-                    " = {$alias}.{$value}"),
+                    static fn($key, $value) => $key . ($value instanceof RawSql ?
+                            ' = ' . $value :
+                            " = {$alias}.{$value}"),
                     array_keys($updateFields),
                     $updateFields
                 )
@@ -787,11 +787,11 @@ class Builder extends BaseBuilder
                 '(' . implode(
                     ', ',
                     array_map(
-                        static fn ($columnName) => $columnName === $tableIdentity
-                    ? "CASE WHEN {$alias}.{$columnName} IS NULL THEN (SELECT "
-                    . 'isnull(IDENT_CURRENT(\'' . $fullTableName . '\')+IDENT_INCR(\''
-                    . $fullTableName . "'),1)) ELSE {$alias}.{$columnName} END"
-                    : "{$alias}.{$columnName}",
+                        static fn($columnName) => $columnName === $tableIdentity
+                            ? "CASE WHEN {$alias}.{$columnName} IS NULL THEN (SELECT "
+                            . 'isnull(IDENT_CURRENT(\'' . $fullTableName . '\')+IDENT_INCR(\''
+                            . $fullTableName . "'),1)) ELSE {$alias}.{$columnName} END"
+                            : "{$alias}.{$columnName}",
                         $keys
                     )
                 ) . ');'

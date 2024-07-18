@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 // CodeIgniter XML Helpers
 
-if (! function_exists('xml_convert')) {
+if (!function_exists('xml_convert')) {
     /**
      * Convert Reserved XML characters to Entities
      */

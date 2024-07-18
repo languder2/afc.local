@@ -70,11 +70,11 @@ class MigrationGenerator extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '--session'   => 'Generates the migration file for database sessions.',
-        '--table'     => 'Table name to use for database sessions. Default: "ci_sessions".',
-        '--dbgroup'   => 'Database group to use for database sessions. Default: "default".',
+        '--session' => 'Generates the migration file for database sessions.',
+        '--table' => 'Table name to use for database sessions. Default: "ci_sessions".',
+        '--dbgroup' => 'Database group to use for database sessions. Default: "default".',
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserMigration).',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserMigration).',
     ];
 
     /**
@@ -84,10 +84,10 @@ class MigrationGenerator extends BaseCommand
     {
         $this->component = 'Migration';
         $this->directory = 'Database\Migrations';
-        $this->template  = 'migration.tpl.php';
+        $this->template = 'migration.tpl.php';
 
         if (array_key_exists('session', $params) || CLI::getOption('session')) {
-            $table     = $params['table'] ?? CLI::getOption('table') ?? 'ci_sessions';
+            $table = $params['table'] ?? CLI::getOption('table') ?? 'ci_sessions';
             $params[0] = "_create_{$table}_table";
         }
 
@@ -100,16 +100,16 @@ class MigrationGenerator extends BaseCommand
      */
     protected function prepare(string $class): string
     {
-        $data            = [];
+        $data = [];
         $data['session'] = false;
 
         if ($this->getOption('session')) {
-            $table   = $this->getOption('table');
+            $table = $this->getOption('table');
             $DBGroup = $this->getOption('dbgroup');
 
-            $data['session']  = true;
-            $data['table']    = is_string($table) ? $table : 'ci_sessions';
-            $data['DBGroup']  = is_string($DBGroup) ? $DBGroup : 'default';
+            $data['session'] = true;
+            $data['table'] = is_string($table) ? $table : 'ci_sessions';
+            $data['DBGroup'] = is_string($DBGroup) ? $DBGroup : 'default';
             $data['DBDriver'] = config(Database::class)->{$data['DBGroup']}['DBDriver'];
 
             /** @var SessionConfig|null $session */

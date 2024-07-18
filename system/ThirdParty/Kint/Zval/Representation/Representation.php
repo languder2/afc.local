@@ -50,7 +50,7 @@ class Representation
     public function getLabel(): string
     {
         if (\is_array($this->contents) && \count($this->contents) > 1) {
-            return $this->label.' ('.\count($this->contents).')';
+            return $this->label . ' (' . \count($this->contents) . ')';
         }
 
         return $this->label;

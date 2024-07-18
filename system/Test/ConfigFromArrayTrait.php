@@ -22,7 +22,7 @@ trait ConfigFromArrayTrait
      *
      * @template T of \CodeIgniter\Config\BaseConfig
      *
-     * @param class-string<T>      $classname Config classname
+     * @param class-string<T> $classname Config classname
      * @param array<string, mixed> $config
      *
      * @return T

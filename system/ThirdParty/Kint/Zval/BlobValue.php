@@ -92,20 +92,20 @@ class BlobValue extends Value
     public function getType(): ?string
     {
         if (false === $this->encoding) {
-            return 'binary '.$this->type;
+            return 'binary ' . $this->type;
         }
 
         if ('ASCII' === $this->encoding) {
             return $this->type;
         }
 
-        return $this->encoding.' '.$this->type;
+        return $this->encoding . ' ' . $this->type;
     }
 
     public function getValueShort(): ?string
     {
         if ($rep = $this->value) {
-            return '"'.$rep->contents.'"';
+            return '"' . $rep->contents . '"';
         }
 
         return null;

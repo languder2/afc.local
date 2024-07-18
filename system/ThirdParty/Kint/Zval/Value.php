@@ -163,7 +163,7 @@ class Value
     public function getName(): ?string
     {
         if (isset($this->name)) {
-            return (string) $this->name;
+            return (string)$this->name;
         }
 
         return null;
@@ -186,7 +186,7 @@ class Value
     public function getSize(): ?string
     {
         if (isset($this->size)) {
-            return (string) $this->size;
+            return (string)$this->size;
         }
 
         return null;
@@ -200,7 +200,7 @@ class Value
             }
 
             if ('integer' === $this->type || 'double' === $this->type) {
-                return (string) $rep->contents;
+                return (string)$rep->contents;
             }
         }
 
@@ -257,10 +257,10 @@ class Value
 
     public static function sortByName(self $a, self $b): int
     {
-        if ((string) $a->name === (string) $b->name) {
-            return (int) \is_int($b->name) - (int) \is_int($a->name);
+        if ((string)$a->name === (string)$b->name) {
+            return (int)\is_int($b->name) - (int)\is_int($a->name);
         }
 
-        return \strnatcasecmp((string) $a->name, (string) $b->name);
+        return \strnatcasecmp((string)$a->name, (string)$b->name);
     }
 }

@@ -44,14 +44,14 @@ class FileLocator implements FileLocatorInterface
      * Attempts to locate a file by examining the name for a namespace
      * and looking through the PSR-4 namespaced files that we know about.
      *
-     * @param string                $file   The relative file path or namespaced file to
+     * @param string $file The relative file path or namespaced file to
      *                                      locate. If not namespaced, search in the app
      *                                      folder.
      * @param non-empty-string|null $folder The folder within the namespace that we should
      *                                      look for the file. If $file does not contain
      *                                      this value, it will be appended to the namespace
      *                                      folder.
-     * @param string                $ext    The file extension the file should have.
+     * @param string $ext The file extension the file should have.
      *
      * @return false|string The path to the file, or false if not found.
      */
@@ -65,7 +65,7 @@ class FileLocator implements FileLocatorInterface
         }
 
         // Is not namespaced? Try the application folder.
-        if (! str_contains($file, '\\')) {
+        if (!str_contains($file, '\\')) {
             return $this->legacyLocate($file, $folder);
         }
 
@@ -80,7 +80,7 @@ class FileLocator implements FileLocatorInterface
             unset($segments[0]);
         }
 
-        $paths    = [];
+        $paths = [];
         $filename = '';
 
         // Namespaces always comes with arrays of paths
@@ -92,7 +92,7 @@ class FileLocator implements FileLocatorInterface
 
                 // There may be sub-namespaces of the same vendor,
                 // so overwrite them with namespaces found later.
-                $paths    = $namespaces[$namespace];
+                $paths = $namespaces[$namespace];
                 $filename = ltrim(str_replace('\\', '/', $fileWithoutNamespace), '/');
             }
         }
@@ -110,7 +110,7 @@ class FileLocator implements FileLocatorInterface
             // If we have a folder name, then the calling function
             // expects this file to be within that folder, like 'Views',
             // or 'libraries'.
-            if ($folder !== null && ! str_contains($path . $filename, '/' . $folder . '/')) {
+            if ($folder !== null && !str_contains($path . $filename, '/' . $folder . '/')) {
                 $path .= trim($folder, '/') . '/';
             }
 
@@ -132,9 +132,9 @@ class FileLocator implements FileLocatorInterface
             return '';
         }
 
-        $php       = file_get_contents($file);
-        $tokens    = token_get_all($php);
-        $dlm       = false;
+        $php = file_get_contents($file);
+        $tokens = token_get_all($php);
+        $dlm = false;
         $namespace = '';
         $className = '';
 
@@ -144,12 +144,12 @@ class FileLocator implements FileLocatorInterface
             }
 
             if ((isset($tokens[$i - 2][1]) && ($tokens[$i - 2][1] === 'phpnamespace' || $tokens[$i - 2][1] === 'namespace')) || ($dlm && $tokens[$i - 1][0] === T_NS_SEPARATOR && $token[0] === T_STRING)) {
-                if (! $dlm) {
+                if (!$dlm) {
                     $namespace = 0;
                 }
                 if (isset($token[1])) {
                     $namespace = $namespace ? $namespace . '\\' . $token[1] : $token[1];
-                    $dlm       = true;
+                    $dlm = true;
                 }
             } elseif ($dlm && ($token[0] !== T_NS_SEPARATOR) && ($token[0] !== T_STRING)) {
                 $dlm = false;
@@ -190,7 +190,7 @@ class FileLocator implements FileLocatorInterface
         $path = $this->ensureExt($path, $ext);
 
         $foundPaths = [];
-        $appPaths   = [];
+        $appPaths = [];
 
         foreach ($this->getNamespaces() as $namespace) {
             if (isset($namespace['path']) && is_file($namespace['path'] . $path)) {
@@ -207,7 +207,7 @@ class FileLocator implements FileLocatorInterface
             }
         }
 
-        if (! $prioritizeApp && $appPaths !== []) {
+        if (!$prioritizeApp && $appPaths !== []) {
             $foundPaths = [...$foundPaths, ...$appPaths];
         }
 
@@ -223,7 +223,7 @@ class FileLocator implements FileLocatorInterface
         if ($ext !== '') {
             $ext = '.' . $ext;
 
-            if (! str_ends_with($path, $ext)) {
+            if (!str_ends_with($path, $ext)) {
                 $path .= $ext;
             }
         }
@@ -248,7 +248,7 @@ class FileLocator implements FileLocatorInterface
                 if ($prefix === 'CodeIgniter') {
                     $system[] = [
                         'prefix' => $prefix,
-                        'path'   => rtrim($path, '\\/') . DIRECTORY_SEPARATOR,
+                        'path' => rtrim($path, '\\/') . DIRECTORY_SEPARATOR,
                     ];
 
                     continue;
@@ -256,7 +256,7 @@ class FileLocator implements FileLocatorInterface
 
                 $namespaces[] = [
                     'prefix' => $prefix,
-                    'path'   => rtrim($path, '\\/') . DIRECTORY_SEPARATOR,
+                    'path' => rtrim($path, '\\/') . DIRECTORY_SEPARATOR,
                 ];
             }
         }
@@ -274,7 +274,7 @@ class FileLocator implements FileLocatorInterface
     {
         $path = realpath($path) ?: $path;
 
-        if (! is_file($path)) {
+        if (!is_file($path)) {
             return false;
         }
 
@@ -334,7 +334,7 @@ class FileLocator implements FileLocatorInterface
             $fullPath = $namespace['path'] . $path;
             $fullPath = realpath($fullPath) ?: $fullPath;
 
-            if (! is_dir($fullPath)) {
+            if (!is_dir($fullPath)) {
                 continue;
             }
 
@@ -368,7 +368,7 @@ class FileLocator implements FileLocatorInterface
             $fullPath = rtrim($namespacePath, '/') . '/' . $path;
             $fullPath = realpath($fullPath) ?: $fullPath;
 
-            if (! is_dir($fullPath)) {
+            if (!is_dir($fullPath)) {
                 continue;
             }
 

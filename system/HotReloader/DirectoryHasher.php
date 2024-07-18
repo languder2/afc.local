@@ -61,13 +61,13 @@ final class DirectoryHasher
      */
     public function hashDirectory(string $path): string
     {
-        if (! is_dir($path)) {
+        if (!is_dir($path)) {
             throw FrameworkException::forInvalidDirectory($path);
         }
 
         $directory = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
-        $filter    = new IteratorFilter($directory);
-        $iterator  = new RecursiveIteratorIterator($filter);
+        $filter = new IteratorFilter($directory);
+        $iterator = new RecursiveIteratorIterator($filter);
 
         $hashes = [];
 

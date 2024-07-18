@@ -335,7 +335,7 @@ class Kint implements FacadeInterface
             return null;
         }
 
-        /** @psalm-var class-string[] $statics['renderers'] */
+        /** @psalm-var class-string[] $statics ['renderers'] */
         if (isset($statics['renderers'][$mode]) && \is_subclass_of($statics['renderers'][$mode], RendererInterface::class)) {
             $renderer = new $statics['renderers'][$mode]();
         } else {
@@ -349,7 +349,7 @@ class Kint implements FacadeInterface
      * Creates base objects given parameter info.
      *
      * @param array $params Parameters as returned from getCallInfo
-     * @param int   $argc   Number of arguments the helper was called with
+     * @param int $argc Number of arguments the helper was called with
      *
      * @return Value[] Base objects for the arguments
      */
@@ -389,10 +389,10 @@ class Kint implements FacadeInterface
                 $access_path = $param['path'];
 
                 if (!empty($param['expression'])) {
-                    $access_path = '('.$access_path.')';
+                    $access_path = '(' . $access_path . ')';
                 }
             } else {
-                $access_path = '$'.$i;
+                $access_path = '$' . $i;
             }
 
             $bases[] = Value::blank($name, $access_path);
@@ -406,9 +406,9 @@ class Kint implements FacadeInterface
      *
      * Aliases must be normalized beforehand (Utils::normalizeAliases)
      *
-     * @param array   $aliases Call aliases as found in Kint::$aliases
-     * @param array[] $trace   Backtrace
-     * @param array   $args    Arguments
+     * @param array $aliases Call aliases as found in Kint::$aliases
+     * @param array[] $trace Backtrace
+     * @param array $args Arguments
      *
      * @return array Call info
      */
@@ -623,11 +623,11 @@ class Kint implements FacadeInterface
 
         foreach ($file as $i => $part) {
             if (!isset($kint[$i]) || $kint[$i] !== $part) {
-                return ($i ? '.../' : '/').\implode('/', \array_slice($file, $i));
+                return ($i ? '.../' : '/') . \implode('/', \array_slice($file, $i));
             }
         }
 
-        return '/'.\implode('/', $file);
+        return '/' . \implode('/', $file);
     }
 
     public static function getIdeLink(string $file, int $line): string
@@ -639,7 +639,7 @@ class Kint implements FacadeInterface
      * Returns specific function call info from a stack trace frame, or null if no match could be found.
      *
      * @param array $frame The stack trace frame in question
-     * @param array $args  The arguments
+     * @param array $args The arguments
      *
      * @return ?array params and modifiers, or null if a specific call could not be determined
      */
@@ -683,8 +683,8 @@ class Kint implements FacadeInterface
 
                             foreach ($keys as $key) {
                                 $call['parameters'][] = [
-                                    'name' => \substr($param['name'], 3).'['.\var_export($key, true).']',
-                                    'path' => \substr($param['path'], 3).'['.\var_export($key, true).']',
+                                    'name' => \substr($param['name'], 3) . '[' . \var_export($key, true) . ']',
+                                    'path' => \substr($param['path'], 3) . '[' . \var_export($key, true) . ']',
                                     'expression' => false,
                                 ];
                             }
@@ -693,8 +693,8 @@ class Kint implements FacadeInterface
                             // through array_values so we can't access them directly at all
                             for ($j = 0; $j + $i < $argc; ++$j) {
                                 $call['parameters'][] = [
-                                    'name' => 'array_values('.\substr($param['name'], 3).')['.$j.']',
-                                    'path' => 'array_values('.\substr($param['path'], 3).')['.$j.']',
+                                    'name' => 'array_values(' . \substr($param['name'], 3) . ')[' . $j . ']',
+                                    'path' => 'array_values(' . \substr($param['path'], 3) . ')[' . $j . ']',
                                     'expression' => false,
                                 ];
                             }

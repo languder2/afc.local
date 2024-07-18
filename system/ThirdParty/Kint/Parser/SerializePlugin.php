@@ -84,14 +84,14 @@ class SerializePlugin extends AbstractPlugin
 
         $base_obj = new Value();
         $base_obj->depth = $o->depth + 1;
-        $base_obj->name = 'unserialize('.$o->name.')';
+        $base_obj->name = 'unserialize(' . $o->name . ')';
 
         if ($o->access_path) {
-            $base_obj->access_path = 'unserialize('.$o->access_path;
+            $base_obj->access_path = 'unserialize(' . $o->access_path;
             if (true === self::$allowed_classes) {
                 $base_obj->access_path .= ')';
             } else {
-                $base_obj->access_path .= ', '.\var_export($options, true).')';
+                $base_obj->access_path .= ', ' . \var_export($options, true) . ')';
             }
         }
 

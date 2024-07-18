@@ -61,7 +61,7 @@ class BaseConfig
     public static function __set_state(array $array)
     {
         static::$override = false;
-        $obj              = new static();
+        $obj = new static();
         static::$override = true;
 
         $properties = array_keys(get_object_vars($obj));
@@ -88,8 +88,8 @@ class BaseConfig
      */
     public static function reset(): void
     {
-        static::$registrars   = [];
-        static::$override     = true;
+        static::$registrars = [];
+        static::$override = true;
         static::$didDiscovery = false;
         static::$moduleConfig = null;
     }
@@ -104,15 +104,15 @@ class BaseConfig
     {
         static::$moduleConfig ??= new Modules();
 
-        if (! static::$override) {
+        if (!static::$override) {
             return;
         }
 
         $this->registerProperties();
 
-        $properties  = array_keys(get_object_vars($this));
-        $prefix      = static::class;
-        $slashAt     = strrpos($prefix, '\\');
+        $properties = array_keys(get_object_vars($this));
+        $prefix = static::class;
+        $slashAt = strrpos($prefix, '\\');
         $shortPrefix = strtolower(substr($prefix, $slashAt === false ? 0 : $slashAt + 1));
 
         foreach ($properties as $property) {
@@ -158,9 +158,9 @@ class BaseConfig
             $value = trim($value, '\'"');
 
             if (is_int($property)) {
-                $value = (int) $value;
+                $value = (int)$value;
             } elseif (is_float($property)) {
-                $value = (float) $value;
+                $value = (float)$value;
             }
 
             // If the default value of the property is `null` and the type is not
@@ -177,7 +177,7 @@ class BaseConfig
      */
     protected function getEnvValue(string $property, string $prefix, string $shortPrefix)
     {
-        $shortPrefix        = ltrim($shortPrefix, '\\');
+        $shortPrefix = ltrim($shortPrefix, '\\');
         $underscoreProperty = str_replace('.', '_', $property);
 
         switch (true) {
@@ -225,12 +225,12 @@ class BaseConfig
      */
     protected function registerProperties()
     {
-        if (! static::$moduleConfig->shouldDiscover('registrars')) {
+        if (!static::$moduleConfig->shouldDiscover('registrars')) {
             return;
         }
 
-        if (! static::$didDiscovery) {
-            $locator         = service('locator');
+        if (!static::$didDiscovery) {
+            $locator = service('locator');
             $registrarsFiles = $locator->search('Config/Registrar.php');
 
             foreach ($registrarsFiles as $file) {
@@ -251,13 +251,13 @@ class BaseConfig
         // Check the registrar class for a method named after this class' shortName
         foreach (static::$registrars as $callable) {
             // ignore non-applicable registrars
-            if (! method_exists($callable, $shortName)) {
+            if (!method_exists($callable, $shortName)) {
                 continue; // @codeCoverageIgnore
             }
 
             $properties = $callable::$shortName();
 
-            if (! is_array($properties)) {
+            if (!is_array($properties)) {
                 throw new RuntimeException('Registrars must return an array of properties and their values.');
             }
 

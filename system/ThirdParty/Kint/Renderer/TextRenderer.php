@@ -138,11 +138,11 @@ class TextRenderer extends AbstractRenderer
         $out = '';
 
         if (0 == $o->depth) {
-            $out .= $this->colorTitle($this->renderTitle($o)).PHP_EOL;
+            $out .= $this->colorTitle($this->renderTitle($o)) . PHP_EOL;
         }
 
         $out .= $this->renderHeader($o);
-        $out .= $this->renderChildren($o).PHP_EOL;
+        $out .= $this->renderChildren($o) . PHP_EOL;
 
         return $out;
     }
@@ -151,32 +151,32 @@ class TextRenderer extends AbstractRenderer
     {
         if (self::$decorations) {
             return $this->colorTitle(
-                $this->boxText('No argument', $this->header_width)
-            ).PHP_EOL;
+                    $this->boxText('No argument', $this->header_width)
+                ) . PHP_EOL;
         }
 
-        return $this->colorTitle('No argument').PHP_EOL;
+        return $this->colorTitle('No argument') . PHP_EOL;
     }
 
     public function boxText(string $text, int $width): string
     {
-        $out = '┌'.\str_repeat('─', $width - 2).'┐'.PHP_EOL;
+        $out = '┌' . \str_repeat('─', $width - 2) . '┐' . PHP_EOL;
 
         if (\strlen($text)) {
             $text = Utils::truncateString($text, $width - 4);
             $text = \str_pad($text, $width - 4);
 
-            $out .= '│ '.$this->escape($text).' │'.PHP_EOL;
+            $out .= '│ ' . $this->escape($text) . ' │' . PHP_EOL;
         }
 
-        $out .= '└'.\str_repeat('─', $width - 2).'┘';
+        $out .= '└' . \str_repeat('─', $width - 2) . '┘';
 
         return $out;
     }
 
     public function renderTitle(Value $o): string
     {
-        $name = (string) $o->getName();
+        $name = (string)$o->getName();
 
         if (self::$decorations) {
             return $this->boxText($name, $this->header_width);
@@ -205,20 +205,20 @@ class TextRenderer extends AbstractRenderer
 
         if (null !== ($s = $o->getType())) {
             if ($o->reference) {
-                $s = '&'.$s;
+                $s = '&' . $s;
             }
 
             $s = $this->colorType($this->escape($s));
 
             if ($o instanceof InstanceValue && isset($o->spl_object_id)) {
-                $s .= '#'.((int) $o->spl_object_id);
+                $s .= '#' . ((int)$o->spl_object_id);
             }
 
             $output[] = $s;
         }
 
         if (null !== ($s = $o->getSize())) {
-            $output[] = '('.$this->escape($s).')';
+            $output[] = '(' . $this->escape($s) . ')';
         }
 
         if (null !== ($s = $o->getValueShort())) {
@@ -228,7 +228,7 @@ class TextRenderer extends AbstractRenderer
             $output[] = $this->colorValue($this->escape($s));
         }
 
-        return \str_repeat(' ', $o->depth * $this->indent_width).\implode(' ', $output);
+        return \str_repeat(' ', $o->depth * $this->indent_width) . \implode(' ', $output);
     }
 
     public function renderChildren(Value $o): string
@@ -256,7 +256,7 @@ class TextRenderer extends AbstractRenderer
         }
 
         if ($children) {
-            $output .= PHP_EOL.$children;
+            $output .= PHP_EOL . $children;
             $output .= \str_repeat(' ', $o->depth * $this->indent_width);
         }
 
@@ -300,7 +300,7 @@ class TextRenderer extends AbstractRenderer
             $output .= PHP_EOL;
         }
 
-        return $this->colorTitle($output.$this->calledFrom().PHP_EOL);
+        return $this->colorTitle($output . $this->calledFrom() . PHP_EOL);
     }
 
     public function filterParserPlugins(array $plugins): array
@@ -321,7 +321,7 @@ class TextRenderer extends AbstractRenderer
 
     public function ideLink(string $file, int $line): string
     {
-        return $this->escape(Kint::shortenPath($file)).':'.$line;
+        return $this->escape(Kint::shortenPath($file)) . ':' . $line;
     }
 
     /**
@@ -337,10 +337,10 @@ class TextRenderer extends AbstractRenderer
         $output = '';
 
         if (isset($this->call_info['callee']['file'])) {
-            $output .= 'Called from '.$this->ideLink(
-                $this->call_info['callee']['file'],
-                $this->call_info['callee']['line']
-            );
+            $output .= 'Called from ' . $this->ideLink(
+                    $this->call_info['callee']['file'],
+                    $this->call_info['callee']['line']
+                );
         }
 
         if (
@@ -357,7 +357,7 @@ class TextRenderer extends AbstractRenderer
             $output .= ' [';
             $output .= $this->call_info['callee']['class'] ?? '';
             $output .= $this->call_info['callee']['type'] ?? '';
-            $output .= $this->call_info['callee']['function'].'()]';
+            $output .= $this->call_info['callee']['function'] . '()]';
         }
 
         if (null !== self::$timestamp) {

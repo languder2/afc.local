@@ -109,10 +109,10 @@ class TimeDifference
         $this->difference = $currentTime->getTimestamp() - $testTime->getTimestamp();
 
         $current = IntlCalendar::fromDateTime($currentTime);
-        $time    = IntlCalendar::fromDateTime($testTime)->getTime();
+        $time = IntlCalendar::fromDateTime($testTime)->getTime();
 
         $this->currentTime = $current;
-        $this->testTime    = $time;
+        $this->testTime = $time;
     }
 
     /**
@@ -160,7 +160,7 @@ class TimeDifference
 
         $time = clone $this->currentTime;
 
-        return (int) ($time->fieldDifference($this->testTime, IntlCalendar::FIELD_DAY_OF_YEAR) / 7);
+        return (int)($time->fieldDifference($this->testTime, IntlCalendar::FIELD_DAY_OF_YEAR) / 7);
     }
 
     /**
@@ -234,10 +234,10 @@ class TimeDifference
     {
         $current = clone $this->currentTime;
 
-        $years   = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_YEAR);
-        $months  = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_MONTH);
-        $days    = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_DAY_OF_YEAR);
-        $hours   = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_HOUR_OF_DAY);
+        $years = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_YEAR);
+        $months = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_MONTH);
+        $days = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_DAY_OF_YEAR);
+        $hours = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_HOUR_OF_DAY);
         $minutes = $current->fieldDifference($this->testTime, IntlCalendar::FIELD_MINUTE);
 
         $phrase = null;
@@ -249,7 +249,7 @@ class TimeDifference
             $phrase = lang('Time.months', [abs($months)], $locale);
             $before = $months < 0;
         } elseif ($days !== 0 && (abs($days) >= 7)) {
-            $weeks  = ceil($days / 7);
+            $weeks = ceil($days / 7);
             $phrase = lang('Time.weeks', [abs($weeks)], $locale);
             $before = $days < 0;
         } elseif ($days !== 0) {
@@ -279,7 +279,7 @@ class TimeDifference
      */
     public function __get($name)
     {
-        $name   = ucfirst(strtolower($name));
+        $name = ucfirst(strtolower($name));
         $method = "get{$name}";
 
         if (method_exists($this, $method)) {
@@ -298,7 +298,7 @@ class TimeDifference
      */
     public function __isset($name)
     {
-        $name   = ucfirst(strtolower($name));
+        $name = ucfirst(strtolower($name));
         $method = "get{$name}";
 
         return method_exists($this, $method);

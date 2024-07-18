@@ -41,7 +41,7 @@ class Boot
     public static function bootWeb(Paths $paths): int
     {
         static::definePathConstants($paths);
-        if (! defined('APP_NAMESPACE')) {
+        if (!defined('APP_NAMESPACE')) {
             static::loadConstants();
         }
         static::checkMissingExtensions();
@@ -83,7 +83,7 @@ class Boot
     public static function bootSpark(Paths $paths): int
     {
         static::definePathConstants($paths);
-        if (! defined('APP_NAMESPACE')) {
+        if (!defined('APP_NAMESPACE')) {
             static::loadConstants();
         }
         static::checkMissingExtensions();
@@ -146,7 +146,7 @@ class Boot
 
     protected static function defineEnvironment(): void
     {
-        if (! defined('ENVIRONMENT')) {
+        if (!defined('ENVIRONMENT')) {
             // @phpstan-ignore-next-line
             $env = $_ENV['CI_ENVIRONMENT'] ?? $_SERVER['CI_ENVIRONMENT']
                 ?? getenv('CI_ENVIRONMENT')
@@ -180,27 +180,27 @@ class Boot
     protected static function definePathConstants(Paths $paths): void
     {
         // The path to the application directory.
-        if (! defined('APPPATH')) {
+        if (!defined('APPPATH')) {
             define('APPPATH', realpath(rtrim($paths->appDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
         }
 
         // The path to the project root directory. Just above APPPATH.
-        if (! defined('ROOTPATH')) {
+        if (!defined('ROOTPATH')) {
             define('ROOTPATH', realpath(APPPATH . '../') . DIRECTORY_SEPARATOR);
         }
 
         // The path to the system directory.
-        if (! defined('SYSTEMPATH')) {
+        if (!defined('SYSTEMPATH')) {
             define('SYSTEMPATH', realpath(rtrim($paths->systemDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
         }
 
         // The path to the writable directory.
-        if (! defined('WRITEPATH')) {
+        if (!defined('WRITEPATH')) {
             define('WRITEPATH', realpath(rtrim($paths->writableDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
         }
 
         // The path to the tests directory
-        if (! defined('TESTPATH')) {
+        if (!defined('TESTPATH')) {
             define('TESTPATH', realpath(rtrim($paths->testsDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
         }
     }
@@ -228,7 +228,7 @@ class Boot
      */
     protected static function loadAutoloader(): void
     {
-        if (! class_exists(Autoload::class, false)) {
+        if (!class_exists(Autoload::class, false)) {
             require_once SYSTEMPATH . 'Config/AutoloadConfig.php';
             require_once APPPATH . 'Config/Autoload.php';
             require_once SYSTEMPATH . 'Modules/Modules.php';
@@ -264,11 +264,11 @@ class Boot
         $missingExtensions = [];
 
         foreach ([
-            'intl',
-            'json',
-            'mbstring',
-        ] as $extension) {
-            if (! extension_loaded($extension)) {
+                     'intl',
+                     'json',
+                     'mbstring',
+                 ] as $extension) {
+            if (!extension_loaded($extension)) {
                 $missingExtensions[] = $extension;
             }
         }

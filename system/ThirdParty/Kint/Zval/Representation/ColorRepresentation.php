@@ -256,7 +256,7 @@ class ColorRepresentation extends Representation
 
                 return \sprintf('hsla(%d, %d%%, %d%%, %s)', $val[0], $val[1], $val[2], \round($this->a, 4));
             case self::COLOR_HEX_4:
-                if (0 === $this->r % 0x11 && 0 === $this->g % 0x11 && 0 === $this->b % 0x11 && 0 === ((int) ($this->a * 255)) % 0x11) {
+                if (0 === $this->r % 0x11 && 0 === $this->g % 0x11 && 0 === $this->b % 0x11 && 0 === ((int)($this->a * 255)) % 0x11) {
                     return \sprintf(
                         '#%1X%1X%1X%1X',
                         \round($this->r / 0x11),
@@ -325,10 +325,10 @@ class ColorRepresentation extends Representation
             $this->variant = null; // @codeCoverageIgnore
         } else {
             $this->variant = $variant;
-            $this->r = (int) $this->r;
-            $this->g = (int) $this->g;
-            $this->b = (int) $this->b;
-            $this->a = (float) $this->a;
+            $this->r = (int)$this->r;
+            $this->g = (int)$this->g;
+            $this->b = (int)$this->b;
+            $this->a = (float)$this->a;
         }
     }
 
@@ -358,7 +358,7 @@ class ColorRepresentation extends Representation
         switch ($variant) {
             case self::COLOR_HEX_4:
                 $this->a = \hexdec($hex[3]) / 0xF;
-                // no break
+            // no break
             case self::COLOR_HEX_3:
                 $this->r = \hexdec($hex[0]) * 0x11;
                 $this->g = \hexdec($hex[1]) * 0x11;
@@ -366,7 +366,7 @@ class ColorRepresentation extends Representation
                 break;
             case self::COLOR_HEX_8:
                 $this->a = \hexdec(\substr($hex, 6, 2)) / 0xFF;
-                // no break
+            // no break
             case self::COLOR_HEX_6:
                 $hex = \str_split($hex, 2);
                 $this->r = \hexdec($hex[0]);
@@ -411,7 +411,7 @@ class ColorRepresentation extends Representation
 
         foreach ($params as $i => &$color) {
             if (false !== \strpos($color, '%')) {
-                $color = (float) \str_replace('%', '', $color);
+                $color = (float)\str_replace('%', '', $color);
 
                 if (3 === $i) {
                     $color = $color / 100;
@@ -420,7 +420,7 @@ class ColorRepresentation extends Representation
                 }
             }
 
-            $color = (float) $color;
+            $color = (float)$color;
 
             if (0 === $i && \in_array($variant, [self::COLOR_HSL, self::COLOR_HSLA], true)) {
                 $color = \fmod(\fmod($color, 360) + 360, 360);
@@ -487,18 +487,18 @@ class ColorRepresentation extends Representation
         $m1 = $l * 2 - $m2;
 
         return [
-            (int) \round(self::hueToRgb($m1, $m2, $h + 1 / 3) * 0xFF),
-            (int) \round(self::hueToRgb($m1, $m2, $h) * 0xFF),
-            (int) \round(self::hueToRgb($m1, $m2, $h - 1 / 3) * 0xFF),
+            (int)\round(self::hueToRgb($m1, $m2, $h + 1 / 3) * 0xFF),
+            (int)\round(self::hueToRgb($m1, $m2, $h) * 0xFF),
+            (int)\round(self::hueToRgb($m1, $m2, $h - 1 / 3) * 0xFF),
         ];
     }
 
     /**
      * Converts RGB to HSL. Color inversion of previous black magic is white magic?
      *
-     * @param float $red   Red
+     * @param float $red Red
      * @param float $green Green
-     * @param float $blue  Blue
+     * @param float $blue Blue
      *
      * @return float[] HSL array
      */

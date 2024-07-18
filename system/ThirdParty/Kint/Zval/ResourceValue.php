@@ -34,7 +34,7 @@ class ResourceValue extends Value
     public function getType(): string
     {
         if ($this->resource_type) {
-            return $this->resource_type.' resource';
+            return $this->resource_type . ' resource';
         }
 
         return 'resource';

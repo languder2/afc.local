@@ -77,7 +77,7 @@ final class ConfigCheck extends BaseCommand
      */
     public function run(array $params)
     {
-        if (! isset($params[0])) {
+        if (!isset($params[0])) {
             CLI::error('You must specify a Config classname.');
             CLI::write('  Usage: ' . $this->usage);
             CLI::write('Example: config:check App');

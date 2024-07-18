@@ -32,10 +32,10 @@ class RedisHandler extends BaseHandler
      * @var array
      */
     protected $config = [
-        'host'     => '127.0.0.1',
+        'host' => '127.0.0.1',
         'password' => null,
-        'port'     => 6379,
-        'timeout'  => 0,
+        'port' => 6379,
+        'timeout' => 0,
         'database' => 0,
     ];
 
@@ -79,20 +79,20 @@ class RedisHandler extends BaseHandler
             // Note:: If Redis is your primary cache choice, and it is "offline", every page load will end up been delayed by the timeout duration.
             // I feel like some sort of temporary flag should be set, to indicate that we think Redis is "offline", allowing us to bypass the timeout for a set period of time.
 
-            if (! $this->redis->connect($config['host'], ($config['host'][0] === '/' ? 0 : $config['port']), $config['timeout'])) {
+            if (!$this->redis->connect($config['host'], ($config['host'][0] === '/' ? 0 : $config['port']), $config['timeout'])) {
                 // Note:: I'm unsure if log_message() is necessary, however I'm not 100% comfortable removing it.
                 log_message('error', 'Cache: Redis connection failed. Check your configuration.');
 
                 throw new CriticalError('Cache: Redis connection failed. Check your configuration.');
             }
 
-            if (isset($config['password']) && ! $this->redis->auth($config['password'])) {
+            if (isset($config['password']) && !$this->redis->auth($config['password'])) {
                 log_message('error', 'Cache: Redis authentication failed.');
 
                 throw new CriticalError('Cache: Redis authentication failed.');
             }
 
-            if (isset($config['database']) && ! $this->redis->select($config['database'])) {
+            if (isset($config['database']) && !$this->redis->select($config['database'])) {
                 log_message('error', 'Cache: Redis select database failed.');
 
                 throw new CriticalError('Cache: Redis select database failed.');
@@ -107,10 +107,10 @@ class RedisHandler extends BaseHandler
      */
     public function get(string $key)
     {
-        $key  = static::validateKey($key, $this->prefix);
+        $key = static::validateKey($key, $this->prefix);
         $data = $this->redis->hMGet($key, ['__ci_type', '__ci_value']);
 
-        if (! isset($data['__ci_type'], $data['__ci_value']) || $data['__ci_value'] === false) {
+        if (!isset($data['__ci_type'], $data['__ci_value']) || $data['__ci_value'] === false) {
             return null;
         }
 
@@ -147,7 +147,7 @@ class RedisHandler extends BaseHandler
                 return false;
         }
 
-        if (! $this->redis->hMSet($key, ['__ci_type' => $dataType, '__ci_value' => $value])) {
+        if (!$this->redis->hMSet($key, ['__ci_type' => $dataType, '__ci_value' => $value])) {
             return false;
         }
 
@@ -176,7 +176,7 @@ class RedisHandler extends BaseHandler
     public function deleteMatching(string $pattern)
     {
         $matchedKeys = [];
-        $iterator    = null;
+        $iterator = null;
 
         do {
             // Scan for some keys
@@ -236,13 +236,13 @@ class RedisHandler extends BaseHandler
 
         if ($value !== null) {
             $time = Time::now()->getTimestamp();
-            $ttl  = $this->redis->ttl(static::validateKey($key, $this->prefix));
+            $ttl = $this->redis->ttl(static::validateKey($key, $this->prefix));
             assert(is_int($ttl));
 
             return [
                 'expire' => $ttl > 0 ? $time + $ttl : null,
-                'mtime'  => $time,
-                'data'   => $value,
+                'mtime' => $time,
+                'data' => $value,
             ];
         }
 

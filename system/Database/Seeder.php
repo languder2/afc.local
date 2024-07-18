@@ -86,7 +86,7 @@ class Seeder
 
         $this->seedPath = rtrim($this->seedPath, '\\/') . '/Seeds/';
 
-        if (! is_dir($this->seedPath)) {
+        if (!is_dir($this->seedPath)) {
             throw new InvalidArgumentException('Unable to locate the seeds directory. Please check Config\Database::filesPath');
         }
 
@@ -94,7 +94,7 @@ class Seeder
 
         $db ??= Database::connect($this->DBGroup);
 
-        $this->db    = $db;
+        $this->db = $db;
         $this->forge = Database::forge($this->DBGroup);
     }
 
@@ -125,10 +125,10 @@ class Seeder
             throw new InvalidArgumentException('No seeder was specified.');
         }
 
-        if (! str_contains($class, '\\')) {
+        if (!str_contains($class, '\\')) {
             $path = $this->seedPath . str_replace('.php', '', $class) . '.php';
 
-            if (! is_file($path)) {
+            if (!is_file($path)) {
                 throw new InvalidArgumentException('The specified seeder is not a valid file: ' . $path);
             }
 
@@ -136,7 +136,7 @@ class Seeder
             // @codeCoverageIgnoreStart
             $class = APP_NAMESPACE . '\Database\Seeds\\' . $class;
 
-            if (! class_exists($class, false)) {
+            if (!class_exists($class, false)) {
                 require_once $path;
             }
             // @codeCoverageIgnoreEnd
@@ -148,7 +148,7 @@ class Seeder
 
         unset($seeder);
 
-        if (is_cli() && ! $this->silent) {
+        if (is_cli() && !$this->silent) {
             CLI::write("Seeded: {$class}", 'green');
         }
     }

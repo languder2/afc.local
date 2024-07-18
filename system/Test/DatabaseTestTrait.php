@@ -84,7 +84,7 @@ trait DatabaseTestTrait
 
         if ($this->migrations === null) {
             // Ensure that we can run migrations
-            $config          = new Migrations();
+            $config = new Migrations();
             $config->enabled = true;
 
             $this->migrations = Services::migrations($config, $this->db, false);
@@ -135,9 +135,7 @@ trait DatabaseTestTrait
         if ($this->namespace === null) {
             $this->migrations->setNamespace(null);
             $this->migrations->regress(0, 'tests');
-        }
-
-        // Regress each specified namespace
+        } // Regress each specified namespace
         else {
             $namespaces = is_array($this->namespace) ? $this->namespace : [$this->namespace];
 
@@ -164,8 +162,7 @@ trait DatabaseTestTrait
             $this->migrations->setNamespace(null);
             $this->migrations->latest('tests');
             self::$doneMigration = true;
-        }
-        // Run migrations for each specified namespace
+        } // Run migrations for each specified namespace
         else {
             $namespaces = is_array($this->namespace) ? $this->namespace : [$this->namespace];
 
@@ -239,7 +236,7 @@ trait DatabaseTestTrait
     public static function resetMigrationSeedCount()
     {
         self::$doneMigration = false;
-        self::$doneSeed      = false;
+        self::$doneSeed = false;
     }
 
     /**

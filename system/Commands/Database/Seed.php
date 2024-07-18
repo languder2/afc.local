@@ -68,7 +68,7 @@ class Seed extends BaseCommand
      */
     public function run(array $params)
     {
-        $seeder   = new Seeder(new Database());
+        $seeder = new Seeder(new Database());
         $seedName = array_shift($params);
 
         if (empty($seedName)) {

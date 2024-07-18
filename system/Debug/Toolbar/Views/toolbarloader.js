@@ -11,11 +11,11 @@ function loadDoc(time) {
     let url = '{url}';
     let xhttp = new XMLHttpRequest();
 
-    xhttp.onreadystatechange = function() {
+    xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             let toolbar = document.getElementById("toolbarContainer");
 
-            if (! toolbar) {
+            if (!toolbar) {
                 toolbar = document.createElement('div');
                 toolbar.setAttribute('id', 'toolbarContainer');
                 document.body.appendChild(toolbar);
@@ -64,7 +64,7 @@ window.oldXHR = window.ActiveXObject
 function newXHR() {
     const realXHR = new window.oldXHR();
 
-    realXHR.addEventListener("readystatechange", function() {
+    realXHR.addEventListener("readystatechange", function () {
         // Only success responses and URLs that do not contains "debugbar_time" are tracked
         if (realXHR.readyState === 4 && realXHR.status.toString()[0] === '2' && realXHR.responseURL.indexOf('debugbar_time') === -1) {
             if (realXHR.getAllResponseHeaders().indexOf("Debugbar-Time") >= 0) {

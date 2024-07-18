@@ -28,7 +28,7 @@ class RedirectResponse extends Response
      * Sets the URI to redirect to and, optionally, the HTTP status code to use.
      * If no code is provided it will be automatically determined.
      *
-     * @param string   $uri  The URI path (relative to baseURL) to redirect to
+     * @param string $uri The URI path (relative to baseURL) to redirect to
      * @param int|null $code HTTP status code
      *
      * @return $this
@@ -37,7 +37,7 @@ class RedirectResponse extends Response
     {
         // If it appears to be a relative URL, then convert to full URL
         // for better security.
-        if (! str_starts_with($uri, 'http')) {
+        if (!str_starts_with($uri, 'http')) {
             $uri = site_url($uri);
         }
 
@@ -60,7 +60,7 @@ class RedirectResponse extends Response
 
         $route = service('routes')->reverseRoute($route, ...$params);
 
-        if (! $route) {
+        if (!$route) {
             throw HTTPException::forInvalidRedirectRoute($namedRoute);
         }
 
@@ -94,7 +94,7 @@ class RedirectResponse extends Response
     {
         $session = service('session');
         $session->setFlashdata('_ci_old_input', [
-            'get'  => $_GET ?? [],
+            'get' => $_GET ?? [],
             'post' => $_POST ?? [],
         ]);
 

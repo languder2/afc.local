@@ -28,8 +28,8 @@ trait ReflectionHelper
     /**
      * Find a private method invoker.
      *
-     * @param object|string $obj    object or class name
-     * @param string        $method method name
+     * @param object|string $obj object or class name
+     * @param string $method method name
      *
      * @return Closure
      *
@@ -41,14 +41,14 @@ trait ReflectionHelper
         $refMethod->setAccessible(true);
         $obj = (gettype($obj) === 'object') ? $obj : null;
 
-        return static fn (...$args) => $refMethod->invokeArgs($obj, $args);
+        return static fn(...$args) => $refMethod->invokeArgs($obj, $args);
     }
 
     /**
      * Find an accessible property.
      *
      * @param object|string $obj
-     * @param string        $property
+     * @param string $property
      *
      * @return ReflectionProperty
      *
@@ -67,9 +67,9 @@ trait ReflectionHelper
     /**
      * Set a private property.
      *
-     * @param object|string $obj      object or class name
-     * @param string        $property property name
-     * @param mixed         $value    value
+     * @param object|string $obj object or class name
+     * @param string $property property name
+     * @param mixed $value value
      *
      * @throws ReflectionException
      */
@@ -87,8 +87,8 @@ trait ReflectionHelper
     /**
      * Retrieve a private property.
      *
-     * @param object|string $obj      object or class name
-     * @param string        $property property name
+     * @param object|string $obj object or class name
+     * @param string $property property name
      *
      * @return mixed value
      *

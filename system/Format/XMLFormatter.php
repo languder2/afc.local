@@ -37,14 +37,14 @@ class XMLFormatter implements FormatterInterface
 
         // SimpleXML is installed but default
         // but best to check, and then provide a fallback.
-        if (! extension_loaded('simplexml')) {
+        if (!extension_loaded('simplexml')) {
             throw FormatException::forMissingExtension(); // @codeCoverageIgnore
         }
 
         $options = $config->formatterOptions['application/xml'] ?? 0;
-        $output  = new SimpleXMLElement('<?xml version="1.0"?><response></response>', $options);
+        $output = new SimpleXMLElement('<?xml version="1.0"?><response></response>', $options);
 
-        $this->arrayToXML((array) $data, $output);
+        $this->arrayToXML((array)$data, $output);
 
         return $output->asXML();
     }
@@ -93,7 +93,7 @@ class XMLFormatter implements FormatterInterface
             '\\x{FDF0}-\\x{FFFD}\\x{10000}-\\x{EFFFF}';
         $validName = $startChar . '\\.\\d\\x{B7}\\x{300}-\\x{36F}\\x{203F}-\\x{2040}';
 
-        $key = (string) $key;
+        $key = (string)$key;
 
         $key = trim($key);
         $key = preg_replace("/[^{$validName}-]+/u", '', $key);

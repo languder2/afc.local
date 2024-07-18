@@ -152,7 +152,7 @@ class Router implements RouterInterface
 
         // These are only for auto-routing
         $this->controller = $this->collection->getDefaultController();
-        $this->method     = $this->collection->getDefaultMethod();
+        $this->method = $this->collection->getDefaultMethod();
 
         $this->collection->setHTTPVerb($request->getMethod() ?? $_SERVER['REQUEST_METHOD']);
 
@@ -217,7 +217,7 @@ class Router implements RouterInterface
         // Still here? Then we can try to match the URI against
         // Controllers/directories, but the application may not
         // want this, like in the case of API's.
-        if (! $this->collection->shouldAutoRoute()) {
+        if (!$this->collection->shouldAutoRoute()) {
             throw new PageNotFoundException(
                 "Can't find a route for '{$this->collection->getHTTPVerb()}: {$uri}'."
             );
@@ -372,7 +372,7 @@ class Router implements RouterInterface
      */
     public function hasLocale()
     {
-        return (bool) $this->detectedLocale;
+        return (bool)$this->detectedLocale;
     }
 
     /**
@@ -418,7 +418,7 @@ class Router implements RouterInterface
                 ? $routeKey
                 // $routeKey may be int, because it is an array key,
                 // and the URI `/1` is valid. The leading `/` is removed.
-                : ltrim((string) $routeKey, '/ ');
+                : ltrim((string)$routeKey, '/ ');
 
             $matchedKey = $routeKey;
 
@@ -453,7 +453,7 @@ class Router implements RouterInterface
                     );
 
                     if ($this->collection->shouldUseSupportedLocalesOnly()
-                        && ! in_array($matched['locale'], config(App::class)->supportedLocales, true)) {
+                        && !in_array($matched['locale'], config(App::class)->supportedLocales, true)) {
                         // Throw exception to prevent the autorouter, if enabled,
                         // from trying to find a route
                         throw PageNotFoundException::forLocaleNotSupported($matched['locale']);
@@ -466,7 +466,7 @@ class Router implements RouterInterface
                 // Are we using Closures? If so, then we need
                 // to collect the params into an array
                 // so it can be passed to the controller method later.
-                if (! is_string($handler) && is_callable($handler)) {
+                if (!is_string($handler) && is_callable($handler)) {
                     $this->controller = $handler;
 
                     // Remove the original string from the matches array
@@ -482,7 +482,7 @@ class Router implements RouterInterface
                 if (str_contains($handler, '::')) {
                     [$controller, $methodAndParams] = explode('::', $handler);
                 } else {
-                    $controller      = $handler;
+                    $controller = $handler;
                     $methodAndParams = '';
                 }
 
@@ -503,8 +503,8 @@ class Router implements RouterInterface
                     } else {
                         if (str_contains($methodAndParams, '/')) {
                             [$method, $handlerParams] = explode('/', $methodAndParams, 2);
-                            $params                   = explode('/', $handlerParams);
-                            $handlerSegments          = array_merge([$controller . '::' . $method], $params);
+                            $params = explode('/', $handlerParams);
+                            $handlerSegments = array_merge([$controller . '::' . $method], $params);
                         } else {
                             $handlerSegments = [$handler];
                         }
@@ -540,7 +540,7 @@ class Router implements RouterInterface
         return preg_replace_callback(
             $pattern,
             static function ($match) use ($matches) {
-                $index = (int) $match[1];
+                $index = (int)$match[1];
 
                 return $matches[$index] ?? '';
             },
@@ -589,7 +589,7 @@ class Router implements RouterInterface
      */
     protected function scanControllers(array $segments): array
     {
-        $segments = array_filter($segments, static fn ($segment) => $segment !== '');
+        $segments = array_filter($segments, static fn($segment) => $segment !== '');
         // numerically reindex the array, removing gaps
         $segments = array_values($segments);
 
@@ -605,14 +605,14 @@ class Router implements RouterInterface
         while ($c-- > 0) {
             $segmentConvert = ucfirst($this->translateURIDashes === true ? str_replace('-', '_', $segments[0]) : $segments[0]);
             // as soon as we encounter any segment that is not PSR-4 compliant, stop searching
-            if (! $this->isValidSegment($segmentConvert)) {
+            if (!$this->isValidSegment($segmentConvert)) {
                 return $segments;
             }
 
             $test = APPPATH . 'Controllers/' . $this->directory . $segmentConvert;
 
             // as long as each segment is *not* a controller file but does match a directory, add it to $this->directory
-            if (! is_file($test . '.php') && is_dir($test)) {
+            if (!is_file($test . '.php') && is_dir($test)) {
                 $this->setDirectory($segmentConvert, true, false);
                 array_shift($segments);
 
@@ -655,7 +655,7 @@ class Router implements RouterInterface
      */
     private function isValidSegment(string $segment): bool
     {
-        return (bool) preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $segment);
+        return (bool)preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $segment);
     }
 
     /**
@@ -681,7 +681,7 @@ class Router implements RouterInterface
 
         // $this->method already contains the default method name,
         // so don't overwrite it with emptiness.
-        if (! empty($method)) {
+        if (!empty($method)) {
             $this->method = $method;
         }
 
@@ -693,9 +693,9 @@ class Router implements RouterInterface
     /**
      * Sets the default controller based on the info set in the RouteCollection.
      *
+     * @return void
      * @deprecated This was an unnecessary method, so it is no longer used.
      *
-     * @return void
      */
     protected function setDefaultController()
     {
@@ -705,7 +705,7 @@ class Router implements RouterInterface
 
         sscanf($this->controller, '%[^/]/%s', $class, $this->method);
 
-        if (! is_file(APPPATH . 'Controllers/' . $this->directory . ucfirst($class) . '.php')) {
+        if (!is_file(APPPATH . 'Controllers/' . $this->directory . ucfirst($class) . '.php')) {
             return;
         }
 

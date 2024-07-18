@@ -179,17 +179,17 @@ trait FeatureTestTrait
         $method = strtoupper($method);
 
         // Simulate having a blank session
-        $_SESSION                  = [];
+        $_SESSION = [];
         $_SERVER['REQUEST_METHOD'] = $method;
 
         $request = $this->setupRequest($method, $path);
         $request = $this->setupHeaders($request);
-        $name    = strtolower($method);
+        $name = strtolower($method);
         $request = $this->populateGlobals($name, $request, $params);
         $request = $this->setRequestBody($request, $params);
 
         // Initialize the RouteCollection
-        if (! $routes = $this->routes) {
+        if (!$routes = $this->routes) {
             $routes = service('routes')->loadRoutes();
         }
 
@@ -305,12 +305,12 @@ trait FeatureTestTrait
     protected function setupRequest(string $method, ?string $path = null): IncomingRequest
     {
         $config = config(App::class);
-        $uri    = new SiteURI($config);
+        $uri = new SiteURI($config);
 
         // $path may have a query in it
-        $path  = URI::removeDotSegments($path);
+        $path = URI::removeDotSegments($path);
         $parts = explode('?', $path);
-        $path  = $parts[0];
+        $path = $parts[0];
         $query = $parts[1] ?? '';
 
         $superglobals = service('superglobals');
@@ -328,8 +328,8 @@ trait FeatureTestTrait
 
         if ($config->forceGlobalSecureRequests) {
             $_SERVER['HTTPS'] = 'test';
-            $server           = $request->getServer();
-            $server['HTTPS']  = 'test';
+            $server = $request->getServer();
+            $server['HTTPS'] = 'test';
             $request->setGlobal('server', $server);
         }
 
@@ -343,7 +343,7 @@ trait FeatureTestTrait
      */
     protected function setupHeaders(IncomingRequest $request)
     {
-        if (! empty($this->headers)) {
+        if (!empty($this->headers)) {
             foreach ($this->headers as $name => $value) {
                 $request->setHeader($name, $value);
             }
@@ -358,7 +358,7 @@ trait FeatureTestTrait
      *
      * Always populate the GET vars based on the URI.
      *
-     * @param string               $name   Superglobal name (lowercase)
+     * @param string $name Superglobal name (lowercase)
      * @param non-empty-array|null $params
      *
      * @return Request

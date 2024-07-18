@@ -55,12 +55,12 @@ class DotEnv
     public function parse(): ?array
     {
         // We don't want to enforce the presence of a .env file, they should be optional.
-        if (! is_file($this->path)) {
+        if (!is_file($this->path)) {
             return null;
         }
 
         // Ensure the file is readable
-        if (! is_readable($this->path)) {
+        if (!is_readable($this->path)) {
             throw new InvalidArgumentException("The .env file is not readable: {$this->path}");
         }
 
@@ -77,7 +77,7 @@ class DotEnv
             // If there is an equal sign, then we know we are assigning a variable.
             if (str_contains($line, '=')) {
                 [$name, $value] = $this->normaliseVariable($line);
-                $vars[$name]    = $value;
+                $vars[$name] = $value;
                 $this->setVariable($name, $value);
             }
         }
@@ -94,7 +94,7 @@ class DotEnv
      */
     protected function setVariable(string $name, string $value = '')
     {
-        if (! getenv($name, true)) {
+        if (!getenv($name, true)) {
             putenv("{$name}={$value}");
         }
 
@@ -118,7 +118,7 @@ class DotEnv
             [$name, $value] = explode('=', $name, 2);
         }
 
-        $name  = trim($name);
+        $name = trim($name);
         $value = trim($value);
 
         // Sanitize the name

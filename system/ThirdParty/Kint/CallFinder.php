@@ -261,7 +261,7 @@ class CallFinder
                 }
 
                 // All self::$namespace tokens are T_ constants
-                /** @psalm-var PhpTokenArray $prev_tokens[0] */
+                /** @psalm-var PhpTokenArray $prev_tokens [0] */
                 $ns = \explode('\\', \strtolower($prev_tokens[0][1]));
 
                 if (\end($ns) !== $class) {
@@ -337,7 +337,7 @@ class CallFinder
                         $paramrealtokens = false;
                         $param_start = $offset + 1;
                     } elseif (T_CONSTANT_ENCAPSED_STRING === $token[0] && \strlen($token[1]) > 2) {
-                        $shortparam[] = $token[1][0].'...'.$token[1][0];
+                        $shortparam[] = $token[1][0] . '...' . $token[1][0];
                     } else {
                         $shortparam[] = $token;
                     }

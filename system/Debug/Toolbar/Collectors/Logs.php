@@ -88,7 +88,7 @@ class Logs extends BaseCollector
      */
     protected function collectLogs()
     {
-        if (! empty($this->data)) {
+        if (!empty($this->data)) {
             return $this->data;
         }
 

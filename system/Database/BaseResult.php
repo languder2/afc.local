@@ -85,14 +85,14 @@ abstract class BaseResult implements ResultInterface
     /**
      * Constructor
      *
-     * @param         object|resource $connID
-     * @param         object|resource $resultID
-     * @phpstan-param TConnection     $connID
-     * @phpstan-param TResult         $resultID
+     * @param object|resource $connID
+     * @param object|resource $resultID
+     * @phpstan-param TConnection $connID
+     * @phpstan-param TResult $resultID
      */
     public function __construct(&$connID, &$resultID)
     {
-        $this->connID   = $connID;
+        $this->connID = $connID;
         $this->resultID = $resultID;
     }
 
@@ -129,7 +129,7 @@ abstract class BaseResult implements ResultInterface
             return $this->customResultObject[$className];
         }
 
-        if (! $this->isValidResultId()) {
+        if (!$this->isValidResultId()) {
             return [];
         }
 
@@ -159,7 +159,7 @@ abstract class BaseResult implements ResultInterface
         $this->customResultObject[$className] = [];
 
         while ($row = $this->fetchObject($className)) {
-            if (! is_subclass_of($row, Entity::class) && method_exists($row, 'syncOriginal')) {
+            if (!is_subclass_of($row, Entity::class) && method_exists($row, 'syncOriginal')) {
                 $row->syncOriginal();
             }
 
@@ -183,13 +183,13 @@ abstract class BaseResult implements ResultInterface
         // In the event that query caching is on, the result_id variable
         // will not be a valid resource so we'll simply return an empty
         // array.
-        if (! $this->isValidResultId()) {
+        if (!$this->isValidResultId()) {
             return [];
         }
 
         if ($this->resultObject !== []) {
             foreach ($this->resultObject as $row) {
-                $this->resultArray[] = (array) $row;
+                $this->resultArray[] = (array)$row;
             }
 
             return $this->resultArray;
@@ -223,13 +223,13 @@ abstract class BaseResult implements ResultInterface
         // In the event that query caching is on, the result_id variable
         // will not be a valid resource so we'll simply return an empty
         // array.
-        if (! $this->isValidResultId()) {
+        if (!$this->isValidResultId()) {
             return [];
         }
 
         if ($this->resultArray !== []) {
             foreach ($this->resultArray as $row) {
-                $this->resultObject[] = (object) $row;
+                $this->resultObject[] = (object)$row;
             }
 
             return $this->resultObject;
@@ -240,7 +240,7 @@ abstract class BaseResult implements ResultInterface
         }
 
         while ($row = $this->fetchObject()) {
-            if (! is_subclass_of($row, Entity::class) && method_exists($row, 'syncOriginal')) {
+            if (!is_subclass_of($row, Entity::class) && method_exists($row, 'syncOriginal')) {
                 $row->syncOriginal();
             }
 
@@ -258,8 +258,8 @@ abstract class BaseResult implements ResultInterface
      *
      * @template T of object
      *
-     * @param         int|string                       $n    The index of the results to return, or column name.
-     * @param         string                           $type The type of result object. 'array', 'object' or class name.
+     * @param int|string $n The index of the results to return, or column name.
+     * @param string $type The type of result object. 'array', 'object' or class name.
      * @phpstan-param class-string<T>|'array'|'object' $type
      *
      * @return         array|float|int|object|stdClass|string|null
@@ -268,14 +268,14 @@ abstract class BaseResult implements ResultInterface
     public function getRow($n = 0, string $type = 'object')
     {
         // $n is a column name.
-        if (! is_numeric($n)) {
+        if (!is_numeric($n)) {
             // We cache the row data for subsequent uses
-            if (! is_array($this->rowData)) {
+            if (!is_array($this->rowData)) {
                 $this->rowData = $this->getRowArray();
             }
 
             // array_key_exists() instead of isset() to allow for NULL values
-            if (empty($this->rowData) || ! array_key_exists($n, $this->rowData)) {
+            if (empty($this->rowData) || !array_key_exists($n, $this->rowData)) {
                 return null;
             }
 
@@ -300,7 +300,7 @@ abstract class BaseResult implements ResultInterface
      *
      * @template T of object
      *
-     * @param         int             $n         The index of the results to return.
+     * @param int $n The index of the results to return.
      * @phpstan-param class-string<T> $className
      *
      * @return         object|null
@@ -308,7 +308,7 @@ abstract class BaseResult implements ResultInterface
      */
     public function getCustomRowObject(int $n, string $className)
     {
-        if (! isset($this->customResultObject[$className])) {
+        if (!isset($this->customResultObject[$className])) {
             $this->getCustomResultObject($className);
         }
 
@@ -368,7 +368,7 @@ abstract class BaseResult implements ResultInterface
     /**
      * Assigns an item into a particular column slot.
      *
-     * @param array|string               $key
+     * @param array|string $key
      * @param array|object|stdClass|null $value
      *
      * @return void
@@ -376,7 +376,7 @@ abstract class BaseResult implements ResultInterface
     public function setRow($key, $value = null)
     {
         // We cache the row data for subsequent uses
-        if (! is_array($this->rowData)) {
+        if (!is_array($this->rowData)) {
             $this->rowData = $this->getRowArray();
         }
 

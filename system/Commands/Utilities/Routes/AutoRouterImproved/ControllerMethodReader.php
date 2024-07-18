@@ -28,15 +28,16 @@ final class ControllerMethodReader
     private readonly bool $translateUriToCamelCase;
 
     /**
-     * @param string       $namespace   the default namespace
+     * @param string $namespace the default namespace
      * @param list<string> $httpMethods
      */
     public function __construct(
         private readonly string $namespace,
-        private readonly array $httpMethods
-    ) {
-        $config                        = config(Routing::class);
-        $this->translateURIDashes      = $config->translateURIDashes;
+        private readonly array  $httpMethods
+    )
+    {
+        $config = config(Routing::class);
+        $this->translateURIDashes = $config->translateURIDashes;
         $this->translateUriToCamelCase = $config->translateUriToCamelCase;
     }
 
@@ -55,10 +56,10 @@ final class ControllerMethodReader
             return [];
         }
 
-        $classname      = $reflection->getName();
+        $classname = $reflection->getName();
         $classShortname = $reflection->getShortName();
 
-        $output     = [];
+        $output = [];
         $classInUri = $this->convertClassNameToUri($classname);
 
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
@@ -94,11 +95,11 @@ final class ControllerMethodReader
 
                         // Route for the default method.
                         $output[] = [
-                            'method'       => $httpVerb,
-                            'route'        => $classInUri,
+                            'method' => $httpVerb,
+                            'route' => $classInUri,
                             'route_params' => $routeParams,
-                            'handler'      => '\\' . $classname . '::' . $methodName,
-                            'params'       => $params,
+                            'handler' => '\\' . $classname . '::' . $methodName,
+                            'params' => $params,
                         ];
 
                         continue;
@@ -115,11 +116,11 @@ final class ControllerMethodReader
                     }
 
                     $output[] = [
-                        'method'       => $httpVerb,
-                        'route'        => $route,
+                        'method' => $httpVerb,
+                        'route' => $route,
                         'route_params' => $routeParams,
-                        'handler'      => '\\' . $classname . '::' . $methodName,
-                        'params'       => $params,
+                        'handler' => '\\' . $classname . '::' . $methodName,
+                        'params' => $params,
                     ];
                 }
             }
@@ -130,9 +131,9 @@ final class ControllerMethodReader
 
     private function getParameters(ReflectionMethod $method): array
     {
-        $params      = [];
+        $params = [];
         $routeParams = '';
-        $refParams   = $method->getParameters();
+        $refParams = $method->getParameters();
 
         foreach ($refParams as $param) {
             $required = true;
@@ -160,10 +161,10 @@ final class ControllerMethodReader
     {
         // remove the namespace
         $pattern = '/' . preg_quote($this->namespace, '/') . '/';
-        $class   = ltrim(preg_replace($pattern, '', $classname), '\\');
+        $class = ltrim(preg_replace($pattern, '', $classname), '\\');
 
         $classParts = explode('\\', $class);
-        $classPath  = '';
+        $classPath = '';
 
         foreach ($classParts as $part) {
             // make the first letter lowercase, because auto routing makes
@@ -208,18 +209,19 @@ final class ControllerMethodReader
      * @return list<array>
      */
     private function getRouteForDefaultController(
-        string $classShortname,
-        string $defaultController,
-        string $uriByClass,
-        string $classname,
-        string $methodName,
-        string $httpVerb,
+        string           $classShortname,
+        string           $defaultController,
+        string           $uriByClass,
+        string           $classname,
+        string           $methodName,
+        string           $httpVerb,
         ReflectionMethod $method
-    ): array {
+    ): array
+    {
         $output = [];
 
         if ($classShortname === $defaultController) {
-            $pattern                = '#' . preg_quote(lcfirst($defaultController), '#') . '\z#';
+            $pattern = '#' . preg_quote(lcfirst($defaultController), '#') . '\z#';
             $routeWithoutController = rtrim(preg_replace($pattern, '', $uriByClass), '/');
             $routeWithoutController = $routeWithoutController ?: '/';
 
@@ -230,11 +232,11 @@ final class ControllerMethodReader
             }
 
             $output[] = [
-                'method'       => $httpVerb,
-                'route'        => $routeWithoutController,
+                'method' => $httpVerb,
+                'route' => $routeWithoutController,
                 'route_params' => $routeParams,
-                'handler'      => '\\' . $classname . '::' . $methodName,
-                'params'       => $params,
+                'handler' => '\\' . $classname . '::' . $methodName,
+                'params' => $params,
             ];
         }
 

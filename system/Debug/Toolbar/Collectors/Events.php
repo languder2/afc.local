@@ -62,10 +62,10 @@ class Events extends BaseCollector
 
         foreach ($rows as $info) {
             $data[] = [
-                'name'      => 'Event: ' . $info['event'],
+                'name' => 'Event: ' . $info['event'],
                 'component' => 'Events',
-                'start'     => $info['start'],
-                'duration'  => $info['end'] - $info['start'],
+                'start' => $info['start'],
+                'duration' => $info['end'] - $info['start'],
             ];
         }
 
@@ -84,11 +84,11 @@ class Events extends BaseCollector
         foreach (\CodeIgniter\Events\Events::getPerformanceLogs() as $row) {
             $key = $row['event'];
 
-            if (! array_key_exists($key, $data['events'])) {
+            if (!array_key_exists($key, $data['events'])) {
                 $data['events'][$key] = [
-                    'event'    => $key,
+                    'event' => $key,
                     'duration' => ($row['end'] - $row['start']) * 1000,
-                    'count'    => 1,
+                    'count' => 1,
                 ];
 
                 continue;

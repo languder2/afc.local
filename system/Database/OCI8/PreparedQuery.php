@@ -48,9 +48,9 @@ class PreparedQuery extends BasePreparedQuery
      */
     public function _prepare(string $sql, array $options = []): PreparedQuery
     {
-        if (! $this->statement = oci_parse($this->db->connID, $this->parameterize($sql))) {
-            $error             = oci_error($this->db->connID);
-            $this->errorCode   = $error['code'] ?? 0;
+        if (!$this->statement = oci_parse($this->db->connID, $this->parameterize($sql))) {
+            $error = oci_error($this->db->connID);
+            $this->errorCode = $error['code'] ?? 0;
             $this->errorString = $error['message'] ?? '';
 
             if ($this->db->DBDebug) {
@@ -69,7 +69,7 @@ class PreparedQuery extends BasePreparedQuery
      */
     public function _execute(array $data): bool
     {
-        if (! isset($this->statement)) {
+        if (!isset($this->statement)) {
             throw new BadMethodCallException('You must call prepare before trying to execute a prepared statement.');
         }
 

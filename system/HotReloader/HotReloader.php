@@ -33,7 +33,7 @@ final class HotReloader
         ob_end_clean();
         set_time_limit(0);
 
-        $hasher  = new DirectoryHasher();
+        $hasher = new DirectoryHasher();
         $appHash = $hasher->hash();
 
         while (true) {

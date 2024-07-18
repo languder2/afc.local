@@ -57,14 +57,14 @@ abstract class AbstractPlugin implements PluginInterface
         $header .= '<span class="kint-popup-trigger" title="Open in new window">&boxbox;</span><nav></nav>';
 
         if (null !== ($s = $o->getModifiers())) {
-            $header .= '<var>'.$s.'</var> ';
+            $header .= '<var>' . $s . '</var> ';
         }
 
         if (null !== ($s = $o->getName())) {
-            $header .= '<dfn>'.$this->renderer->escape($s).'</dfn> ';
+            $header .= '<dfn>' . $this->renderer->escape($s) . '</dfn> ';
 
             if ($s = $o->getOperator()) {
-                $header .= $this->renderer->escape($s, 'ASCII').' ';
+                $header .= $this->renderer->escape($s, 'ASCII') . ' ';
             }
         }
 
@@ -74,13 +74,13 @@ abstract class AbstractPlugin implements PluginInterface
             }
 
             if ($o->reference) {
-                $s = '&amp;'.$s;
+                $s = '&amp;' . $s;
             }
 
-            $header .= '<var>'.$s.'</var>';
+            $header .= '<var>' . $s . '</var>';
 
             if ($o instanceof InstanceValue && isset($o->spl_object_id)) {
-                $header .= '#'.((int) $o->spl_object_id);
+                $header .= '#' . ((int)$o->spl_object_id);
             }
 
             $header .= ' ';
@@ -90,15 +90,15 @@ abstract class AbstractPlugin implements PluginInterface
             if (RichRenderer::$escape_types) {
                 $s = $this->renderer->escape($s);
             }
-            $header .= '('.$s.') ';
+            $header .= '(' . $s . ') ';
         }
 
         $header .= $content;
 
         if (!empty($ap)) {
-            $header .= '<div class="access-path">'.$this->renderer->escape($ap).'</div>';
+            $header .= '<div class="access-path">' . $this->renderer->escape($ap) . '</div>';
         }
 
-        return $header.'</dt>';
+        return $header . '</dt>';
     }
 }

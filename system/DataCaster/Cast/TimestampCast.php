@@ -24,23 +24,25 @@ use CodeIgniter\I18n\Time;
 class TimestampCast extends BaseCast
 {
     public static function get(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): Time {
-        if (! is_int($value) && ! is_string($value)) {
+    ): Time
+    {
+        if (!is_int($value) && !is_string($value)) {
             self::invalidTypeValueError($value);
         }
 
-        return Time::createFromTimestamp((int) $value);
+        return Time::createFromTimestamp((int)$value);
     }
 
     public static function set(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): int {
-        if (! $value instanceof Time) {
+    ): int
+    {
+        if (!$value instanceof Time) {
             self::invalidTypeValueError($value);
         }
 

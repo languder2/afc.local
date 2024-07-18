@@ -67,14 +67,14 @@ class ScaffoldGenerator extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '--bare'      => 'Add the "--bare" option to controller component.',
-        '--restful'   => 'Add the "--restful" option to controller component.',
-        '--table'     => 'Add the "--table" option to the model component.',
-        '--dbgroup'   => 'Add the "--dbgroup" option to model component.',
-        '--return'    => 'Add the "--return" option to the model component.',
+        '--bare' => 'Add the "--bare" option to controller component.',
+        '--restful' => 'Add the "--restful" option to controller component.',
+        '--table' => 'Add the "--table" option to the model component.',
+        '--dbgroup' => 'Add the "--dbgroup" option to model component.',
+        '--return' => 'Add the "--return" option to the model component.',
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name.',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name.',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -107,9 +107,9 @@ class ScaffoldGenerator extends BaseCommand
         }
 
         $modelOpts = [
-            'table'   => $this->getOption('table'),
+            'table' => $this->getOption('table'),
             'dbgroup' => $this->getOption('dbgroup'),
-            'return'  => $this->getOption('return'),
+            'return' => $this->getOption('return'),
         ];
 
         $class = $params[0] ?? CLI::getSegment(2);

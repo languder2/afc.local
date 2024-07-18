@@ -81,9 +81,9 @@ class Controller
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        $this->request  = $request;
+        $this->request = $request;
         $this->response = $response;
-        $this->logger   = $logger;
+        $this->logger = $logger;
 
         if ($this->forceHTTPS > 0) {
             $this->forceHTTPS($this->forceHTTPS);
@@ -128,7 +128,7 @@ class Controller
      * A shortcut to performing validation on Request data.
      *
      * @param array|string $rules
-     * @param array        $messages An array of custom error messages
+     * @param array $messages An array of custom error messages
      */
     protected function validate($rules, array $messages = []): bool
     {
@@ -140,10 +140,10 @@ class Controller
     /**
      * A shortcut to performing validation on any input data.
      *
-     * @param array        $data     The data to validate
+     * @param array $data The data to validate
      * @param array|string $rules
-     * @param array        $messages An array of custom error messages
-     * @param string|null  $dbGroup  The database group to use
+     * @param array $messages An array of custom error messages
+     * @param string|null $dbGroup The database group to use
      */
     protected function validateData(array $data, $rules, array $messages = [], ?string $dbGroup = null): bool
     {
@@ -165,14 +165,14 @@ class Controller
 
             // If the rule wasn't found in the \Config\Validation, we
             // should throw an exception so the developer can find it.
-            if (! isset($validation->{$rules})) {
+            if (!isset($validation->{$rules})) {
                 throw ValidationException::forRuleNotFound($rules);
             }
 
             // If no error message is defined, use the error message in the Config\Validation file
             if ($messages === []) {
                 $errorName = $rules . '_errors';
-                $messages  = $validation->{$errorName} ?? [];
+                $messages = $validation->{$errorName} ?? [];
             }
 
             $rules = $validation->{$rules};

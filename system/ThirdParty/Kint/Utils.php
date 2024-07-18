@@ -94,7 +94,7 @@ final class Utils
 
     public static function isAssoc(array $array): bool
     {
-        return (bool) \count(\array_filter(\array_keys($array), 'is_string'));
+        return (bool)\count(\array_filter(\array_keys($array), 'is_string'));
     }
 
     public static function composerGetExtras(string $key = 'kint'): array
@@ -106,10 +106,10 @@ final class Utils
 
         $extras = [];
 
-        $folder = KINT_DIR.'/vendor';
+        $folder = KINT_DIR . '/vendor';
 
         for ($i = 0; $i < 4; ++$i) {
-            $installed = $folder.'/composer/installed.json';
+            $installed = $folder . '/composer/installed.json';
 
             if (\file_exists($installed) && \is_readable($installed)) {
                 $packages = \json_decode(\file_get_contents($installed), true);
@@ -128,8 +128,8 @@ final class Utils
 
                 $folder = \dirname($folder);
 
-                if (\file_exists($folder.'/composer.json') && \is_readable($folder.'/composer.json')) {
-                    $composer = \json_decode(\file_get_contents($folder.'/composer.json'), true);
+                if (\file_exists($folder . '/composer.json') && \is_readable($folder . '/composer.json')) {
+                    $composer = \json_decode(\file_get_contents($folder . '/composer.json'), true);
 
                     if (isset($composer['extra'][$key]) && \is_array($composer['extra'][$key])) {
                         $extras = \array_replace($extras, $composer['extra'][$key]);
@@ -226,8 +226,8 @@ final class Utils
                 $alias = \array_values(\array_filter($alias, 'is_string'));
 
                 if (2 === \count($alias) &&
-                    \preg_match('/^'.$name_regex.'$/', $alias[1]) &&
-                    \preg_match('/^\\\\?('.$name_regex.'\\\\)*'.$name_regex.'$/', $alias[0])
+                    \preg_match('/^' . $name_regex . '$/', $alias[1]) &&
+                    \preg_match('/^\\\\?(' . $name_regex . '\\\\)*' . $name_regex . '$/', $alias[0])
                 ) {
                     $alias = [
                         \strtolower(\ltrim($alias[0], '\\')),
@@ -238,7 +238,7 @@ final class Utils
                     continue;
                 }
             } elseif (\is_string($alias)) {
-                if (\preg_match('/^\\\\?('.$name_regex.'\\\\)*'.$name_regex.'$/', $alias)) {
+                if (\preg_match('/^\\\\?(' . $name_regex . '\\\\)*' . $name_regex . '$/', $alias)) {
                     $alias = \explode('\\', \strtolower($alias));
                     $alias = \end($alias);
                 } else {
@@ -266,7 +266,7 @@ final class Utils
         }
 
         if (BlobValue::strlen($input, $encoding) > $length) {
-            return BlobValue::substr($input, 0, $length - $endlength, $encoding).$end;
+            return BlobValue::substr($input, 0, $length - $endlength, $encoding) . $end;
         }
 
         return $input;
@@ -284,13 +284,13 @@ final class Utils
 
             $name = $type->getName();
             if ($type->allowsNull() && 'mixed' !== $name && false === \strpos($name, '|')) {
-                $name = '?'.$name;
+                $name = '?' . $name;
             }
 
             return $name;
         }
         // @codeCoverageIgnoreEnd
 
-        return (string) $type;
+        return (string)$type;
     }
 }

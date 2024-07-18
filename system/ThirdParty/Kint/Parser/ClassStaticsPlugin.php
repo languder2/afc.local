@@ -84,7 +84,7 @@ class ClassStaticsPlugin extends AbstractPlugin
                 }
 
                 if ($this->parser->childHasPath($o, $const)) {
-                    $const->access_path = '\\'.$class.'::'.$name;
+                    $const->access_path = '\\' . $class . '::' . $name;
                 }
 
                 $const = $this->parser->parse($val, $const);
@@ -100,7 +100,7 @@ class ClassStaticsPlugin extends AbstractPlugin
 
         foreach ($reflection->getProperties(ReflectionProperty::IS_STATIC) as $static) {
             $prop = new Value();
-            $prop->name = '$'.$static->getName();
+            $prop->name = '$' . $static->getName();
             $prop->depth = $o->depth + 1;
             $prop->static = true;
             $prop->operator = Value::OPERATOR_STATIC;
@@ -114,7 +114,7 @@ class ClassStaticsPlugin extends AbstractPlugin
             }
 
             if ($this->parser->childHasPath($o, $prop)) {
-                $prop->access_path = '\\'.$prop->owner_class.'::'.$prop->name;
+                $prop->access_path = '\\' . $prop->owner_class . '::' . $prop->name;
             }
 
             $static->setAccessible(true);
@@ -139,7 +139,7 @@ class ClassStaticsPlugin extends AbstractPlugin
 
     private static function sort(Value $a, Value $b): int
     {
-        $sort = ((int) $a->const) - ((int) $b->const);
+        $sort = ((int)$a->const) - ((int)$b->const);
         if ($sort) {
             return $sort;
         }

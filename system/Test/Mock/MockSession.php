@@ -59,7 +59,7 @@ class MockSession extends Session
      */
     protected function setCookie()
     {
-        $expiration   = $this->config->expiration === 0 ? 0 : Time::now()->getTimestamp() + $this->config->expiration;
+        $expiration = $this->config->expiration === 0 ? 0 : Time::now()->getTimestamp() + $this->config->expiration;
         $this->cookie = $this->cookie->withValue(session_id())->withExpires($expiration);
 
         $this->cookies[] = $this->cookie;
@@ -67,7 +67,7 @@ class MockSession extends Session
 
     public function regenerate(bool $destroy = false)
     {
-        $this->didRegenerate              = true;
+        $this->didRegenerate = true;
         $_SESSION['__ci_last_regenerate'] = Time::now()->getTimestamp();
     }
 }

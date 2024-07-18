@@ -90,34 +90,34 @@ class Builder extends BaseBuilder
             $sql .= ') ' . $alias . "\n";
 
             $sql .= 'ON ' . implode(
-                ' AND ',
-                array_map(
-                    static fn ($key, $value) => (
+                    ' AND ',
+                    array_map(
+                        static fn($key, $value) => (
                         ($value instanceof RawSql && is_string($key))
-                        ?
-                        $table . '.' . $key . ' = ' . $value
-                        :
-                        (
-                            $value instanceof RawSql
                             ?
-                            $value
+                            $table . '.' . $key . ' = ' . $value
                             :
-                            $table . '.' . $value . ' = ' . $alias . '.' . $value
-                        )
-                    ),
-                    array_keys($constraints),
-                    $constraints
-                )
-            ) . "\n";
+                            (
+                            $value instanceof RawSql
+                                ?
+                                $value
+                                :
+                                $table . '.' . $value . ' = ' . $alias . '.' . $value
+                            )
+                        ),
+                        array_keys($constraints),
+                        $constraints
+                    )
+                ) . "\n";
 
             $sql .= "SET\n";
 
             $sql .= implode(
                 ",\n",
                 array_map(
-                    static fn ($key, $value) => $table . '.' . $key . ($value instanceof RawSql ?
-                        ' = ' . $value :
-                        ' = ' . $alias . '.' . $value),
+                    static fn($key, $value) => $table . '.' . $key . ($value instanceof RawSql ?
+                            ' = ' . $value :
+                            ' = ' . $alias . '.' . $value),
                     array_keys($updateFields),
                     $updateFields
                 )
@@ -130,16 +130,16 @@ class Builder extends BaseBuilder
             $data = $this->QBOptions['setQueryAsData'];
         } else {
             $data = implode(
-                " UNION ALL\n",
-                array_map(
-                    static fn ($value) => 'SELECT ' . implode(', ', array_map(
-                        static fn ($key, $index) => $index . ' ' . $key,
-                        $keys,
-                        $value
-                    )),
-                    $values
-                )
-            ) . "\n";
+                    " UNION ALL\n",
+                    array_map(
+                        static fn($value) => 'SELECT ' . implode(', ', array_map(
+                                static fn($key, $index) => $index . ' ' . $key,
+                                $keys,
+                                $value
+                            )),
+                        $values
+                    )
+                ) . "\n";
         }
 
         return str_replace('{:_table_:}', $data, $sql);

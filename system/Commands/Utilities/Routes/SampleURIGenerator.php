@@ -31,12 +31,12 @@ final class SampleURIGenerator
      * @var array<string, string>
      */
     private array $samples = [
-        'any'      => '123/abc',
-        'segment'  => 'abc_123',
+        'any' => '123/abc',
+        'segment' => 'abc_123',
         'alphanum' => 'abc123',
-        'num'      => '123',
-        'alpha'    => 'abc',
-        'hash'     => 'abc_123',
+        'num' => '123',
+        'alpha' => 'abc',
+        'hash' => 'abc_123',
     ];
 
     public function __construct(?RouteCollection $routes = null)

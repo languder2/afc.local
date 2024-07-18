@@ -34,23 +34,23 @@ class ContentSecurityPolicy
      * @var array<string, string>
      */
     protected array $directives = [
-        'base-uri'        => 'baseURI',
-        'child-src'       => 'childSrc',
-        'connect-src'     => 'connectSrc',
-        'default-src'     => 'defaultSrc',
-        'font-src'        => 'fontSrc',
-        'form-action'     => 'formAction',
+        'base-uri' => 'baseURI',
+        'child-src' => 'childSrc',
+        'connect-src' => 'connectSrc',
+        'default-src' => 'defaultSrc',
+        'font-src' => 'fontSrc',
+        'form-action' => 'formAction',
         'frame-ancestors' => 'frameAncestors',
-        'frame-src'       => 'frameSrc',
-        'img-src'         => 'imageSrc',
-        'media-src'       => 'mediaSrc',
-        'object-src'      => 'objectSrc',
-        'plugin-types'    => 'pluginTypes',
-        'script-src'      => 'scriptSrc',
-        'style-src'       => 'styleSrc',
-        'manifest-src'    => 'manifestSrc',
-        'sandbox'         => 'sandbox',
-        'report-uri'      => 'reportURI',
+        'frame-src' => 'frameSrc',
+        'img-src' => 'imageSrc',
+        'media-src' => 'mediaSrc',
+        'object-src' => 'objectSrc',
+        'plugin-types' => 'pluginTypes',
+        'script-src' => 'scriptSrc',
+        'style-src' => 'styleSrc',
+        'manifest-src' => 'manifestSrc',
+        'sandbox' => 'sandbox',
+        'report-uri' => 'reportURI',
     ];
 
     /**
@@ -270,7 +270,7 @@ class ContentSecurityPolicy
      */
     public function __construct(ContentSecurityPolicyConfig $config)
     {
-        $appConfig        = config(App::class);
+        $appConfig = config(App::class);
         $this->CSPEnabled = $appConfig->CSPEnabled;
 
         foreach (get_object_vars($config) as $setting => $value) {
@@ -279,11 +279,11 @@ class ContentSecurityPolicy
             }
         }
 
-        if (! is_array($this->styleSrc)) {
+        if (!is_array($this->styleSrc)) {
             $this->styleSrc = [$this->styleSrc];
         }
 
-        if (! is_array($this->scriptSrc)) {
+        if (!is_array($this->scriptSrc)) {
             $this->scriptSrc = [$this->scriptSrc];
         }
     }
@@ -294,6 +294,50 @@ class ContentSecurityPolicy
     public function enabled(): bool
     {
         return $this->CSPEnabled;
+    }
+
+    /**
+     * Compiles and sets the appropriate headers in the request.
+     *
+     * Should be called just prior to sending the response to the user agent.
+     *
+     * @return void
+     */
+    public function finalize(ResponseInterface $response)
+    {
+        if ($this->autoNonce) {
+            $this->generateNonces($response);
+        }
+
+        $this->buildHeaders($response);
+    }
+
+    /**
+     * Scans the body of the request message and replaces any nonce
+     * placeholders with actual nonces, that we'll then add to our
+     * headers.
+     *
+     * @return void
+     */
+    protected function generateNonces(ResponseInterface $response)
+    {
+        $body = $response->getBody();
+
+        if (empty($body)) {
+            return;
+        }
+
+        // Replace style and script placeholders with nonces
+        $pattern = '/(' . preg_quote($this->styleNonceTag, '/')
+            . '|' . preg_quote($this->scriptNonceTag, '/') . ')/';
+
+        $body = preg_replace_callback($pattern, function ($match) {
+            $nonce = $match[0] === $this->styleNonceTag ? $this->getStyleNonce() : $this->getScriptNonce();
+
+            return "nonce=\"{$nonce}\"";
+        }, $body);
+
+        $response->setBody($body);
     }
 
     /**
@@ -323,19 +367,107 @@ class ContentSecurityPolicy
     }
 
     /**
-     * Compiles and sets the appropriate headers in the request.
-     *
-     * Should be called just prior to sending the response to the user agent.
+     * Based on the current state of the elements, will add the appropriate
+     * Content-Security-Policy and Content-Security-Policy-Report-Only headers
+     * with their values to the response object.
      *
      * @return void
      */
-    public function finalize(ResponseInterface $response)
+    protected function buildHeaders(ResponseInterface $response)
     {
-        if ($this->autoNonce) {
-            $this->generateNonces($response);
+        // Ensure both headers are available and arrays...
+        $response->setHeader('Content-Security-Policy', []);
+        $response->setHeader('Content-Security-Policy-Report-Only', []);
+
+        // inject default base & default URIs if needed
+        if (empty($this->baseURI)) {
+            $this->baseURI = 'self';
         }
 
-        $this->buildHeaders($response);
+        if (empty($this->defaultSrc)) {
+            $this->defaultSrc = 'self';
+        }
+
+        foreach ($this->directives as $name => $property) {
+            if (!empty($this->{$property})) {
+                $this->addToHeader($name, $this->{$property});
+            }
+        }
+
+        // Compile our own header strings here since if we just
+        // append it to the response, it will be joined with
+        // commas, not semi-colons as we need.
+        if (!empty($this->tempHeaders)) {
+            $header = '';
+
+            foreach ($this->tempHeaders as $name => $value) {
+                $header .= " {$name} {$value};";
+            }
+
+            // add token only if needed
+            if ($this->upgradeInsecureRequests) {
+                $header .= ' upgrade-insecure-requests;';
+            }
+
+            $response->appendHeader('Content-Security-Policy', $header);
+        }
+
+        if (!empty($this->reportOnlyHeaders)) {
+            $header = '';
+
+            foreach ($this->reportOnlyHeaders as $name => $value) {
+                $header .= " {$name} {$value};";
+            }
+
+            $response->appendHeader('Content-Security-Policy-Report-Only', $header);
+        }
+
+        $this->tempHeaders = [];
+        $this->reportOnlyHeaders = [];
+    }
+
+    /**
+     * Adds a directive and it's options to the appropriate header. The $values
+     * array might have options that are geared toward either the regular or the
+     * reportOnly header, since it's viable to have both simultaneously.
+     *
+     * @param array|string|null $values
+     *
+     * @return void
+     */
+    protected function addToHeader(string $name, $values = null)
+    {
+        if (is_string($values)) {
+            $values = [$values => $this->reportOnly];
+        }
+
+        $sources = [];
+        $reportSources = [];
+
+        foreach ($values as $value => $reportOnly) {
+            if (is_numeric($value) && is_string($reportOnly) && ($reportOnly !== '')) {
+                $value = $reportOnly;
+                $reportOnly = $this->reportOnly;
+            }
+
+            if (str_starts_with($value, 'nonce-')) {
+                $value = "'{$value}'";
+            }
+
+            if ($reportOnly === true) {
+                $reportSources[] = in_array($value, $this->validSources, true) ? "'{$value}'" : $value;
+            } else {
+                $sources[] = in_array($value, $this->validSources, true) ? "'{$value}'" : $value;
+            }
+        }
+
+        if ($sources !== []) {
+            $this->tempHeaders[$name] = implode(' ', $sources);
+        }
+
+        if ($reportSources !== []) {
+            $this->reportOnlyHeaders[$name] = implode(' ', $reportSources);
+        }
     }
 
     /**
@@ -370,6 +502,29 @@ class ContentSecurityPolicy
         $this->addOption($uri, 'baseURI', $explicitReporting ?? $this->reportOnly);
 
         return $this;
+    }
+
+    /**
+     * DRY method to add an string or array to a class property.
+     *
+     * @param list<string>|string $options
+     *
+     * @return void
+     */
+    protected function addOption($options, string $target, ?bool $explicitReporting = null)
+    {
+        // Ensure we have an array to work with...
+        if (is_string($this->{$target})) {
+            $this->{$target} = [$this->{$target}];
+        }
+
+        if (is_array($options)) {
+            foreach ($options as $opt) {
+                $this->{$target}[$opt] = $explicitReporting ?? $this->reportOnly;
+            }
+        } else {
+            $this->{$target}[$options] = $explicitReporting ?? $this->reportOnly;
+        }
     }
 
     /**
@@ -428,7 +583,7 @@ class ContentSecurityPolicy
      */
     public function setDefaultSrc($uri, ?bool $explicitReporting = null)
     {
-        $this->defaultSrc = [(string) $uri => $explicitReporting ?? $this->reportOnly];
+        $this->defaultSrc = [(string)$uri => $explicitReporting ?? $this->reportOnly];
 
         return $this;
     }
@@ -665,161 +820,6 @@ class ContentSecurityPolicy
         $this->upgradeInsecureRequests = $value;
 
         return $this;
-    }
-
-    /**
-     * DRY method to add an string or array to a class property.
-     *
-     * @param list<string>|string $options
-     *
-     * @return void
-     */
-    protected function addOption($options, string $target, ?bool $explicitReporting = null)
-    {
-        // Ensure we have an array to work with...
-        if (is_string($this->{$target})) {
-            $this->{$target} = [$this->{$target}];
-        }
-
-        if (is_array($options)) {
-            foreach ($options as $opt) {
-                $this->{$target}[$opt] = $explicitReporting ?? $this->reportOnly;
-            }
-        } else {
-            $this->{$target}[$options] = $explicitReporting ?? $this->reportOnly;
-        }
-    }
-
-    /**
-     * Scans the body of the request message and replaces any nonce
-     * placeholders with actual nonces, that we'll then add to our
-     * headers.
-     *
-     * @return void
-     */
-    protected function generateNonces(ResponseInterface $response)
-    {
-        $body = $response->getBody();
-
-        if (empty($body)) {
-            return;
-        }
-
-        // Replace style and script placeholders with nonces
-        $pattern = '/(' . preg_quote($this->styleNonceTag, '/')
-            . '|' . preg_quote($this->scriptNonceTag, '/') . ')/';
-
-        $body = preg_replace_callback($pattern, function ($match) {
-            $nonce = $match[0] === $this->styleNonceTag ? $this->getStyleNonce() : $this->getScriptNonce();
-
-            return "nonce=\"{$nonce}\"";
-        }, $body);
-
-        $response->setBody($body);
-    }
-
-    /**
-     * Based on the current state of the elements, will add the appropriate
-     * Content-Security-Policy and Content-Security-Policy-Report-Only headers
-     * with their values to the response object.
-     *
-     * @return void
-     */
-    protected function buildHeaders(ResponseInterface $response)
-    {
-        // Ensure both headers are available and arrays...
-        $response->setHeader('Content-Security-Policy', []);
-        $response->setHeader('Content-Security-Policy-Report-Only', []);
-
-        // inject default base & default URIs if needed
-        if (empty($this->baseURI)) {
-            $this->baseURI = 'self';
-        }
-
-        if (empty($this->defaultSrc)) {
-            $this->defaultSrc = 'self';
-        }
-
-        foreach ($this->directives as $name => $property) {
-            if (! empty($this->{$property})) {
-                $this->addToHeader($name, $this->{$property});
-            }
-        }
-
-        // Compile our own header strings here since if we just
-        // append it to the response, it will be joined with
-        // commas, not semi-colons as we need.
-        if (! empty($this->tempHeaders)) {
-            $header = '';
-
-            foreach ($this->tempHeaders as $name => $value) {
-                $header .= " {$name} {$value};";
-            }
-
-            // add token only if needed
-            if ($this->upgradeInsecureRequests) {
-                $header .= ' upgrade-insecure-requests;';
-            }
-
-            $response->appendHeader('Content-Security-Policy', $header);
-        }
-
-        if (! empty($this->reportOnlyHeaders)) {
-            $header = '';
-
-            foreach ($this->reportOnlyHeaders as $name => $value) {
-                $header .= " {$name} {$value};";
-            }
-
-            $response->appendHeader('Content-Security-Policy-Report-Only', $header);
-        }
-
-        $this->tempHeaders       = [];
-        $this->reportOnlyHeaders = [];
-    }
-
-    /**
-     * Adds a directive and it's options to the appropriate header. The $values
-     * array might have options that are geared toward either the regular or the
-     * reportOnly header, since it's viable to have both simultaneously.
-     *
-     * @param array|string|null $values
-     *
-     * @return void
-     */
-    protected function addToHeader(string $name, $values = null)
-    {
-        if (is_string($values)) {
-            $values = [$values => $this->reportOnly];
-        }
-
-        $sources       = [];
-        $reportSources = [];
-
-        foreach ($values as $value => $reportOnly) {
-            if (is_numeric($value) && is_string($reportOnly) && ($reportOnly !== '')) {
-                $value      = $reportOnly;
-                $reportOnly = $this->reportOnly;
-            }
-
-            if (str_starts_with($value, 'nonce-')) {
-                $value = "'{$value}'";
-            }
-
-            if ($reportOnly === true) {
-                $reportSources[] = in_array($value, $this->validSources, true) ? "'{$value}'" : $value;
-            } else {
-                $sources[] = in_array($value, $this->validSources, true) ? "'{$value}'" : $value;
-            }
-        }
-
-        if ($sources !== []) {
-            $this->tempHeaders[$name] = implode(' ', $sources);
-        }
-
-        if ($reportSources !== []) {
-            $this->reportOnlyHeaders[$name] = implode(' ', $reportSources);
-        }
     }
 
     /**

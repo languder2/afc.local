@@ -49,7 +49,7 @@ class FileCollection implements Countable, IteratorAggregate
      */
     final protected static function resolveDirectory(string $directory): string
     {
-        if (! is_dir($directory = set_realpath($directory))) {
+        if (!is_dir($directory = set_realpath($directory))) {
             $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
 
             throw FileException::forExpectedDirectory($caller['function']);
@@ -65,7 +65,7 @@ class FileCollection implements Countable, IteratorAggregate
      */
     final protected static function resolveFile(string $file): string
     {
-        if (! is_file($file = set_realpath($file))) {
+        if (!is_file($file = set_realpath($file))) {
             $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
 
             throw FileException::forExpectedFile($caller['function']);
@@ -85,14 +85,14 @@ class FileCollection implements Countable, IteratorAggregate
     {
         $directory = self::resolveDirectory($directory);
 
-        return array_filter($files, static fn (string $value): bool => str_starts_with($value, $directory));
+        return array_filter($files, static fn(string $value): bool => str_starts_with($value, $directory));
     }
 
     /**
      * Returns any files whose `basename` matches the given pattern.
      *
      * @param list<string> $files
-     * @param string       $pattern Regex or pseudo-regex string
+     * @param string $pattern Regex or pseudo-regex string
      *
      * @return list<string>
      */
@@ -108,7 +108,7 @@ class FileCollection implements Countable, IteratorAggregate
             $pattern = "#\\A{$pattern}\\z#";
         }
 
-        return array_filter($files, static fn ($value) => (bool) preg_match($pattern, basename($value)));
+        return array_filter($files, static fn($value) => (bool)preg_match($pattern, basename($value)));
     }
 
     // --------------------------------------------------------------------
@@ -172,10 +172,10 @@ class FileCollection implements Countable, IteratorAggregate
      */
     public function add($paths, bool $recursive = true)
     {
-        $paths = (array) $paths;
+        $paths = (array)$paths;
 
         foreach ($paths as $path) {
-            if (! is_string($path)) {
+            if (!is_string($path)) {
                 throw new InvalidArgumentException('FileCollection paths must be strings.');
             }
 
@@ -300,8 +300,8 @@ class FileCollection implements Countable, IteratorAggregate
      * Removes any files from the list that match the supplied pattern
      * (within the optional scope).
      *
-     * @param string      $pattern Regex or pseudo-regex string
-     * @param string|null $scope   The directory to limit the scope
+     * @param string $pattern Regex or pseudo-regex string
+     * @param string|null $scope The directory to limit the scope
      *
      * @return $this
      */
@@ -322,8 +322,8 @@ class FileCollection implements Countable, IteratorAggregate
      * Keeps only the files from the list that match
      * (within the optional scope).
      *
-     * @param string      $pattern Regex or pseudo-regex string
-     * @param string|null $scope   A directory to limit the scope
+     * @param string $pattern Regex or pseudo-regex string
+     * @param string|null $scope A directory to limit the scope
      *
      * @return $this
      */

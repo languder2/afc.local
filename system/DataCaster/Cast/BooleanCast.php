@@ -22,10 +22,11 @@ namespace CodeIgniter\DataCaster\Cast;
 class BooleanCast extends BaseCast
 {
     public static function get(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): bool {
+    ): bool
+    {
         // For PostgreSQL
         if ($value === 't') {
             return true;

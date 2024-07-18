@@ -57,10 +57,10 @@ class GenerateKey extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '--force'  => 'Force overwrite existing key in `.env` file.',
+        '--force' => 'Force overwrite existing key in `.env` file.',
         '--length' => 'The length of the random string that should be returned in bytes. Defaults to 32.',
         '--prefix' => 'Prefix to prepend to encoded key (either hex2bin or base64). Defaults to hex2bin.',
-        '--show'   => 'Shows the generated key in the terminal instead of storing in the `.env` file.',
+        '--show' => 'Shows the generated key in the terminal instead of storing in the `.env` file.',
     ];
 
     /**
@@ -72,7 +72,7 @@ class GenerateKey extends BaseCommand
 
         if (in_array($prefix, [null, true], true)) {
             $prefix = 'hex2bin';
-        } elseif (! in_array($prefix, ['hex2bin', 'base64'], true)) {
+        } elseif (!in_array($prefix, ['hex2bin', 'base64'], true)) {
             $prefix = CLI::prompt('Please provide a valid prefix to use.', ['hex2bin', 'base64'], 'required'); // @codeCoverageIgnore
         }
 
@@ -84,14 +84,14 @@ class GenerateKey extends BaseCommand
 
         $encodedKey = $this->generateRandomKey($prefix, $length);
 
-        if (array_key_exists('show', $params) || (bool) CLI::getOption('show')) {
+        if (array_key_exists('show', $params) || (bool)CLI::getOption('show')) {
             CLI::write($encodedKey, 'yellow');
             CLI::newLine();
 
             return;
         }
 
-        if (! $this->setNewEncryptionKey($encodedKey, $params)) {
+        if (!$this->setNewEncryptionKey($encodedKey, $params)) {
             CLI::write('Error in setting new encryption key to .env file.', 'light_gray', 'red');
             CLI::newLine();
 
@@ -131,7 +131,7 @@ class GenerateKey extends BaseCommand
     {
         $currentKey = env('encryption.key', '');
 
-        if ($currentKey !== '' && ! $this->confirmOverwrite($params)) {
+        if ($currentKey !== '' && !$this->confirmOverwrite($params)) {
             // Not yet testable since it requires keyboard input
             return false; // @codeCoverageIgnore
         }
@@ -157,8 +157,8 @@ class GenerateKey extends BaseCommand
         $baseEnv = ROOTPATH . 'env';
         $envFile = ROOTPATH . '.env';
 
-        if (! is_file($envFile)) {
-            if (! is_file($baseEnv)) {
+        if (!is_file($envFile)) {
+            if (!is_file($baseEnv)) {
                 CLI::write('Both default shipped `env` file and custom `.env` are missing.', 'yellow');
                 CLI::write('Here\'s your new key instead: ' . CLI::color($newKey, 'yellow'));
                 CLI::newLine();
@@ -169,10 +169,10 @@ class GenerateKey extends BaseCommand
             copy($baseEnv, $envFile);
         }
 
-        $oldFileContents = (string) file_get_contents($envFile);
-        $replacementKey  = "\nencryption.key = {$newKey}";
+        $oldFileContents = (string)file_get_contents($envFile);
+        $replacementKey = "\nencryption.key = {$newKey}";
 
-        if (! str_contains($oldFileContents, 'encryption.key')) {
+        if (!str_contains($oldFileContents, 'encryption.key')) {
             return file_put_contents($envFile, $replacementKey, FILE_APPEND) !== false;
         }
 

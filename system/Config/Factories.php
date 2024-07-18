@@ -46,11 +46,11 @@ final class Factories
      * @var array<string, bool|string|null>
      */
     private static array $configOptions = [
-        'component'  => 'config',
-        'path'       => 'Config',
+        'component' => 'config',
+        'path' => 'Config',
         'instanceOf' => null,
-        'getShared'  => true,
-        'preferApp'  => true,
+        'getShared' => true,
+        'preferApp' => true,
     ];
 
     /**
@@ -92,8 +92,8 @@ final class Factories
     /**
      * Define the class to load. You can *override* the concrete class.
      *
-     * @param string       $component Lowercase, plural component name
-     * @param string       $alias     Class alias. See the $aliases property.
+     * @param string $component Lowercase, plural component name
+     * @param string $alias Class alias. See the $aliases property.
      * @param class-string $classname FQCN to be loaded
      */
     public static function define(string $component, string $alias, string $classname): void
@@ -110,7 +110,7 @@ final class Factories
             );
         }
 
-        if (! class_exists($classname)) {
+        if (!class_exists($classname)) {
             throw new InvalidArgumentException('No such class: ' . $classname);
         }
 
@@ -119,7 +119,7 @@ final class Factories
         self::getOptions($component);
 
         self::$aliases[$component][$alias] = $classname;
-        self::$updated[$component]         = true;
+        self::$updated[$component] = true;
     }
 
     /**
@@ -133,13 +133,13 @@ final class Factories
         $component = strtolower($component);
 
         // First argument is the class alias, second is options
-        $alias   = trim(array_shift($arguments), '\\ ');
+        $alias = trim(array_shift($arguments), '\\ ');
         $options = array_shift($arguments) ?? [];
 
         // Determine the component-specific options
         $options = array_merge(self::getOptions($component), $options);
 
-        if (! $options['getShared']) {
+        if (!$options['getShared']) {
             if (isset(self::$aliases[$options['component']][$alias])) {
                 $class = self::$aliases[$options['component']][$alias];
 
@@ -162,7 +162,7 @@ final class Factories
         }
 
         // Try to locate the class
-        if (! $class = self::locateClass($options, $alias)) {
+        if (!$class = self::locateClass($options, $alias)) {
             return null;
         }
 
@@ -213,7 +213,7 @@ final class Factories
         }
 
         // Try to locate the class
-        if (! $class = self::locateClass($options, $alias)) {
+        if (!$class = self::locateClass($options, $alias)) {
             return null;
         }
 
@@ -233,7 +233,7 @@ final class Factories
     private static function createInstance(string $component, string $class, array $arguments): void
     {
         self::$instances[$component][$class] = new $class(...$arguments);
-        self::$updated[$component]           = true;
+        self::$updated[$component] = true;
     }
 
     /**
@@ -242,10 +242,10 @@ final class Factories
     private static function setAlias(string $component, string $alias, string $class): void
     {
         self::$aliases[$component][$alias] = $class;
-        self::$updated[$component]         = true;
+        self::$updated[$component] = true;
 
         // If a short classname is specified, also register FQCN to share the instance.
-        if (! isset(self::$aliases[$component][$class]) && ! self::isNamespaced($alias)) {
+        if (!isset(self::$aliases[$component][$class]) && !self::isNamespaced($alias)) {
             self::$aliases[$component][$class] = $class;
         }
     }
@@ -263,8 +263,8 @@ final class Factories
     /**
      * Finds a component class
      *
-     * @param array  $options The array of component-specific directives
-     * @param string $alias   Class alias. See the $aliases property.
+     * @param array $options The array of component-specific directives
+     * @param string $alias Class alias. See the $aliases property.
      */
     private static function locateClass(array $options, string $alias): ?string
     {
@@ -279,14 +279,14 @@ final class Factories
 
         // Determine the relative class names we need
         $basename = self::getBasename($alias);
-        $appname  = self::isConfig($options['component'])
+        $appname = self::isConfig($options['component'])
             ? 'Config\\' . $basename
             : rtrim(APP_NAMESPACE, '\\') . '\\' . $options['path'] . '\\' . $basename;
 
         // If an App version was requested then see if it verifies
         if (
             // preferApp is used only for no namespaced class.
-            ! self::isNamespaced($alias)
+            !self::isNamespaced($alias)
             && $options['preferApp'] && class_exists($appname)
             && self::verifyInstanceOf($options, $alias)
         ) {
@@ -303,14 +303,14 @@ final class Factories
 
         // Check if the class alias was namespaced
         if (self::isNamespaced($alias)) {
-            if (! $file = $locator->locateFile($alias, $options['path'])) {
+            if (!$file = $locator->locateFile($alias, $options['path'])) {
                 return null;
             }
             $files = [$file];
         }
         // No namespace? Search for it
         // Check all namespaces, prioritizing App and modules
-        elseif (! $files = $locator->search($options['path'] . DIRECTORY_SEPARATOR . $alias)) {
+        elseif (!$files = $locator->search($options['path'] . DIRECTORY_SEPARATOR . $alias)) {
             return null;
         }
 
@@ -339,13 +339,13 @@ final class Factories
     /**
      * Verifies that a class & config satisfy the "preferApp" option
      *
-     * @param array  $options The array of component-specific directives
-     * @param string $alias   Class alias. See the $aliases property.
+     * @param array $options The array of component-specific directives
+     * @param string $alias Class alias. See the $aliases property.
      */
     private static function verifyPreferApp(array $options, string $alias): bool
     {
         // Anything without that restriction passes
-        if (! $options['preferApp']) {
+        if (!$options['preferApp']) {
             return true;
         }
 
@@ -360,13 +360,13 @@ final class Factories
     /**
      * Verifies that a class & config satisfy the "instanceOf" option
      *
-     * @param array  $options The array of component-specific directives
-     * @param string $alias   Class alias. See the $aliases property.
+     * @param array $options The array of component-specific directives
+     * @param string $alias Class alias. See the $aliases property.
      */
     private static function verifyInstanceOf(array $options, string $alias): bool
     {
         // Anything without that restriction passes
-        if (! $options['instanceOf']) {
+        if (!$options['instanceOf']) {
             return true;
         }
 
@@ -407,7 +407,7 @@ final class Factories
      * Normalizes, stores, and returns the configuration for a specific component
      *
      * @param string $component Lowercase, plural component name
-     * @param array  $values    option values
+     * @param array $values option values
      *
      * @return array<string, bool|string|null> The result after applying defaults and normalization
      */
@@ -428,7 +428,7 @@ final class Factories
         $values = array_merge(Factory::$default, $values);
 
         // Store the result to the supplied name and potential alias
-        self::$options[$component]           = $values;
+        self::$options[$component] = $values;
         self::$options[$values['component']] = $values;
 
         return $values;
@@ -454,17 +454,17 @@ final class Factories
             return;
         }
 
-        self::$options   = [];
-        self::$aliases   = [];
+        self::$options = [];
+        self::$aliases = [];
         self::$instances = [];
-        self::$updated   = [];
+        self::$updated = [];
     }
 
     /**
      * Helper method for injecting mock instances
      *
      * @param string $component Lowercase, plural component name
-     * @param string $alias     Class alias. See the $aliases property.
+     * @param string $alias Class alias. See the $aliases property.
      *
      * @return void
      *
@@ -481,7 +481,7 @@ final class Factories
         $class = $instance::class;
 
         self::$instances[$component][$class] = $instance;
-        self::$aliases[$component][$alias]   = $class;
+        self::$aliases[$component][$alias] = $class;
 
         if (self::isConfig($component)) {
             if (self::isNamespaced($alias)) {
@@ -515,17 +515,17 @@ final class Factories
      */
     public static function getComponentInstances(string $component): array
     {
-        if (! isset(self::$aliases[$component])) {
+        if (!isset(self::$aliases[$component])) {
             return [
-                'options'   => [],
-                'aliases'   => [],
+                'options' => [],
+                'aliases' => [],
                 'instances' => [],
             ];
         }
 
         return [
-            'options'   => self::$options[$component],
-            'aliases'   => self::$aliases[$component],
+            'options' => self::$options[$component],
+            'aliases' => self::$aliases[$component],
             'instances' => self::$instances[$component],
         ];
     }
@@ -537,8 +537,8 @@ final class Factories
      */
     public static function setComponentInstances(string $component, array $data): void
     {
-        self::$options[$component]   = $data['options'];
-        self::$aliases[$component]   = $data['aliases'];
+        self::$options[$component] = $data['options'];
+        self::$aliases[$component] = $data['aliases'];
         self::$instances[$component] = $data['instances'];
 
         unset(self::$updated[$component]);

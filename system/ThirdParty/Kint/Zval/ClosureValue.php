@@ -36,7 +36,7 @@ class ClosureValue extends InstanceValue
     public function getAccessPath(): ?string
     {
         if (null !== $this->access_path) {
-            return parent::getAccessPath().'('.$this->getParams().')';
+            return parent::getAccessPath() . '(' . $this->getParams() . ')';
         }
 
         return null;

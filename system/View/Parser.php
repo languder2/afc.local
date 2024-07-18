@@ -82,12 +82,13 @@ class Parser extends View
      * @param FileLocatorInterface|null $loader
      */
     public function __construct(
-        ViewConfig $config,
-        ?string $viewPath = null,
-        $loader = null,
-        ?bool $debug = null,
+        ViewConfig       $config,
+        ?string          $viewPath = null,
+                         $loader = null,
+        ?bool            $debug = null,
         ?LoggerInterface $logger = null
-    ) {
+    )
+    {
         // Ensure user plugins override core plugins.
         $this->plugins = $config->plugins;
 
@@ -112,7 +113,7 @@ class Parser extends View
         }
 
         $fileExt = pathinfo($view, PATHINFO_EXTENSION);
-        $view    = ($fileExt === '') ? $view . '.php' : $view; // allow Views as .html, .tpl, etc (from CI3)
+        $view = ($fileExt === '') ? $view . '.php' : $view; // allow Views as .html, .tpl, etc (from CI3)
 
         $cacheName = $options['cache_name'] ?? str_replace('.php', '', $view);
 
@@ -125,9 +126,9 @@ class Parser extends View
 
         $file = $this->viewPath . $view;
 
-        if (! is_file($file)) {
+        if (!is_file($file)) {
             $fileOrig = $file;
-            $file     = $this->loader->locateFile($view, 'Views');
+            $file = $this->loader->locateFile($view, 'Views');
 
             // locateFile() will return false if the file cannot be found.
             if ($file === false) {
@@ -140,7 +141,7 @@ class Parser extends View
         }
 
         $template = file_get_contents($file);
-        $output   = $this->parse($template, $this->tempData, $options);
+        $output = $this->parse($template, $this->tempData, $options);
         $this->logPerformance($start, microtime(true), $view);
 
         if ($saveData) {
@@ -151,7 +152,7 @@ class Parser extends View
 
         // Should we cache?
         if (isset($options['cache'])) {
-            cache()->save($cacheName, $output, (int) $options['cache']);
+            cache()->save($cacheName, $output, (int)$options['cache']);
         }
         $this->tempData = null;
 
@@ -198,8 +199,8 @@ class Parser extends View
      * so that the variable is correctly handled within the
      * parsing itself, and contexts (including raw) are respected.
      *
-     * @param         array<string, mixed>                      $data
-     * @param         non-empty-string|null                     $context The context to escape it for.
+     * @param array<string, mixed> $data
+     * @param non-empty-string|null $context The context to escape it for.
      *                                                                   If 'raw', no escaping will happen.
      * @phpstan-param null|'html'|'js'|'css'|'url'|'attr'|'raw' $context
      */
@@ -260,10 +261,10 @@ class Parser extends View
             $escape = true;
 
             if (is_array($val)) {
-                $escape  = false;
+                $escape = false;
                 $replace = $this->parsePair($key, $val, $template);
             } else {
-                $replace = $this->parseSingle($key, (string) $val);
+                $replace = $this->parseSingle($key, (string)$val);
             }
 
             foreach ($replace as $pattern => $content) {
@@ -329,15 +330,14 @@ class Parser extends View
                 // converted with that method (i.e. Entities)
                 if (is_object($row) && method_exists($row, 'toArray')) {
                     $row = $row->toArray();
-                }
-                // Otherwise, cast as an array and it will grab public properties.
+                } // Otherwise, cast as an array and it will grab public properties.
                 elseif (is_object($row)) {
-                    $row = (array) $row;
+                    $row = (array)$row;
                 }
 
-                $temp  = [];
+                $temp = [];
                 $pairs = [];
-                $out   = $match[1];
+                $out = $match[1];
 
                 foreach ($row as $key => $val) {
                     // For nested data, send us back through this method...
@@ -364,7 +364,7 @@ class Parser extends View
 
                 // Now replace our placeholders with the new content.
                 foreach ($temp as $pattern => $content) {
-                    $out = $this->replaceSingle($pattern, $content, $out, ! isset($pairs[$pattern]));
+                    $out = $this->replaceSingle($pattern, $content, $out, !isset($pairs[$pattern]));
                 }
 
                 $str .= $out;
@@ -403,9 +403,9 @@ class Parser extends View
         if (preg_match_all($pattern, $template, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
                 // Create a hash of the contents to insert in its place.
-                $hash                       = md5($match[1]);
+                $hash = md5($match[1]);
                 $this->noparseBlocks[$hash] = $match[1];
-                $template                   = str_replace($match[0], "noparse_{$hash}", $template);
+                $template = str_replace($match[0], "noparse_{$hash}", $template);
             }
         }
 
@@ -436,7 +436,7 @@ class Parser extends View
      */
     protected function parseConditionals(string $template): string
     {
-        $leftDelimiter  = preg_quote($this->leftConditionalDelimiter, '/');
+        $leftDelimiter = preg_quote($this->leftConditionalDelimiter, '/');
         $rightDelimiter = preg_quote($this->rightConditionalDelimiter, '/');
 
         $pattern = '/'
@@ -459,7 +459,7 @@ class Parser extends View
             $condition = $match[2];
 
             $statement = $match[1] === 'elseif' ? '<?php elseif (' . $condition . '): ?>' : '<?php if (' . $condition . '): ?>';
-            $template  = str_replace($match[0], $statement, $template);
+            $template = str_replace($match[0], $statement, $template);
         }
 
         $template = preg_replace(
@@ -501,7 +501,7 @@ class Parser extends View
      */
     public function setDelimiters($leftDelimiter = '{', $rightDelimiter = '}'): RendererInterface
     {
-        $this->leftDelimiter  = $leftDelimiter;
+        $this->leftDelimiter = $leftDelimiter;
         $this->rightDelimiter = $rightDelimiter;
 
         return $this;
@@ -515,7 +515,7 @@ class Parser extends View
      */
     public function setConditionalDelimiters($leftDelimiter = '{', $rightDelimiter = '}'): RendererInterface
     {
-        $this->leftConditionalDelimiter  = $leftDelimiter;
+        $this->leftConditionalDelimiter = $leftDelimiter;
         $this->rightConditionalDelimiter = $rightDelimiter;
 
         return $this;
@@ -526,12 +526,12 @@ class Parser extends View
      * for escaping brackets.
      *
      * @param array|string $pattern
-     * @param string       $content
-     * @param string       $template
+     * @param string $content
+     * @param string $template
      */
     protected function replaceSingle($pattern, $content, $template, bool $escape = false): string
     {
-        $content = (string) $content;
+        $content = (string)$content;
 
         // Replace the content in the template
         return preg_replace_callback($pattern, function ($matches) use ($content, $escape) {
@@ -544,7 +544,7 @@ class Parser extends View
             }
 
             return $this->prepareReplacement($matches, $content, $escape);
-        }, (string) $template);
+        }, (string)$template);
     }
 
     /**
@@ -584,17 +584,14 @@ class Parser extends View
             if ($this->dataContexts[$key] !== 'raw') {
                 return $this->dataContexts[$key];
             }
-        }
-        // No pipes, then we know we need to escape
-        elseif (! str_contains($key, '|')) {
+        } // No pipes, then we know we need to escape
+        elseif (!str_contains($key, '|')) {
             $escape = 'html';
-        }
-        // If there's a `noescape` then we're definitely false.
+        } // If there's a `noescape` then we're definitely false.
         elseif (str_contains($key, 'noescape')) {
             $escape = false;
-        }
-        // If no `esc` filter is found, then we'll need to add one.
-        elseif (! preg_match('/\s+esc/u', $key)) {
+        } // If no `esc` filter is found, then we'll need to add one.
+        elseif (!preg_match('/\s+esc/u', $key)) {
             $escape = 'html';
         }
 
@@ -632,7 +629,7 @@ class Parser extends View
             // Get our filter name
             $filter = $param !== [] ? trim(strtolower(substr($filter, 0, strpos($filter, '(')))) : trim($filter);
 
-            if (! array_key_exists($filter, $this->config->filters)) {
+            if (!array_key_exists($filter, $this->config->filters)) {
                 continue;
             }
 
@@ -641,7 +638,7 @@ class Parser extends View
             $replace = $this->config->filters[$filter]($replace, ...$param);
         }
 
-        return (string) $replace;
+        return (string)$replace;
     }
 
     // Plugins
@@ -656,7 +653,7 @@ class Parser extends View
     {
         foreach ($this->plugins as $plugin => $callable) {
             // Paired tags are enclosed in an array in the config array.
-            $isPair   = is_array($callable);
+            $isPair = is_array($callable);
             $callable = $isPair ? array_shift($callable) : $callable;
 
             // See https://regex101.com/r/BCBBKB/1
@@ -672,7 +669,7 @@ class Parser extends View
              *   $matches[1] = all parameters string in opening tag
              *   $matches[2] = content between the tags to send to the plugin.
              */
-            if (! preg_match_all($pattern, $template, $matches, PREG_SET_ORDER)) {
+            if (!preg_match_all($pattern, $template, $matches, PREG_SET_ORDER)) {
                 continue;
             }
 
@@ -738,10 +735,9 @@ class Parser extends View
         // converted with that method (i.e. Entities)
         if (is_object($value) && method_exists($value, 'toArray')) {
             $value = $value->toArray();
-        }
-        // Otherwise, cast as an array and it will grab public properties.
+        } // Otherwise, cast as an array and it will grab public properties.
         elseif (is_object($value)) {
-            $value = (array) $value;
+            $value = (array)$value;
         }
 
         return $value;

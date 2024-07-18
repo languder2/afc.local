@@ -79,12 +79,12 @@ class ShowTableInfo extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '--show'              => 'Lists the names of all database tables.',
-        '--metadata'          => 'Retrieves list containing field information.',
-        '--desc'              => 'Sorts the table rows in DESC order.',
-        '--limit-rows'        => 'Limits the number of rows. Default: 10.',
+        '--show' => 'Lists the names of all database tables.',
+        '--metadata' => 'Retrieves list containing field information.',
+        '--desc' => 'Sorts the table rows in DESC order.',
+        '--limit-rows' => 'Limits the number of rows. Default: 10.',
         '--limit-field-value' => 'Limits the length of field values. Default: 15.',
-        '--dbgroup'           => 'Database group to show.',
+        '--dbgroup' => 'Database group to show.',
     ];
 
     /**
@@ -136,11 +136,11 @@ class ShowTableInfo extends BaseCommand
             return EXIT_ERROR;
         }
 
-        $tableName       = $params[0] ?? null;
-        $limitRows       = (int) ($params['limit-rows'] ?? 10);
-        $limitFieldValue = (int) ($params['limit-field-value'] ?? 15);
+        $tableName = $params[0] ?? null;
+        $limitRows = (int)($params['limit-rows'] ?? 10);
+        $limitFieldValue = (int)($params['limit-field-value'] ?? 15);
 
-        while (! in_array($tableName, $tables, true)) {
+        while (!in_array($tableName, $tables, true)) {
             $tableNameNo = CLI::promptByKey(
                 ['Here is the list of your database tables:', 'Which table do you want to see?'],
                 $tables,
@@ -170,7 +170,7 @@ class ShowTableInfo extends BaseCommand
             'username' => $this->db->username,
             'DBDriver' => $this->db->getPlatform(),
             'DBPrefix' => $this->DBPrefix,
-            'port'     => $this->db->port,
+            'port' => $this->db->port,
         ]];
         CLI::table(
             $data,
@@ -212,7 +212,7 @@ class ShowTableInfo extends BaseCommand
         CLI::write('The following is a list of the names of all database tables:', 'black', 'yellow');
         CLI::newLine();
 
-        $thead       = ['ID', 'Table Name', 'Num of Rows', 'Num of Fields'];
+        $thead = ['ID', 'Table Name', 'Num of Rows', 'Num of Fields'];
         $this->tbody = $this->makeTbodyForShowAllTables($tables);
 
         CLI::table($this->tbody, $thead);
@@ -223,9 +223,9 @@ class ShowTableInfo extends BaseCommand
     {
         $this->removeDBPrefix();
 
-        foreach ($tables  as $id => $tableName) {
+        foreach ($tables as $id => $tableName) {
             $table = $this->db->protectIdentifiers($tableName);
-            $db    = $this->db->query("SELECT * FROM {$table}");
+            $db = $this->db->query("SELECT * FROM {$table}");
 
             $this->tbody[] = [
                 $id + 1,
@@ -245,11 +245,12 @@ class ShowTableInfo extends BaseCommand
     }
 
     private function makeTableRows(
-        string $tableName,
-        int $limitRows,
-        int $limitFieldValue,
+        string  $tableName,
+        int     $limitRows,
+        int     $limitFieldValue,
         ?string $sortField = null
-    ): array {
+    ): array
+    {
         $this->tbody = [];
 
         $this->removeDBPrefix();
@@ -263,9 +264,9 @@ class ShowTableInfo extends BaseCommand
 
         foreach ($rows as $row) {
             $row = array_map(
-                static fn ($item): string => mb_strlen((string) $item) > $limitFieldValue
-                    ? mb_substr((string) $item, 0, $limitFieldValue) . '...'
-                    : (string) $item,
+                static fn($item): string => mb_strlen((string)$item) > $limitFieldValue
+                    ? mb_substr((string)$item, 0, $limitFieldValue) . '...'
+                    : (string)$item,
                 $row
             );
             $this->tbody[] = $row;
@@ -312,7 +313,7 @@ class ShowTableInfo extends BaseCommand
      */
     private function setYesOrNo($fieldValue): string
     {
-        if ((bool) $fieldValue) {
+        if ((bool)$fieldValue) {
             return CLI::color('Yes', 'green');
         }
 

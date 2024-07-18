@@ -42,7 +42,7 @@ class ImageMagickHandler extends BaseHandler
     {
         parent::__construct($config);
 
-        if (! (extension_loaded('imagick') || class_exists(Imagick::class))) {
+        if (!(extension_loaded('imagick') || class_exists(Imagick::class))) {
             throw ImageException::forMissingExtension('IMAGICK'); // @codeCoverageIgnore
         }
 
@@ -58,7 +58,7 @@ class ImageMagickHandler extends BaseHandler
             $this->config->libraryPath = $cmd;
         }
 
-        if (! is_file($cmd)) {
+        if (!is_file($cmd)) {
             throw ImageException::forInvalidImageLibraryPath($cmd);
         }
     }
@@ -72,7 +72,7 @@ class ImageMagickHandler extends BaseHandler
      */
     public function _resize(bool $maintainRatio = false)
     {
-        $source      = ! empty($this->resource) ? $this->resource : $this->image()->getPathname();
+        $source = !empty($this->resource) ? $this->resource : $this->image()->getPathname();
         $destination = $this->getResourcePath();
 
         $escape = '\\';
@@ -99,7 +99,7 @@ class ImageMagickHandler extends BaseHandler
      */
     public function _crop()
     {
-        $source      = ! empty($this->resource) ? $this->resource : $this->image()->getPathname();
+        $source = !empty($this->resource) ? $this->resource : $this->image()->getPathname();
         $destination = $this->getResourcePath();
 
         $extent = ' ';
@@ -126,7 +126,7 @@ class ImageMagickHandler extends BaseHandler
     {
         $angle = '-rotate ' . $angle;
 
-        $source      = ! empty($this->resource) ? $this->resource : $this->image()->getPathname();
+        $source = !empty($this->resource) ? $this->resource : $this->image()->getPathname();
         $destination = $this->getResourcePath();
 
         $action = ' ' . $angle . ' ' . escapeshellarg($source) . ' ' . escapeshellarg($destination);
@@ -147,7 +147,7 @@ class ImageMagickHandler extends BaseHandler
     {
         $flatten = "-background 'rgb({$red},{$green},{$blue})' -flatten";
 
-        $source      = ! empty($this->resource) ? $this->resource : $this->image()->getPathname();
+        $source = !empty($this->resource) ? $this->resource : $this->image()->getPathname();
         $destination = $this->getResourcePath();
 
         $action = ' ' . $flatten . ' ' . escapeshellarg($source) . ' ' . escapeshellarg($destination);
@@ -168,7 +168,7 @@ class ImageMagickHandler extends BaseHandler
     {
         $angle = $direction === 'horizontal' ? '-flop' : '-flip';
 
-        $source      = ! empty($this->resource) ? $this->resource : $this->image()->getPathname();
+        $source = !empty($this->resource) ? $this->resource : $this->image()->getPathname();
         $destination = $this->getResourcePath();
 
         $action = ' ' . $angle . ' ' . escapeshellarg($source) . ' ' . escapeshellarg($destination);
@@ -234,7 +234,7 @@ class ImageMagickHandler extends BaseHandler
     public function save(?string $target = null, int $quality = 90): bool
     {
         $original = $target;
-        $target   = ($target === null || $target === '') ? $this->image()->getPathname() : $target;
+        $target = ($target === null || $target === '') ? $this->image()->getPathname() : $target;
 
         // If no new resource has been created, then we're
         // simply copy the existing one.
@@ -319,7 +319,7 @@ class ImageMagickHandler extends BaseHandler
     {
         switch ($this->image()->imageType) {
             case IMAGETYPE_WEBP:
-                if (! in_array('WEBP', Imagick::queryFormats(), true)) {
+                if (!in_array('WEBP', Imagick::queryFormats(), true)) {
                     throw ImageException::forInvalidImageCreate(lang('images.webpNotSupported'));
                 }
                 break;
@@ -335,10 +335,10 @@ class ImageMagickHandler extends BaseHandler
      */
     protected function _text(string $text, array $options = [])
     {
-        $xAxis   = 0;
-        $yAxis   = 0;
+        $xAxis = 0;
+        $yAxis = 0;
         $gravity = '';
-        $cmd     = '';
+        $cmd = '';
 
         // Reverse the vertical offset
         // When the image is positioned at the bottom
@@ -355,39 +355,39 @@ class ImageMagickHandler extends BaseHandler
         }
 
         // Font
-        if (! empty($options['fontPath'])) {
+        if (!empty($options['fontPath'])) {
             $cmd .= " -font '{$options['fontPath']}'";
         }
 
         if (isset($options['hAlign'], $options['vAlign'])) {
             switch ($options['hAlign']) {
                 case 'left':
-                    $xAxis   = $options['hOffset'] + $options['padding'];
-                    $yAxis   = $options['vOffset'] + $options['padding'];
+                    $xAxis = $options['hOffset'] + $options['padding'];
+                    $yAxis = $options['vOffset'] + $options['padding'];
                     $gravity = $options['vAlign'] === 'top' ? 'NorthWest' : 'West';
                     if ($options['vAlign'] === 'bottom') {
                         $gravity = 'SouthWest';
-                        $yAxis   = $options['vOffset'] - $options['padding'];
+                        $yAxis = $options['vOffset'] - $options['padding'];
                     }
                     break;
 
                 case 'center':
-                    $xAxis   = $options['hOffset'] + $options['padding'];
-                    $yAxis   = $options['vOffset'] + $options['padding'];
+                    $xAxis = $options['hOffset'] + $options['padding'];
+                    $yAxis = $options['vOffset'] + $options['padding'];
                     $gravity = $options['vAlign'] === 'top' ? 'North' : 'Center';
                     if ($options['vAlign'] === 'bottom') {
-                        $yAxis   = $options['vOffset'] - $options['padding'];
+                        $yAxis = $options['vOffset'] - $options['padding'];
                         $gravity = 'South';
                     }
                     break;
 
                 case 'right':
-                    $xAxis   = $options['hOffset'] - $options['padding'];
-                    $yAxis   = $options['vOffset'] + $options['padding'];
+                    $xAxis = $options['hOffset'] - $options['padding'];
+                    $yAxis = $options['vOffset'] + $options['padding'];
                     $gravity = $options['vAlign'] === 'top' ? 'NorthEast' : 'East';
                     if ($options['vAlign'] === 'bottom') {
                         $gravity = 'SouthEast';
-                        $yAxis   = $options['vOffset'] - $options['padding'];
+                        $yAxis = $options['vOffset'] - $options['padding'];
                     }
                     break;
             }
@@ -413,7 +413,7 @@ class ImageMagickHandler extends BaseHandler
         // Text
         $cmd .= " -annotate 0 '{$text}'";
 
-        $source      = ! empty($this->resource) ? $this->resource : $this->image()->getPathname();
+        $source = !empty($this->resource) ? $this->resource : $this->image()->getPathname();
         $destination = $this->getResourcePath();
 
         $cmd = " '{$source}' {$cmd} '{$destination}'";
@@ -456,13 +456,13 @@ class ImageMagickHandler extends BaseHandler
         $orientation = $this->getEXIF('Orientation', $silent);
 
         return match ($orientation) {
-            2       => $this->flip('horizontal'),
-            3       => $this->rotate(180),
-            4       => $this->rotate(180)->flip('horizontal'),
-            5       => $this->rotate(90)->flip('horizontal'),
-            6       => $this->rotate(90),
-            7       => $this->rotate(270)->flip('horizontal'),
-            8       => $this->rotate(270),
+            2 => $this->flip('horizontal'),
+            3 => $this->rotate(180),
+            4 => $this->rotate(180)->flip('horizontal'),
+            5 => $this->rotate(90)->flip('horizontal'),
+            6 => $this->rotate(90),
+            7 => $this->rotate(270)->flip('horizontal'),
+            8 => $this->rotate(270),
             default => $this,
         };
     }

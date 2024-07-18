@@ -143,7 +143,7 @@ class Escaper
             }
 
             $encoding = strtolower($encoding);
-            if (! in_array($encoding, $this->supportedEncodings)) {
+            if (!in_array($encoding, $this->supportedEncodings)) {
                 throw new Exception\InvalidArgumentException(
                     'Value of \'' . $encoding . '\' passed to ' . static::class
                     . ' constructor parameter is invalid. Provide an encoding supported by htmlspecialchars()'
@@ -162,12 +162,12 @@ class Escaper
             function (array $matches): string {
                 return $this->htmlAttrMatcher($matches);
             };
-        $this->jsMatcher       =
+        $this->jsMatcher =
             /** @param array<array-key, string> $matches */
             function (array $matches): string {
                 return $this->jsMatcher($matches);
             };
-        $this->cssMatcher      =
+        $this->cssMatcher =
             /** @param array<array-key, string> $matches */
             function (array $matches): string {
                 return $this->cssMatcher($matches);
@@ -330,7 +330,7 @@ class Escaper
             return sprintf('\\u%04s', $hex);
         }
         $highSurrogate = substr($hex, 0, 4);
-        $lowSurrogate  = substr($hex, 4, 4);
+        $lowSurrogate = substr($hex, 4, 4);
         return sprintf('\\u%04s\\u%04s', $highSurrogate, $lowSurrogate);
     }
 
@@ -357,8 +357,8 @@ class Escaper
      * Converts a string to UTF-8 from the base encoding. The base encoding is set via this
      *
      * @param string $string
-     * @throws Exception\RuntimeException
      * @return string
+     * @throws Exception\RuntimeException
      */
     protected function toUtf8($string)
     {
@@ -368,7 +368,7 @@ class Escaper
             $result = $this->convertEncoding($string, 'UTF-8', $this->getEncoding());
         }
 
-        if (! $this->isUtf8($result)) {
+        if (!$this->isUtf8($result)) {
             throw new Exception\RuntimeException(
                 sprintf('String to be escaped was not valid UTF-8 or could not be converted: %s', $result)
             );

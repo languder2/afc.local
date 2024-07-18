@@ -57,8 +57,8 @@ class Migrate extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '-n'    => 'Set migration namespace',
-        '-g'    => 'Set database group',
+        '-n' => 'Set migration namespace',
+        '-g' => 'Set database group',
         '--all' => 'Set for all namespaces, will ignore (-n) option',
     ];
 
@@ -73,7 +73,7 @@ class Migrate extends BaseCommand
         CLI::write(lang('Migrations.latest'), 'yellow');
 
         $namespace = $params['n'] ?? CLI::getOption('n');
-        $group     = $params['g'] ?? CLI::getOption('g');
+        $group = $params['g'] ?? CLI::getOption('g');
 
         try {
             if (array_key_exists('all', $params) || CLI::getOption('all')) {
@@ -82,7 +82,7 @@ class Migrate extends BaseCommand
                 $runner->setNamespace($namespace);
             }
 
-            if (! $runner->latest($group)) {
+            if (!$runner->latest($group)) {
                 CLI::error(lang('Migrations.generalFault'), 'light_gray', 'red'); // @codeCoverageIgnore
             }
 

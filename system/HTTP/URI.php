@@ -44,14 +44,6 @@ class URI implements Stringable
      * @deprecated 4.4.0 Not used.
      */
     protected $uriString;
-
-    /**
-     * The Current baseURL.
-     *
-     * @deprecated 4.4.0 Use SiteURI instead.
-     */
-    private ?string $baseURL = null;
-
     /**
      * List of URI segments.
      *
@@ -60,75 +52,65 @@ class URI implements Stringable
      * @var array
      */
     protected $segments = [];
-
     /**
      * The URI Scheme.
      *
      * @var string
      */
     protected $scheme = 'http';
-
     /**
      * URI User Info
      *
      * @var string
      */
     protected $user;
-
     /**
      * URI User Password
      *
      * @var string
      */
     protected $password;
-
     /**
      * URI Host
      *
      * @var string
      */
     protected $host;
-
     /**
      * URI Port
      *
      * @var int
      */
     protected $port;
-
     /**
      * URI path.
      *
      * @var string
      */
     protected $path;
-
     /**
      * The name of any fragment.
      *
      * @var string
      */
     protected $fragment = '';
-
     /**
      * The query string.
      *
      * @var array
      */
     protected $query = [];
-
     /**
      * Default schemes/ports.
      *
      * @var array
      */
     protected $defaultPorts = [
-        'http'  => 80,
+        'http' => 80,
         'https' => 443,
-        'ftp'   => 21,
-        'sftp'  => 22,
+        'ftp' => 21,
+        'sftp' => 22,
     ];
-
     /**
      * Whether passwords should be shown in userInfo/authority calls.
      * Default to false because URIs often show up in logs
@@ -136,59 +118,150 @@ class URI implements Stringable
      * @var bool
      */
     protected $showPassword = false;
-
     /**
      * If true, will continue instead of throwing exceptions.
      *
      * @var bool
      */
     protected $silent = false;
-
     /**
      * If true, will use raw query string.
      *
      * @var bool
      */
     protected $rawQueryString = false;
+    /**
+     * The Current baseURL.
+     *
+     * @deprecated 4.4.0 Use SiteURI instead.
+     */
+    private ?string $baseURL = null;
 
     /**
-     * Builds a representation of the string from the component parts.
+     * Constructor.
      *
-     * @param string|null $scheme URI scheme. E.g., http, ftp
+     * @param string|null $uri The URI to parse.
      *
-     * @return string URI string with only passed parts. Maybe incomplete as a URI.
+     * @throws HTTPException
+     *
+     * @TODO null for param $uri should be removed.
+     *      See https://www.php-fig.org/psr/psr-17/#26-urifactoryinterface
      */
-    public static function createURIString(
-        ?string $scheme = null,
-        ?string $authority = null,
-        ?string $path = null,
-        ?string $query = null,
-        ?string $fragment = null
-    ): string {
-        $uri = '';
-        if ($scheme !== null && $scheme !== '') {
-            $uri .= $scheme . '://';
+    public function __construct(?string $uri = null)
+    {
+        if ($uri !== null) {
+            $this->setURI($uri);
+        }
+    }
+
+    /**
+     * Sets and overwrites any current URI information.
+     *
+     * @return URI
+     *
+     * @throws HTTPException
+     *
+     * @deprecated 4.4.0 This method will be private.
+     */
+    public function setURI(?string $uri = null)
+    {
+        if ($uri !== null) {
+            $parts = parse_url($uri);
+
+            if ($parts === false) {
+                if ($this->silent) {
+                    return $this;
+                }
+
+                throw HTTPException::forUnableToParseURI($uri);
+            }
+
+            $this->applyParts($parts);
         }
 
-        if ($authority !== null && $authority !== '') {
-            $uri .= $authority;
+        return $this;
+    }
+
+    /**
+     * Saves our parts from a parse_url call.
+     *
+     * @return void
+     */
+    protected function applyParts(array $parts)
+    {
+        if (!empty($parts['host'])) {
+            $this->host = $parts['host'];
+        }
+        if (!empty($parts['user'])) {
+            $this->user = $parts['user'];
+        }
+        if (isset($parts['path']) && $parts['path'] !== '') {
+            $this->path = $this->filterPath($parts['path']);
+        }
+        if (!empty($parts['query'])) {
+            $this->setQuery($parts['query']);
+        }
+        if (!empty($parts['fragment'])) {
+            $this->fragment = $parts['fragment'];
         }
 
-        if (isset($path) && $path !== '') {
-            $uri .= ! str_ends_with($uri, '/')
-                ? '/' . ltrim($path, '/')
-                : ltrim($path, '/');
+        // Scheme
+        if (isset($parts['scheme'])) {
+            $this->setScheme(rtrim($parts['scheme'], ':/'));
+        } else {
+            $this->setScheme('http');
         }
 
-        if ($query !== '' && $query !== null) {
-            $uri .= '?' . $query;
+        // Port
+        if (isset($parts['port']) && $parts['port'] !== null) {
+            // Valid port numbers are enforced by earlier parse_url or setPort()
+            $this->port = $parts['port'];
         }
 
-        if ($fragment !== '' && $fragment !== null) {
-            $uri .= '#' . $fragment;
+        if (isset($parts['pass'])) {
+            $this->password = $parts['pass'];
         }
 
-        return $uri;
+        // Populate our segments array
+        if (isset($parts['path']) && $parts['path'] !== '') {
+            $tempPath = trim($parts['path'], '/');
+
+            $this->segments = ($tempPath === '') ? [] : explode('/', $tempPath);
+        }
+    }
+
+    /**
+     * Encodes any dangerous characters, and removes dot segments.
+     * While dot segments have valid uses according to the spec,
+     * this URI class does not allow them.
+     */
+    protected function filterPath(?string $path = null): string
+    {
+        $orig = $path;
+
+        // Decode/normalize percent-encoded chars so
+        // we can always have matching for Routes, etc.
+        $path = urldecode($path);
+
+        // Remove dot segments
+        $path = self::removeDotSegments($path);
+
+        // Fix up some leading slash edge cases...
+        if (str_starts_with($orig, './')) {
+            $path = '/' . $path;
+        }
+        if (str_starts_with($orig, '../')) {
+            $path = '/' . $path;
+        }
+
+        // Encode characters
+        $path = preg_replace_callback(
+            '/(?:[^' . static::CHAR_UNRESERVED . ':@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
+            static fn(array $matches) => rawurlencode($matches[0]),
+            $path
+        );
+
+        return $path;
     }
 
     /**
@@ -244,29 +317,12 @@ class URI implements Stringable
     }
 
     /**
-     * Constructor.
-     *
-     * @param string|null $uri The URI to parse.
-     *
-     * @throws HTTPException
-     *
-     * @TODO null for param $uri should be removed.
-     *      See https://www.php-fig.org/psr/psr-17/#26-urifactoryinterface
-     */
-    public function __construct(?string $uri = null)
-    {
-        if ($uri !== null) {
-            $this->setURI($uri);
-        }
-    }
-
-    /**
      * If $silent == true, then will not throw exceptions and will
      * attempt to continue gracefully.
      *
+     * @return URI
      * @deprecated 4.4.0 Method not in PSR-7
      *
-     * @return URI
      */
     public function setSilent(bool $silent = true)
     {
@@ -291,127 +347,6 @@ class URI implements Stringable
     }
 
     /**
-     * Sets and overwrites any current URI information.
-     *
-     * @return URI
-     *
-     * @throws HTTPException
-     *
-     * @deprecated 4.4.0 This method will be private.
-     */
-    public function setURI(?string $uri = null)
-    {
-        if ($uri !== null) {
-            $parts = parse_url($uri);
-
-            if ($parts === false) {
-                if ($this->silent) {
-                    return $this;
-                }
-
-                throw HTTPException::forUnableToParseURI($uri);
-            }
-
-            $this->applyParts($parts);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Retrieve the scheme component of the URI.
-     *
-     * If no scheme is present, this method MUST return an empty string.
-     *
-     * The value returned MUST be normalized to lowercase, per RFC 3986
-     * Section 3.1.
-     *
-     * The trailing ":" character is not part of the scheme and MUST NOT be
-     * added.
-     *
-     * @see    https://tools.ietf.org/html/rfc3986#section-3.1
-     *
-     * @return string The URI scheme.
-     */
-    public function getScheme(): string
-    {
-        return $this->scheme;
-    }
-
-    /**
-     * Retrieve the authority component of the URI.
-     *
-     * If no authority information is present, this method MUST return an empty
-     * string.
-     *
-     * The authority syntax of the URI is:
-     *
-     * <pre>
-     * [user-info@]host[:port]
-     * </pre>
-     *
-     * If the port component is not set or is the standard port for the current
-     * scheme, it SHOULD NOT be included.
-     *
-     * @see https://tools.ietf.org/html/rfc3986#section-3.2
-     *
-     * @return string The URI authority, in "[user-info@]host[:port]" format.
-     */
-    public function getAuthority(bool $ignorePort = false): string
-    {
-        if (empty($this->host)) {
-            return '';
-        }
-
-        $authority = $this->host;
-
-        if (! empty($this->getUserInfo())) {
-            $authority = $this->getUserInfo() . '@' . $authority;
-        }
-
-        // Don't add port if it's a standard port for
-        // this scheme
-        if (! empty($this->port) && ! $ignorePort && $this->port !== $this->defaultPorts[$this->scheme]) {
-            $authority .= ':' . $this->port;
-        }
-
-        $this->showPassword = false;
-
-        return $authority;
-    }
-
-    /**
-     * Retrieve the user information component of the URI.
-     *
-     * If no user information is present, this method MUST return an empty
-     * string.
-     *
-     * If a user is present in the URI, this will return that value;
-     * additionally, if the password is also present, it will be appended to the
-     * user value, with a colon (":") separating the values.
-     *
-     * NOTE that be default, the password, if available, will NOT be shown
-     * as a security measure as discussed in RFC 3986, Section 7.5. If you know
-     * the password is not a security issue, you can force it to be shown
-     * with $this->showPassword();
-     *
-     * The trailing "@" character is not part of the user information and MUST
-     * NOT be added.
-     *
-     * @return string|null The URI user information, in "username[:password]" format.
-     */
-    public function getUserInfo()
-    {
-        $userInfo = $this->user;
-
-        if ($this->showPassword === true && ! empty($this->password)) {
-            $userInfo .= ':' . $this->password;
-        }
-
-        return $userInfo;
-    }
-
-    /**
      * Temporarily sets the URI to show a password in userInfo. Will
      * reset itself after the first call to authority().
      *
@@ -424,23 +359,6 @@ class URI implements Stringable
         $this->showPassword = $val;
 
         return $this;
-    }
-
-    /**
-     * Retrieve the host component of the URI.
-     *
-     * If no host is present, this method MUST return an empty string.
-     *
-     * The value returned MUST be normalized to lowercase, per RFC 3986
-     * Section 3.2.2.
-     *
-     * @see    http://tools.ietf.org/html/rfc3986#section-3.2.2
-     *
-     * @return string The URI host.
-     */
-    public function getHost(): string
-    {
-        return $this->host ?? '';
     }
 
     /**
@@ -461,6 +379,156 @@ class URI implements Stringable
     public function getPort()
     {
         return $this->port;
+    }
+
+    /**
+     * Sets the port portion of the URI.
+     *
+     * @return $this
+     *
+     * @TODO PSR-7: Should be `withPort($port)`.
+     */
+    public function setPort(?int $port = null)
+    {
+        if ($port === null) {
+            return $this;
+        }
+
+        if ($port <= 0 || $port > 65535) {
+            if ($this->silent) {
+                return $this;
+            }
+
+            throw HTTPException::forInvalidPort($port);
+        }
+
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Returns the segments of the path as an array.
+     */
+    public function getSegments(): array
+    {
+        return $this->segments;
+    }
+
+    /**
+     * Returns the value of a specific segment of the URI path.
+     * Allows to get only existing segments or the next one.
+     *
+     * @param int $number Segment number starting at 1
+     * @param string $default Default value
+     *
+     * @return string The value of the segment. If you specify the last +1
+     *                segment, the $default value. If you specify the last +2
+     *                or more throws HTTPException.
+     */
+    public function getSegment(int $number, string $default = ''): string
+    {
+        if ($number < 1) {
+            throw HTTPException::forURISegmentOutOfRange($number);
+        }
+
+        if ($number > count($this->segments) + 1 && !$this->silent) {
+            throw HTTPException::forURISegmentOutOfRange($number);
+        }
+
+        // The segment should treat the array as 1-based for the user
+        // but we still have to deal with a zero-based array.
+        $number--;
+
+        return $this->segments[$number] ?? $default;
+    }
+
+    /**
+     * Set the value of a specific segment of the URI path.
+     * Allows to set only existing segments or add new one.
+     *
+     * Note: Method not in PSR-7
+     *
+     * @param int $number Segment number starting at 1
+     * @param int|string $value
+     *
+     * @return $this
+     */
+    public function setSegment(int $number, $value)
+    {
+        if ($number < 1) {
+            throw HTTPException::forURISegmentOutOfRange($number);
+        }
+
+        if ($number > count($this->segments) + 1) {
+            if ($this->silent) {
+                return $this;
+            }
+
+            throw HTTPException::forURISegmentOutOfRange($number);
+        }
+
+        // The segment should treat the array as 1-based for the user
+        // but we still have to deal with a zero-based array.
+        $number--;
+
+        $this->segments[$number] = $value;
+        $this->refreshPath();
+
+        return $this;
+    }
+
+    /**
+     * Sets the path portion of the URI based on segments.
+     *
+     * @return $this
+     *
+     * @deprecated This method will be private.
+     */
+    public function refreshPath()
+    {
+        $this->path = $this->filterPath(implode('/', $this->segments));
+
+        $tempPath = trim($this->path, '/');
+
+        $this->segments = ($tempPath === '') ? [] : explode('/', $tempPath);
+
+        return $this;
+    }
+
+    /**
+     * Returns the total number of segments.
+     *
+     * Note: Method not in PSR-7
+     */
+    public function getTotalSegments(): int
+    {
+        return count($this->segments);
+    }
+
+    /**
+     * Formats the URI as a string.
+     *
+     * Warning: For backwards-compatability this method
+     * assumes URIs with the same host as baseURL should
+     * be relative to the project's configuration.
+     * This aspect of __toString() is deprecated and should be avoided.
+     */
+    public function __toString(): string
+    {
+        $path = $this->getPath();
+        $scheme = $this->getScheme();
+
+        // If the hosts matches then assume this should be relative to baseURL
+        [$scheme, $path] = $this->changeSchemeAndPath($scheme, $path);
+
+        return static::createURIString(
+            $scheme,
+            $this->getAuthority(),
+            $path, // Absolute URIs should use a "/" for an empty path
+            $this->getQuery(),
+            $this->getFragment()
+        );
     }
 
     /**
@@ -495,209 +563,41 @@ class URI implements Stringable
     }
 
     /**
-     * Retrieve the query string
-     */
-    public function getQuery(array $options = []): string
-    {
-        $vars = $this->query;
-
-        if (array_key_exists('except', $options)) {
-            if (! is_array($options['except'])) {
-                $options['except'] = [$options['except']];
-            }
-
-            foreach ($options['except'] as $var) {
-                unset($vars[$var]);
-            }
-        } elseif (array_key_exists('only', $options)) {
-            $temp = [];
-
-            if (! is_array($options['only'])) {
-                $options['only'] = [$options['only']];
-            }
-
-            foreach ($options['only'] as $var) {
-                if (array_key_exists($var, $vars)) {
-                    $temp[$var] = $vars[$var];
-                }
-            }
-
-            $vars = $temp;
-        }
-
-        return empty($vars) ? '' : http_build_query($vars);
-    }
-
-    /**
-     * Retrieve a URI fragment
-     */
-    public function getFragment(): string
-    {
-        return $this->fragment ?? '';
-    }
-
-    /**
-     * Returns the segments of the path as an array.
-     */
-    public function getSegments(): array
-    {
-        return $this->segments;
-    }
-
-    /**
-     * Returns the value of a specific segment of the URI path.
-     * Allows to get only existing segments or the next one.
-     *
-     * @param int    $number  Segment number starting at 1
-     * @param string $default Default value
-     *
-     * @return string The value of the segment. If you specify the last +1
-     *                segment, the $default value. If you specify the last +2
-     *                or more throws HTTPException.
-     */
-    public function getSegment(int $number, string $default = ''): string
-    {
-        if ($number < 1) {
-            throw HTTPException::forURISegmentOutOfRange($number);
-        }
-
-        if ($number > count($this->segments) + 1 && ! $this->silent) {
-            throw HTTPException::forURISegmentOutOfRange($number);
-        }
-
-        // The segment should treat the array as 1-based for the user
-        // but we still have to deal with a zero-based array.
-        $number--;
-
-        return $this->segments[$number] ?? $default;
-    }
-
-    /**
-     * Set the value of a specific segment of the URI path.
-     * Allows to set only existing segments or add new one.
-     *
-     * Note: Method not in PSR-7
-     *
-     * @param int        $number Segment number starting at 1
-     * @param int|string $value
+     * Sets the path portion of the URI.
      *
      * @return $this
+     *
+     * @TODO PSR-7: Should be `withPath($port)`.
      */
-    public function setSegment(int $number, $value)
+    public function setPath(string $path)
     {
-        if ($number < 1) {
-            throw HTTPException::forURISegmentOutOfRange($number);
-        }
+        $this->path = $this->filterPath($path);
 
-        if ($number > count($this->segments) + 1) {
-            if ($this->silent) {
-                return $this;
-            }
+        $tempPath = trim($this->path, '/');
 
-            throw HTTPException::forURISegmentOutOfRange($number);
-        }
-
-        // The segment should treat the array as 1-based for the user
-        // but we still have to deal with a zero-based array.
-        $number--;
-
-        $this->segments[$number] = $value;
-        $this->refreshPath();
+        $this->segments = ($tempPath === '') ? [] : explode('/', $tempPath);
 
         return $this;
     }
 
     /**
-     * Returns the total number of segments.
+     * Retrieve the scheme component of the URI.
      *
-     * Note: Method not in PSR-7
+     * If no scheme is present, this method MUST return an empty string.
+     *
+     * The value returned MUST be normalized to lowercase, per RFC 3986
+     * Section 3.1.
+     *
+     * The trailing ":" character is not part of the scheme and MUST NOT be
+     * added.
+     *
+     * @see    https://tools.ietf.org/html/rfc3986#section-3.1
+     *
+     * @return string The URI scheme.
      */
-    public function getTotalSegments(): int
+    public function getScheme(): string
     {
-        return count($this->segments);
-    }
-
-    /**
-     * Formats the URI as a string.
-     *
-     * Warning: For backwards-compatability this method
-     * assumes URIs with the same host as baseURL should
-     * be relative to the project's configuration.
-     * This aspect of __toString() is deprecated and should be avoided.
-     */
-    public function __toString(): string
-    {
-        $path   = $this->getPath();
-        $scheme = $this->getScheme();
-
-        // If the hosts matches then assume this should be relative to baseURL
-        [$scheme, $path] = $this->changeSchemeAndPath($scheme, $path);
-
-        return static::createURIString(
-            $scheme,
-            $this->getAuthority(),
-            $path, // Absolute URIs should use a "/" for an empty path
-            $this->getQuery(),
-            $this->getFragment()
-        );
-    }
-
-    /**
-     * Change the path (and scheme) assuming URIs with the same host as baseURL
-     * should be relative to the project's configuration.
-     *
-     * @deprecated This method will be deleted.
-     */
-    private function changeSchemeAndPath(string $scheme, string $path): array
-    {
-        // Check if this is an internal URI
-        $config  = config(App::class);
-        $baseUri = new self($config->baseURL);
-
-        if (
-            str_starts_with($this->getScheme(), 'http')
-            && $this->getHost() === $baseUri->getHost()
-        ) {
-            // Check for additional segments
-            $basePath = trim($baseUri->getPath(), '/') . '/';
-            $trimPath = ltrim($path, '/');
-
-            if ($basePath !== '/' && ! str_starts_with($trimPath, $basePath)) {
-                $path = $basePath . $trimPath;
-            }
-
-            // Check for forced HTTPS
-            if ($config->forceGlobalSecureRequests) {
-                $scheme = 'https';
-            }
-        }
-
-        return [$scheme, $path];
-    }
-
-    /**
-     * Parses the given string and saves the appropriate authority pieces.
-     *
-     * Note: Method not in PSR-7
-     *
-     * @return $this
-     */
-    public function setAuthority(string $str)
-    {
-        $parts = parse_url($str);
-
-        if (! isset($parts['path'])) {
-            $parts['path'] = $this->getPath();
-        }
-
-        if (empty($parts['host']) && $parts['path'] !== '') {
-            $parts['host'] = $parts['path'];
-            unset($parts['path']);
-        }
-
-        $this->applyParts($parts);
-
-        return $this;
+        return $this->scheme;
     }
 
     /**
@@ -714,8 +614,276 @@ class URI implements Stringable
      */
     public function setScheme(string $str)
     {
-        $str          = strtolower($str);
+        $str = strtolower($str);
         $this->scheme = preg_replace('#:(//)?$#', '', $str);
+
+        return $this;
+    }
+
+    /**
+     * Change the path (and scheme) assuming URIs with the same host as baseURL
+     * should be relative to the project's configuration.
+     *
+     * @deprecated This method will be deleted.
+     */
+    private function changeSchemeAndPath(string $scheme, string $path): array
+    {
+        // Check if this is an internal URI
+        $config = config(App::class);
+        $baseUri = new self($config->baseURL);
+
+        if (
+            str_starts_with($this->getScheme(), 'http')
+            && $this->getHost() === $baseUri->getHost()
+        ) {
+            // Check for additional segments
+            $basePath = trim($baseUri->getPath(), '/') . '/';
+            $trimPath = ltrim($path, '/');
+
+            if ($basePath !== '/' && !str_starts_with($trimPath, $basePath)) {
+                $path = $basePath . $trimPath;
+            }
+
+            // Check for forced HTTPS
+            if ($config->forceGlobalSecureRequests) {
+                $scheme = 'https';
+            }
+        }
+
+        return [$scheme, $path];
+    }
+
+    /**
+     * Retrieve the host component of the URI.
+     *
+     * If no host is present, this method MUST return an empty string.
+     *
+     * The value returned MUST be normalized to lowercase, per RFC 3986
+     * Section 3.2.2.
+     *
+     * @see    http://tools.ietf.org/html/rfc3986#section-3.2.2
+     *
+     * @return string The URI host.
+     */
+    public function getHost(): string
+    {
+        return $this->host ?? '';
+    }
+
+    /**
+     * Sets the host name to use.
+     *
+     * @return $this
+     *
+     * @TODO PSR-7: Should be `withHost($host)`.
+     */
+    public function setHost(string $str)
+    {
+        $this->host = trim($str);
+
+        return $this;
+    }
+
+    /**
+     * Builds a representation of the string from the component parts.
+     *
+     * @param string|null $scheme URI scheme. E.g., http, ftp
+     *
+     * @return string URI string with only passed parts. Maybe incomplete as a URI.
+     */
+    public static function createURIString(
+        ?string $scheme = null,
+        ?string $authority = null,
+        ?string $path = null,
+        ?string $query = null,
+        ?string $fragment = null
+    ): string
+    {
+        $uri = '';
+        if ($scheme !== null && $scheme !== '') {
+            $uri .= $scheme . '://';
+        }
+
+        if ($authority !== null && $authority !== '') {
+            $uri .= $authority;
+        }
+
+        if (isset($path) && $path !== '') {
+            $uri .= !str_ends_with($uri, '/')
+                ? '/' . ltrim($path, '/')
+                : ltrim($path, '/');
+        }
+
+        if ($query !== '' && $query !== null) {
+            $uri .= '?' . $query;
+        }
+
+        if ($fragment !== '' && $fragment !== null) {
+            $uri .= '#' . $fragment;
+        }
+
+        return $uri;
+    }
+
+    /**
+     * Retrieve the authority component of the URI.
+     *
+     * If no authority information is present, this method MUST return an empty
+     * string.
+     *
+     * The authority syntax of the URI is:
+     *
+     * <pre>
+     * [user-info@]host[:port]
+     * </pre>
+     *
+     * If the port component is not set or is the standard port for the current
+     * scheme, it SHOULD NOT be included.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-3.2
+     *
+     * @return string The URI authority, in "[user-info@]host[:port]" format.
+     */
+    public function getAuthority(bool $ignorePort = false): string
+    {
+        if (empty($this->host)) {
+            return '';
+        }
+
+        $authority = $this->host;
+
+        if (!empty($this->getUserInfo())) {
+            $authority = $this->getUserInfo() . '@' . $authority;
+        }
+
+        // Don't add port if it's a standard port for
+        // this scheme
+        if (!empty($this->port) && !$ignorePort && $this->port !== $this->defaultPorts[$this->scheme]) {
+            $authority .= ':' . $this->port;
+        }
+
+        $this->showPassword = false;
+
+        return $authority;
+    }
+
+    /**
+     * Retrieve the user information component of the URI.
+     *
+     * If no user information is present, this method MUST return an empty
+     * string.
+     *
+     * If a user is present in the URI, this will return that value;
+     * additionally, if the password is also present, it will be appended to the
+     * user value, with a colon (":") separating the values.
+     *
+     * NOTE that be default, the password, if available, will NOT be shown
+     * as a security measure as discussed in RFC 3986, Section 7.5. If you know
+     * the password is not a security issue, you can force it to be shown
+     * with $this->showPassword();
+     *
+     * The trailing "@" character is not part of the user information and MUST
+     * NOT be added.
+     *
+     * @return string|null The URI user information, in "username[:password]" format.
+     */
+    public function getUserInfo()
+    {
+        $userInfo = $this->user;
+
+        if ($this->showPassword === true && !empty($this->password)) {
+            $userInfo .= ':' . $this->password;
+        }
+
+        return $userInfo;
+    }
+
+    /**
+     * Retrieve the query string
+     */
+    public function getQuery(array $options = []): string
+    {
+        $vars = $this->query;
+
+        if (array_key_exists('except', $options)) {
+            if (!is_array($options['except'])) {
+                $options['except'] = [$options['except']];
+            }
+
+            foreach ($options['except'] as $var) {
+                unset($vars[$var]);
+            }
+        } elseif (array_key_exists('only', $options)) {
+            $temp = [];
+
+            if (!is_array($options['only'])) {
+                $options['only'] = [$options['only']];
+            }
+
+            foreach ($options['only'] as $var) {
+                if (array_key_exists($var, $vars)) {
+                    $temp[$var] = $vars[$var];
+                }
+            }
+
+            $vars = $temp;
+        }
+
+        return empty($vars) ? '' : http_build_query($vars);
+    }
+
+    /**
+     * Sets the query portion of the URI, while attempting
+     * to clean the various parts of the query keys and values.
+     *
+     * @return $this
+     *
+     * @TODO PSR-7: Should be `withQuery($query)`.
+     */
+    public function setQuery(string $query)
+    {
+        if (str_contains($query, '#')) {
+            if ($this->silent) {
+                return $this;
+            }
+
+            throw HTTPException::forMalformedQueryString();
+        }
+
+        // Can't have leading ?
+        if ($query !== '' && str_starts_with($query, '?')) {
+            $query = substr($query, 1);
+        }
+
+        if ($this->rawQueryString) {
+            $this->query = $this->parseStr($query);
+        } else {
+            parse_str($query, $this->query);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Retrieve a URI fragment
+     */
+    public function getFragment(): string
+    {
+        return $this->fragment ?? '';
+    }
+
+    /**
+     * Sets the fragment portion of the URI.
+     *
+     * @see https://tools.ietf.org/html/rfc3986#section-3.5
+     *
+     * @return $this
+     *
+     * @TODO PSR-7: Should be `withFragment($fragment)`.
+     */
+    public function setFragment(string $string)
+    {
+        $this->fragment = trim($string, '# ');
 
         return $this;
     }
@@ -760,80 +928,10 @@ class URI implements Stringable
      */
     public function setUserInfo(string $user, string $pass)
     {
-        $this->user     = trim($user);
+        $this->user = trim($user);
         $this->password = trim($pass);
 
         return $this;
-    }
-
-    /**
-     * Sets the host name to use.
-     *
-     * @return $this
-     *
-     * @TODO PSR-7: Should be `withHost($host)`.
-     */
-    public function setHost(string $str)
-    {
-        $this->host = trim($str);
-
-        return $this;
-    }
-
-    /**
-     * Sets the port portion of the URI.
-     *
-     * @return $this
-     *
-     * @TODO PSR-7: Should be `withPort($port)`.
-     */
-    public function setPort(?int $port = null)
-    {
-        if ($port === null) {
-            return $this;
-        }
-
-        if ($port <= 0 || $port > 65535) {
-            if ($this->silent) {
-                return $this;
-            }
-
-            throw HTTPException::forInvalidPort($port);
-        }
-
-        $this->port = $port;
-
-        return $this;
-    }
-
-    /**
-     * Sets the path portion of the URI.
-     *
-     * @return $this
-     *
-     * @TODO PSR-7: Should be `withPath($port)`.
-     */
-    public function setPath(string $path)
-    {
-        $this->path = $this->filterPath($path);
-
-        $tempPath = trim($this->path, '/');
-
-        $this->segments = ($tempPath === '') ? [] : explode('/', $tempPath);
-
-        return $this;
-    }
-
-    /**
-     * Sets the current baseURL.
-     *
-     * @interal
-     *
-     * @deprecated Use SiteURI instead.
-     */
-    public function setBaseURL(string $baseURL): void
-    {
-        $this->baseURL = $baseURL;
     }
 
     /**
@@ -853,53 +951,15 @@ class URI implements Stringable
     }
 
     /**
-     * Sets the path portion of the URI based on segments.
+     * Sets the current baseURL.
      *
-     * @return $this
+     * @interal
      *
-     * @deprecated This method will be private.
+     * @deprecated Use SiteURI instead.
      */
-    public function refreshPath()
+    public function setBaseURL(string $baseURL): void
     {
-        $this->path = $this->filterPath(implode('/', $this->segments));
-
-        $tempPath = trim($this->path, '/');
-
-        $this->segments = ($tempPath === '') ? [] : explode('/', $tempPath);
-
-        return $this;
-    }
-
-    /**
-     * Sets the query portion of the URI, while attempting
-     * to clean the various parts of the query keys and values.
-     *
-     * @return $this
-     *
-     * @TODO PSR-7: Should be `withQuery($query)`.
-     */
-    public function setQuery(string $query)
-    {
-        if (str_contains($query, '#')) {
-            if ($this->silent) {
-                return $this;
-            }
-
-            throw HTTPException::forMalformedQueryString();
-        }
-
-        // Can't have leading ?
-        if ($query !== '' && str_starts_with($query, '?')) {
-            $query = substr($query, 1);
-        }
-
-        if ($this->rawQueryString) {
-            $this->query = $this->parseStr($query);
-        } else {
-            parse_str($query, $this->query);
-        }
-
-        return $this;
+        $this->baseURL = $baseURL;
     }
 
     /**
@@ -966,7 +1026,7 @@ class URI implements Stringable
         $temp = [];
 
         foreach ($this->query as $key => $value) {
-            if (! in_array($key, $params, true)) {
+            if (!in_array($key, $params, true)) {
                 continue;
             }
 
@@ -976,104 +1036,6 @@ class URI implements Stringable
         $this->query = $temp;
 
         return $this;
-    }
-
-    /**
-     * Sets the fragment portion of the URI.
-     *
-     * @see https://tools.ietf.org/html/rfc3986#section-3.5
-     *
-     * @return $this
-     *
-     * @TODO PSR-7: Should be `withFragment($fragment)`.
-     */
-    public function setFragment(string $string)
-    {
-        $this->fragment = trim($string, '# ');
-
-        return $this;
-    }
-
-    /**
-     * Encodes any dangerous characters, and removes dot segments.
-     * While dot segments have valid uses according to the spec,
-     * this URI class does not allow them.
-     */
-    protected function filterPath(?string $path = null): string
-    {
-        $orig = $path;
-
-        // Decode/normalize percent-encoded chars so
-        // we can always have matching for Routes, etc.
-        $path = urldecode($path);
-
-        // Remove dot segments
-        $path = self::removeDotSegments($path);
-
-        // Fix up some leading slash edge cases...
-        if (str_starts_with($orig, './')) {
-            $path = '/' . $path;
-        }
-        if (str_starts_with($orig, '../')) {
-            $path = '/' . $path;
-        }
-
-        // Encode characters
-        $path = preg_replace_callback(
-            '/(?:[^' . static::CHAR_UNRESERVED . ':@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
-            static fn (array $matches) => rawurlencode($matches[0]),
-            $path
-        );
-
-        return $path;
-    }
-
-    /**
-     * Saves our parts from a parse_url call.
-     *
-     * @return void
-     */
-    protected function applyParts(array $parts)
-    {
-        if (! empty($parts['host'])) {
-            $this->host = $parts['host'];
-        }
-        if (! empty($parts['user'])) {
-            $this->user = $parts['user'];
-        }
-        if (isset($parts['path']) && $parts['path'] !== '') {
-            $this->path = $this->filterPath($parts['path']);
-        }
-        if (! empty($parts['query'])) {
-            $this->setQuery($parts['query']);
-        }
-        if (! empty($parts['fragment'])) {
-            $this->fragment = $parts['fragment'];
-        }
-
-        // Scheme
-        if (isset($parts['scheme'])) {
-            $this->setScheme(rtrim($parts['scheme'], ':/'));
-        } else {
-            $this->setScheme('http');
-        }
-
-        // Port
-        if (isset($parts['port']) && $parts['port'] !== null) {
-            // Valid port numbers are enforced by earlier parse_url or setPort()
-            $this->port = $parts['port'];
-        }
-
-        if (isset($parts['pass'])) {
-            $this->password = $parts['pass'];
-        }
-
-        // Populate our segments array
-        if (isset($parts['path']) && $parts['path'] !== '') {
-            $tempPath = trim($parts['path'], '/');
-
-            $this->segments = ($tempPath === '') ? [] : explode('/', $tempPath);
-        }
     }
 
     /**
@@ -1135,6 +1097,31 @@ class URI implements Stringable
     }
 
     /**
+     * Parses the given string and saves the appropriate authority pieces.
+     *
+     * Note: Method not in PSR-7
+     *
+     * @return $this
+     */
+    public function setAuthority(string $str)
+    {
+        $parts = parse_url($str);
+
+        if (!isset($parts['path'])) {
+            $parts['path'] = $this->getPath();
+        }
+
+        if (empty($parts['host']) && $parts['path'] !== '') {
+            $parts['host'] = $parts['path'];
+            unset($parts['path']);
+        }
+
+        $this->applyParts($parts);
+
+        return $this;
+    }
+
+    /**
      * Given 2 paths, will merge them according to rules set out in RFC 2986,
      * Section 5.2
      *
@@ -1165,11 +1152,11 @@ class URI implements Stringable
     protected function parseStr(string $query): array
     {
         $return = [];
-        $query  = explode('&', $query);
+        $query = explode('&', $query);
 
-        $params = array_map(static fn (string $chunk) => preg_replace_callback(
+        $params = array_map(static fn(string $chunk) => preg_replace_callback(
             '/^(?<key>[^&=]+?)(?:\[[^&=]*\])?=(?<value>[^&=]+)/',
-            static fn (array $match) => str_replace($match['key'], bin2hex($match['key']), $match[0]),
+            static fn(array $match) => str_replace($match['key'], bin2hex($match['key']), $match[0]),
             urldecode($chunk)
         ), $query);
 

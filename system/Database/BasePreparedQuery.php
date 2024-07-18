@@ -92,7 +92,7 @@ abstract class BasePreparedQuery implements PreparedQueryInterface
 
         $query->setQuery($sql);
 
-        if (! empty($this->db->swapPre) && ! empty($this->db->DBPrefix)) {
+        if (!empty($this->db->swapPre) && !empty($this->db->DBPrefix)) {
             $query->swapPrefix($this->db->DBPrefix, $this->db->swapPre);
         }
 
@@ -124,7 +124,7 @@ abstract class BasePreparedQuery implements PreparedQueryInterface
 
         try {
             $exception = null;
-            $result    = $this->_execute($data);
+            $result = $this->_execute($data);
         } catch (ArgumentCountError|ErrorException $exception) {
             $result = false;
         }
@@ -177,7 +177,7 @@ abstract class BasePreparedQuery implements PreparedQueryInterface
         // Let others do something with this query
         Events::trigger('DBQuery', $query);
 
-        if ($this->db->isWriteType((string) $query)) {
+        if ($this->db->isWriteType((string)$query)) {
             return true;
         }
 
@@ -208,7 +208,7 @@ abstract class BasePreparedQuery implements PreparedQueryInterface
      */
     public function close(): bool
     {
-        if (! isset($this->statement)) {
+        if (!isset($this->statement)) {
             throw new BadMethodCallException('Cannot call close on a non-existing prepared statement.');
         }
 
@@ -229,7 +229,7 @@ abstract class BasePreparedQuery implements PreparedQueryInterface
      */
     public function getQueryString(): string
     {
-        if (! $this->query instanceof QueryInterface) {
+        if (!$this->query instanceof QueryInterface) {
             throw new BadMethodCallException('Cannot call getQueryString on a prepared query until after the query has been prepared.');
         }
 
@@ -241,7 +241,7 @@ abstract class BasePreparedQuery implements PreparedQueryInterface
      */
     public function hasError(): bool
     {
-        return ! empty($this->errorString);
+        return !empty($this->errorString);
     }
 
     /**

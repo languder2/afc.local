@@ -22,11 +22,12 @@ namespace CodeIgniter\DataCaster\Cast;
 class ArrayCast extends BaseCast implements CastInterface
 {
     public static function get(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): array {
-        if (! is_string($value)) {
+    ): array
+    {
+        if (!is_string($value)) {
             self::invalidTypeValueError($value);
         }
 
@@ -34,14 +35,15 @@ class ArrayCast extends BaseCast implements CastInterface
             $value = unserialize($value, ['allowed_classes' => false]);
         }
 
-        return (array) $value;
+        return (array)$value;
     }
 
     public static function set(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): string {
+    ): string
+    {
         return serialize($value);
     }
 }

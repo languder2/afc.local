@@ -26,7 +26,7 @@ class PublisherException extends FrameworkException
      * Throws when a file should be overwritten yet cannot.
      *
      * @param string $from The source file
-     * @param string $to   The destination file
+     * @param string $to The destination file
      *
      * @return static
      */

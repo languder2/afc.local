@@ -49,27 +49,27 @@ class CacheFactory
      */
     public static function getHandler(Cache $config, ?string $handler = null, ?string $backup = null)
     {
-        if (! isset($config->validHandlers) || $config->validHandlers === []) {
+        if (!isset($config->validHandlers) || $config->validHandlers === []) {
             throw CacheException::forInvalidHandlers();
         }
 
-        if (! isset($config->handler) || ! isset($config->backupHandler)) {
+        if (!isset($config->handler) || !isset($config->backupHandler)) {
             throw CacheException::forNoBackup();
         }
 
         $handler ??= $config->handler;
         $backup ??= $config->backupHandler;
 
-        if (! array_key_exists($handler, $config->validHandlers) || ! array_key_exists($backup, $config->validHandlers)) {
+        if (!array_key_exists($handler, $config->validHandlers) || !array_key_exists($backup, $config->validHandlers)) {
             throw CacheException::forHandlerNotFound();
         }
 
         $adapter = new $config->validHandlers[$handler]($config);
 
-        if (! $adapter->isSupported()) {
+        if (!$adapter->isSupported()) {
             $adapter = new $config->validHandlers[$backup]($config);
 
-            if (! $adapter->isSupported()) {
+            if (!$adapter->isSupported()) {
                 // Fall back to the dummy adapter.
                 $adapter = new $config->validHandlers['dummy']();
             }

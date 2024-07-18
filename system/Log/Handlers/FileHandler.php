@@ -76,7 +76,7 @@ class FileHandler extends BaseHandler
 
         $msg = '';
 
-        if (! is_file($filepath)) {
+        if (!is_file($filepath)) {
             $newfile = true;
 
             // Only add protection to php files
@@ -85,16 +85,16 @@ class FileHandler extends BaseHandler
             }
         }
 
-        if (! $fp = @fopen($filepath, 'ab')) {
+        if (!$fp = @fopen($filepath, 'ab')) {
             return false;
         }
 
         // Instantiating DateTime with microseconds appended to initial date is needed for proper support of this format
         if (str_contains($this->dateFormat, 'u')) {
-            $microtimeFull  = microtime(true);
+            $microtimeFull = microtime(true);
             $microtimeShort = sprintf('%06d', ($microtimeFull - floor($microtimeFull)) * 1_000_000);
-            $date           = new DateTime(date('Y-m-d H:i:s.' . $microtimeShort, (int) $microtimeFull));
-            $date           = $date->format($this->dateFormat);
+            $date = new DateTime(date('Y-m-d H:i:s.' . $microtimeShort, (int)$microtimeFull));
+            $date = $date->format($this->dateFormat);
         } else {
             $date = date($this->dateFormat);
         }

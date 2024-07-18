@@ -1,7 +1,7 @@
 <div class="container-lg">
     <h3>
-        <?=$spec->specName??""?>
-        <?=!empty($spec->specProfile)?"<br>$spec->specProfile":""?>
+        <?= $spec->specName ?? "" ?>
+        <?= !empty($spec->specProfile) ? "<br>$spec->specProfile" : "" ?>
     </h3>
     <div class="chart-container" style="position: relative; height:35vh; width:100%">
         <canvas id="chart"></canvas>
@@ -13,7 +13,7 @@
         // Переменные
         let chart = null;
         // Функции
-        const createLineChart = (dates, totals, forms, levels,formColors,levelColors,formTitles,levelTitles,yMax) => {
+        const createLineChart = (dates, totals, forms, levels, formColors, levelColors, formTitles, levelTitles, yMax) => {
             let data = {
                 labels: dates,
                 datasets: [{
@@ -27,8 +27,8 @@
                     tension: 0.2
                 }]
             }
-            if(forms.length>1){
-                forms.forEach((form,i)=>data.datasets.push({
+            if (forms.length > 1) {
+                forms.forEach((form, i) => data.datasets.push({
                     label: formTitles[i],
                     data: form,
                     pointStyle: true,
@@ -39,8 +39,8 @@
                     tension: 0.2
                 }));
             }
-            if(levels.length>1){
-                levels.forEach((level,i)=>data.datasets.push({
+            if (levels.length > 1) {
+                levels.forEach((level, i) => data.datasets.push({
                     label: levelTitles[i],
                     data: level,
                     pointStyle: true,
@@ -54,7 +54,7 @@
             }
 
             let xScaleConfig = {
-                min:totals.length-14,
+                min: totals.length - 14,
                 max: totals.length,
                 ticks: {
                     autoSkip: true,
@@ -112,33 +112,33 @@
         }
 
         // Получение данных с сервера
-        let dates = [<?=$dates??""?>];
-        let totals = [<?=implode(",",$totals??[])?>];
+        let dates = [<?=$dates ?? ""?>];
+        let totals = [<?=implode(",", $totals ?? [])?>];
 
-        let forms= [
+        let forms = [
             <?php if(isset($forms)) foreach($forms as $form):?>
-            [<?=implode(",",$form)?>],
+            [<?=implode(",", $form)?>],
             <?php endforeach;?>
         ];
-        let levels= [
+        let levels = [
             <?php if(isset($levels)) foreach($levels as $level):?>
-            [<?=implode(",",$level)?>],
+            [<?=implode(",", $level)?>],
             <?php endforeach;?>
         ];
-        let formColors= [
-            <?php if(isset($formColors)) foreach($formColors as $color) echo "'$color',";?>
+        let formColors = [
+            <?php if (isset($formColors)) foreach ($formColors as $color) echo "'$color',";?>
         ];
-        let levelColors= [
-            <?php if(isset($levelColors)) foreach($levelColors as $color) echo "'$color',";?>
+        let levelColors = [
+            <?php if (isset($levelColors)) foreach ($levelColors as $color) echo "'$color',";?>
         ];
-        let formTitles= [
-            <?php if(isset($formTitles)) foreach($formTitles as $title) echo "'$title->specShape',";?>
+        let formTitles = [
+            <?php if (isset($formTitles)) foreach ($formTitles as $title) echo "'$title->specShape',";?>
         ];
-        let levelTitles= [
-            <?php if(isset($levelTitles)) foreach($levelTitles as $title) echo "'$title->specLevel',";?>
+        let levelTitles = [
+            <?php if (isset($levelTitles)) foreach ($levelTitles as $title) echo "'$title->specLevel',";?>
         ];
-        let yMax= <?=max($totals)+1?>;
-        createLineChart(dates, totals,forms,levels,formColors,levelColors,formTitles,levelTitles,yMax);
+        let yMax = <?=max($totals) + 1?>;
+        createLineChart(dates, totals, forms, levels, formColors, levelColors, formTitles, levelTitles, yMax);
     </script>
 </div>
 <div class="container-lg">
@@ -152,7 +152,7 @@
         // Переменные
         let chart2 = null;
         // Функции
-        const createLineChart2 = (dates, totals, forms, levels,formColors,levelColors,formTitles,levelTitles,yMax) => {
+        const createLineChart2 = (dates, totals, forms, levels, formColors, levelColors, formTitles, levelTitles, yMax) => {
             let data = {
                 labels: dates,
                 datasets: [{
@@ -214,7 +214,7 @@
             chart2 = new Chart(context2, config);
             return false;
         }
-        createLineChart2(dates, totals,forms,levels,formColors,levelColors,formTitles,levelTitles,yMax);
+        createLineChart2(dates, totals, forms, levels, formColors, levelColors, formTitles, levelTitles, yMax);
     </script>
 </div>
 
@@ -229,14 +229,16 @@
                 <div class="fw-bold">
                     Кол-во:
                 </div>
-                <?php $i=0; if(isset($totals)) foreach ($totals as $day=>$cnt): if(!$cnt) continue; $i++;?>
-                    <div class="bg<?=$i%2?>">
-                        <?=$day?>
+                <?php $i = 0;
+                if (isset($totals)) foreach ($totals as $day => $cnt): if (!$cnt) continue;
+                    $i++; ?>
+                    <div class="bg<?= $i % 2 ?>">
+                        <?= $day ?>
                     </div>
-                    <div class="bg<?=$i%2?>">
-                        <?=$cnt?>
+                    <div class="bg<?= $i % 2 ?>">
+                        <?= $cnt ?>
                     </div>
-                <?php endforeach;?>
+                <?php endforeach; ?>
             </div>
         </div>
         <div class="col-5">
@@ -252,21 +254,23 @@
                         Кол-во:
                     </div>
                 </div>
-                <?php $i=0; if(isset($formRows)) foreach ($formRows as $day=>$forms): if(empty($forms)) continue; $i++;?>
-                    <div class="bg<?=$i%2?>">
-                        <?=$day?>
+                <?php $i = 0;
+                if (isset($formRows)) foreach ($formRows as $day => $forms): if (empty($forms)) continue;
+                    $i++; ?>
+                    <div class="bg<?= $i % 2 ?>">
+                        <?= $day ?>
                     </div>
-                    <div class="grid-Cnt bg<?=$i%2?>">
-                        <?php foreach ($forms as $form=>$cnt):?>
+                    <div class="grid-Cnt bg<?= $i % 2 ?>">
+                        <?php foreach ($forms as $form => $cnt): ?>
                             <div class="text-start">
-                                <?=$form?>
+                                <?= $form ?>
                             </div>
                             <div>
-                                <?=$cnt?>
+                                <?= $cnt ?>
                             </div>
-                        <?php endforeach;?>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach;?>
+                <?php endforeach; ?>
             </div>
         </div>
         <div class="col-4">
@@ -276,27 +280,29 @@
                 </div>
                 <div class="grid-Cnt">
                     <div class="fw-bold text-start">
-                         Уровень:
+                        Уровень:
                     </div>
                     <div class="fw-bold">
                         Кол-во:
                     </div>
                 </div>
-                <?php $i=0; if(isset($levelRows)) foreach ($levelRows as $day=>$levels): if(empty($levels)) continue; $i++;?>
-                    <div class="bg<?=$i%2?>">
-                        <?=$day?>
+                <?php $i = 0;
+                if (isset($levelRows)) foreach ($levelRows as $day => $levels): if (empty($levels)) continue;
+                    $i++; ?>
+                    <div class="bg<?= $i % 2 ?>">
+                        <?= $day ?>
                     </div>
-                    <div class="grid-Cnt bg<?=$i%2?>">
-                        <?php foreach ($levels as $level=>$cnt):?>
+                    <div class="grid-Cnt bg<?= $i % 2 ?>">
+                        <?php foreach ($levels as $level => $cnt): ?>
                             <div class="text-start">
-                                <?=$level?>
+                                <?= $level ?>
                             </div>
                             <div>
-                                <?=$cnt?>
+                                <?= $cnt ?>
                             </div>
-                        <?php endforeach;?>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach;?>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

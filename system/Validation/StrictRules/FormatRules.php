@@ -36,7 +36,7 @@ class FormatRules
      */
     public function alpha($str = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -52,7 +52,7 @@ class FormatRules
      */
     public function alpha_space($value = null): bool
     {
-        if (! is_string($value)) {
+        if (!is_string($value)) {
             return false;
         }
 
@@ -67,10 +67,10 @@ class FormatRules
     public function alpha_dash($str = null): bool
     {
         if (is_int($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -91,10 +91,10 @@ class FormatRules
     public function alpha_numeric_punct($str)
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -109,10 +109,10 @@ class FormatRules
     public function alpha_numeric($str = null): bool
     {
         if (is_int($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -127,10 +127,10 @@ class FormatRules
     public function alpha_numeric_space($str = null): bool
     {
         if (is_int($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -155,10 +155,10 @@ class FormatRules
     public function decimal($str = null): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -173,10 +173,10 @@ class FormatRules
     public function hex($str = null): bool
     {
         if (is_int($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -191,10 +191,10 @@ class FormatRules
     public function integer($str = null): bool
     {
         if (is_int($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -209,10 +209,10 @@ class FormatRules
     public function is_natural($str = null): bool
     {
         if (is_int($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -227,10 +227,10 @@ class FormatRules
     public function is_natural_no_zero($str = null): bool
     {
         if (is_int($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -245,10 +245,10 @@ class FormatRules
     public function numeric($str = null): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -262,7 +262,7 @@ class FormatRules
      */
     public function regex_match($str, string $pattern): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -279,7 +279,7 @@ class FormatRules
      */
     public function timezone($str = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -296,7 +296,7 @@ class FormatRules
      */
     public function valid_base64($str = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -310,7 +310,7 @@ class FormatRules
      */
     public function valid_json($str = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -324,7 +324,7 @@ class FormatRules
      */
     public function valid_email($str = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -341,7 +341,7 @@ class FormatRules
      */
     public function valid_emails($str = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -352,11 +352,11 @@ class FormatRules
      * Validate an IP address (human readable format or binary string - inet_pton)
      *
      * @param array|bool|float|int|object|string|null $ip
-     * @param string|null                             $which IP protocol: 'ipv4' or 'ipv6'
+     * @param string|null $which IP protocol: 'ipv4' or 'ipv6'
      */
     public function valid_ip($ip = null, ?string $which = null): bool
     {
-        if (! is_string($ip)) {
+        if (!is_string($ip)) {
             return false;
         }
 
@@ -373,7 +373,7 @@ class FormatRules
      */
     public function valid_url($str = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -384,11 +384,11 @@ class FormatRules
      * Checks a URL to ensure it's formed correctly.
      *
      * @param array|bool|float|int|object|string|null $str
-     * @param string|null                             $validSchemes comma separated list of allowed schemes
+     * @param string|null $validSchemes comma separated list of allowed schemes
      */
     public function valid_url_strict($str = null, ?string $validSchemes = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -402,7 +402,7 @@ class FormatRules
      */
     public function valid_date($str = null, ?string $format = null): bool
     {
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 

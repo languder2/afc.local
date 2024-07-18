@@ -22,13 +22,13 @@ use Throwable;
  * BaseCommand is the base class used in creating CLI commands.
  *
  * @property array<string, string> $arguments
- * @property Commands              $commands
- * @property string                $description
- * @property string                $group
- * @property LoggerInterface       $logger
- * @property string                $name
+ * @property Commands $commands
+ * @property string $description
+ * @property string $group
+ * @property LoggerInterface $logger
+ * @property string $name
  * @property array<string, string> $options
- * @property string                $usage
+ * @property string $usage
  */
 abstract class BaseCommand
 {
@@ -92,45 +92,8 @@ abstract class BaseCommand
 
     public function __construct(LoggerInterface $logger, Commands $commands)
     {
-        $this->logger   = $logger;
+        $this->logger = $logger;
         $this->commands = $commands;
-    }
-
-    /**
-     * Actually execute a command.
-     *
-     * @param array<int|string, string|null> $params
-     *
-     * @return int|void
-     */
-    abstract public function run(array $params);
-
-    /**
-     * Can be used by a command to run other commands.
-     *
-     * @param array<int|string, string|null> $params
-     *
-     * @return int|void
-     *
-     * @throws ReflectionException
-     */
-    protected function call(string $command, array $params = [])
-    {
-        return $this->commands->run($command, $params);
-    }
-
-    /**
-     * A simple method to display an error with line/file, in child commands.
-     *
-     * @return void
-     */
-    protected function showError(Throwable $e)
-    {
-        $exception = $e;
-        $message   = $e->getMessage();
-        $config    = config(Exceptions::class);
-
-        require $config->errorViewPath . '/cli/error_exception.php';
     }
 
     /**
@@ -229,5 +192,42 @@ abstract class BaseCommand
     public function __isset(string $key): bool
     {
         return isset($this->{$key});
+    }
+
+    /**
+     * Can be used by a command to run other commands.
+     *
+     * @param array<int|string, string|null> $params
+     *
+     * @return int|void
+     *
+     * @throws ReflectionException
+     */
+    protected function call(string $command, array $params = [])
+    {
+        return $this->commands->run($command, $params);
+    }
+
+    /**
+     * Actually execute a command.
+     *
+     * @param array<int|string, string|null> $params
+     *
+     * @return int|void
+     */
+    abstract public function run(array $params);
+
+    /**
+     * A simple method to display an error with line/file, in child commands.
+     *
+     * @return void
+     */
+    protected function showError(Throwable $e)
+    {
+        $exception = $e;
+        $message = $e->getMessage();
+        $config = config(Exceptions::class);
+
+        require $config->errorViewPath . '/cli/error_exception.php';
     }
 }

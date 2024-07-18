@@ -89,11 +89,11 @@ class Exceptions
         // workaround for upgraded users
         // This causes "Deprecated: Creation of dynamic property" in PHP 8.2.
         // @TODO remove this after dropping PHP 8.1 support.
-        if (! isset($this->config->sensitiveDataInTrace)) {
+        if (!isset($this->config->sensitiveDataInTrace)) {
             $this->config->sensitiveDataInTrace = [];
         }
-        if (! isset($this->config->logDeprecations, $this->config->deprecationLogLevel)) {
-            $this->config->logDeprecations     = false;
+        if (!isset($this->config->logDeprecations, $this->config->deprecationLogLevel)) {
+            $this->config->logDeprecations = false;
             $this->config->deprecationLogLevel = LogLevel::WARNING;
         }
     }
@@ -128,16 +128,16 @@ class Exceptions
 
         $this->request = Services::request();
 
-        if ($this->config->log === true && ! in_array($statusCode, $this->config->ignoreCodes, true)) {
-            $uri       = $this->request->getPath() === '' ? '/' : $this->request->getPath();
+        if ($this->config->log === true && !in_array($statusCode, $this->config->ignoreCodes, true)) {
+            $uri = $this->request->getPath() === '' ? '/' : $this->request->getPath();
             $routeInfo = '[Method: ' . $this->request->getMethod() . ', Route: ' . $uri . ']';
 
             log_message('critical', $exception::class . ": {message}\n{routeInfo}\nin {exFile} on line {exLine}.\n{trace}", [
-                'message'   => $exception->getMessage(),
+                'message' => $exception->getMessage(),
                 'routeInfo' => $routeInfo,
-                'exFile'    => clean_path($exception->getFile()), // {file} refers to THIS file
-                'exLine'    => $exception->getLine(), // {line} refers to THIS line
-                'trace'     => self::renderBacktrace($exception->getTrace()),
+                'exFile' => clean_path($exception->getFile()), // {file} refers to THIS file
+                'exLine' => $exception->getLine(), // {line} refers to THIS line
+                'trace' => self::renderBacktrace($exception->getTrace()),
             ]);
 
             // Get the first exception.
@@ -148,9 +148,9 @@ class Exceptions
 
                 log_message('critical', '[Caused by] ' . $prevException::class . ": {message}\nin {exFile} on line {exLine}.\n{trace}", [
                     'message' => $prevException->getMessage(),
-                    'exFile'  => clean_path($prevException->getFile()), // {file} refers to THIS file
-                    'exLine'  => $prevException->getLine(), // {line} refers to THIS line
-                    'trace'   => self::renderBacktrace($prevException->getTrace()),
+                    'exFile' => clean_path($prevException->getFile()), // {file} refers to THIS file
+                    'exLine' => $prevException->getLine(), // {line} refers to THIS line
+                    'trace' => self::renderBacktrace($prevException->getTrace()),
                 ]);
             }
         }
@@ -172,7 +172,7 @@ class Exceptions
         }
 
         // For backward compatibility
-        if (! is_cli()) {
+        if (!is_cli()) {
             try {
                 $this->response->setStatusCode($statusCode);
             } catch (HTTPException) {
@@ -181,11 +181,11 @@ class Exceptions
                 $this->response->setStatusCode($statusCode);
             }
 
-            if (! headers_sent()) {
+            if (!headers_sent()) {
                 header(sprintf('HTTP/%s %s %s', $this->request->getProtocolVersion(), $this->response->getStatusCode(), $this->response->getReasonPhrase()), true, $statusCode);
             }
 
-            if (! str_contains($this->request->getHeaderLine('accept'), 'text/html')) {
+            if (!str_contains($this->request->getHeaderLine('accept'), 'text/html')) {
                 $this->respond(ENVIRONMENT === 'development' ? $this->collectVars($exception, $statusCode) : '', $statusCode)->send();
 
                 exit($exitCode);
@@ -209,7 +209,7 @@ class Exceptions
     public function errorHandler(int $severity, string $message, ?string $file = null, ?int $line = null)
     {
         if ($this->isDeprecationError($severity)) {
-            if (! $this->config->logDeprecations || (bool) env('CODEIGNITER_SCREAM_DEPRECATIONS')) {
+            if (!$this->config->logDeprecations || (bool)env('CODEIGNITER_SCREAM_DEPRECATIONS')) {
                 throw new ErrorException($message, 0, $severity, $file, $line);
             }
 
@@ -264,7 +264,7 @@ class Exceptions
     protected function determineView(Throwable $exception, string $templatePath): string
     {
         // Production environments should have a custom exception file.
-        $view         = 'production.php';
+        $view = 'production.php';
         $templatePath = rtrim($templatePath, '\\/ ') . DIRECTORY_SEPARATOR;
 
         if (
@@ -300,14 +300,14 @@ class Exceptions
     protected function render(Throwable $exception, int $statusCode)
     {
         // Determine possible directories of error views
-        $path    = $this->viewPath;
+        $path = $this->viewPath;
         $altPath = rtrim((new Paths())->viewDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR;
 
-        $path    .= (is_cli() ? 'cli' : 'html') . DIRECTORY_SEPARATOR;
+        $path .= (is_cli() ? 'cli' : 'html') . DIRECTORY_SEPARATOR;
         $altPath .= (is_cli() ? 'cli' : 'html') . DIRECTORY_SEPARATOR;
 
         // Determine the views
-        $view    = $this->determineView($exception, $path);
+        $view = $this->determineView($exception, $path);
         $altView = $this->determineView($exception, $altPath);
 
         // Check if the view exists
@@ -317,7 +317,7 @@ class Exceptions
             $viewFile = $altPath . $altView;
         }
 
-        if (! isset($viewFile)) {
+        if (!isset($viewFile)) {
             echo 'The error view files were not found. Cannot render exception trace.';
 
             exit(1);
@@ -355,13 +355,13 @@ class Exceptions
         }
 
         return [
-            'title'   => $exception::class,
-            'type'    => $exception::class,
-            'code'    => $statusCode,
+            'title' => $exception::class,
+            'type' => $exception::class,
+            'code' => $statusCode,
             'message' => $exception->getMessage(),
-            'file'    => $exception->getFile(),
-            'line'    => $exception->getLine(),
-            'trace'   => $trace,
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => $trace,
         ];
     }
 
@@ -394,7 +394,7 @@ class Exceptions
     {
         foreach ($keysToMask as $keyToMask) {
             $explode = explode('/', $keyToMask);
-            $index   = end($explode);
+            $index = end($explode);
 
             if (str_starts_with(strrev($path . '/' . $index), strrev($keyToMask))) {
                 if (is_array($args) && array_key_exists($index, $args)) {
@@ -462,7 +462,7 @@ class Exceptions
                 'message' => $message,
                 'errFile' => clean_path($file ?? ''),
                 'errLine' => $line ?? 0,
-                'trace'   => self::renderBacktrace($trace),
+                'trace' => self::renderBacktrace($trace),
             ]
         );
 
@@ -481,11 +481,11 @@ class Exceptions
     public static function cleanPath(string $file): string
     {
         return match (true) {
-            str_starts_with($file, APPPATH)                             => 'APPPATH' . DIRECTORY_SEPARATOR . substr($file, strlen(APPPATH)),
-            str_starts_with($file, SYSTEMPATH)                          => 'SYSTEMPATH' . DIRECTORY_SEPARATOR . substr($file, strlen(SYSTEMPATH)),
-            str_starts_with($file, FCPATH)                              => 'FCPATH' . DIRECTORY_SEPARATOR . substr($file, strlen(FCPATH)),
+            str_starts_with($file, APPPATH) => 'APPPATH' . DIRECTORY_SEPARATOR . substr($file, strlen(APPPATH)),
+            str_starts_with($file, SYSTEMPATH) => 'SYSTEMPATH' . DIRECTORY_SEPARATOR . substr($file, strlen(SYSTEMPATH)),
+            str_starts_with($file, FCPATH) => 'FCPATH' . DIRECTORY_SEPARATOR . substr($file, strlen(FCPATH)),
             defined('VENDORPATH') && str_starts_with($file, VENDORPATH) => 'VENDORPATH' . DIRECTORY_SEPARATOR . substr($file, strlen(VENDORPATH)),
-            default                                                     => $file,
+            default => $file,
         };
     }
 
@@ -517,7 +517,7 @@ class Exceptions
      */
     public static function highlightFile(string $file, int $lineNumber, int $lines = 15)
     {
-        if ($file === '' || ! is_readable($file)) {
+        if ($file === '' || !is_readable($file)) {
             return false;
         }
 
@@ -542,13 +542,13 @@ class Exceptions
         $source = explode("\n", str_replace("\r\n", "\n", $source));
 
         // Get just the part to show
-        $start = max($lineNumber - (int) round($lines / 2), 0);
+        $start = max($lineNumber - (int)round($lines / 2), 0);
 
         // Get just the lines we need to display, while keeping line numbers...
         $source = array_splice($source, $start, $lines, true);
 
         // Used to format the line number in the source
-        $format = '% ' . strlen((string) ($start + $lines)) . 'd';
+        $format = '% ' . strlen((string)($start + $lines)) . 'd';
 
         $out = '';
         // Because the highlighting may have an uneven number
@@ -595,14 +595,14 @@ class Exceptions
 
             unset($frame['line']);
             $idx = $index;
-            $idx = str_pad((string) ++$idx, 2, ' ', STR_PAD_LEFT);
+            $idx = str_pad((string)++$idx, 2, ' ', STR_PAD_LEFT);
 
-            $args = implode(', ', array_map(static fn ($value): string => match (true) {
-                is_object($value)   => sprintf('Object(%s)', $value::class),
-                is_array($value)    => $value !== [] ? '[...]' : '[]',
-                $value === null     => 'null',
+            $args = implode(', ', array_map(static fn($value): string => match (true) {
+                is_object($value) => sprintf('Object(%s)', $value::class),
+                is_array($value) => $value !== [] ? '[...]' : '[]',
+                $value === null => 'null',
                 is_resource($value) => sprintf('resource (%s)', get_resource_type($value)),
-                default             => var_export($value, true),
+                default => var_export($value, true),
             }, $frame['args']));
 
             $backtraces[] = sprintf(

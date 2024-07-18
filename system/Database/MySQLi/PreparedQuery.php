@@ -44,8 +44,8 @@ class PreparedQuery extends BasePreparedQuery
         // with terminating semicolons.
         $sql = rtrim($sql, ';');
 
-        if (! $this->statement = $this->db->mysqli->prepare($sql)) {
-            $this->errorCode   = $this->db->mysqli->errno;
+        if (!$this->statement = $this->db->mysqli->prepare($sql)) {
+            $this->errorCode = $this->db->mysqli->errno;
             $this->errorString = $this->db->mysqli->error;
 
             if ($this->db->DBDebug) {
@@ -62,7 +62,7 @@ class PreparedQuery extends BasePreparedQuery
      */
     public function _execute(array $data): bool
     {
-        if (! isset($this->statement)) {
+        if (!isset($this->statement)) {
             throw new BadMethodCallException('You must call prepare before trying to execute a prepared statement.');
         }
 

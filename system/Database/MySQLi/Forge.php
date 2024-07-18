@@ -116,11 +116,11 @@ class Forge extends BaseForge
             }
         }
 
-        if ($this->db->charset !== '' && ! strpos($sql, 'CHARACTER SET') && ! strpos($sql, 'CHARSET')) {
+        if ($this->db->charset !== '' && !strpos($sql, 'CHARACTER SET') && !strpos($sql, 'CHARSET')) {
             $sql .= ' DEFAULT CHARACTER SET = ' . $this->db->escapeString($this->db->charset);
         }
 
-        if ($this->db->DBCollat !== '' && ! strpos($sql, 'COLLATE')) {
+        if ($this->db->DBCollat !== '' && !strpos($sql, 'COLLATE')) {
             $sql .= ' COLLATE = ' . $this->db->escapeString($this->db->DBCollat);
         }
 
@@ -130,8 +130,8 @@ class Forge extends BaseForge
     /**
      * ALTER TABLE
      *
-     * @param string       $alterType       ALTER type
-     * @param string       $table           Table name
+     * @param string $alterType ALTER type
+     * @param string $table Table name
      * @param array|string $processedFields Processed column definitions
      *                                      or column names to DROP
      *
@@ -175,15 +175,15 @@ class Forge extends BaseForge
         }
 
         return $this->db->escapeIdentifiers($processedField['name'])
-                . (empty($processedField['new_name']) ? '' : ' ' . $this->db->escapeIdentifiers($processedField['new_name']))
-                . ' ' . $processedField['type'] . $processedField['length']
-                . $processedField['unsigned']
-                . $processedField['null']
-                . $processedField['default']
-                . $processedField['auto_increment']
-                . $processedField['unique']
-                . (empty($processedField['comment']) ? '' : ' COMMENT ' . $processedField['comment'])
-                . $extraClause;
+            . (empty($processedField['new_name']) ? '' : ' ' . $this->db->escapeIdentifiers($processedField['new_name']))
+            . ' ' . $processedField['type'] . $processedField['length']
+            . $processedField['unsigned']
+            . $processedField['null']
+            . $processedField['default']
+            . $processedField['auto_increment']
+            . $processedField['unique']
+            . (empty($processedField['comment']) ? '' : ' COMMENT ' . $processedField['comment'])
+            . $extraClause;
     }
 
     /**
@@ -193,7 +193,7 @@ class Forge extends BaseForge
      */
     protected function _processIndexes(string $table, bool $asQuery = false): array
     {
-        $sqls  = [''];
+        $sqls = [''];
         $index = 0;
 
         for ($i = 0, $c = count($this->keys); $i < $c; $i++) {
@@ -204,7 +204,7 @@ class Forge extends BaseForge
 
             if (isset($this->keys[$i]['fields'])) {
                 for ($i2 = 0, $c2 = count($this->keys[$i]['fields']); $i2 < $c2; $i2++) {
-                    if (! isset($this->fields[$this->keys[$i]['fields'][$i2]])) {
+                    if (!isset($this->fields[$this->keys[$i]['fields'][$i2]])) {
                         unset($this->keys[$i]['fields'][$i2]);
 
                         continue;
@@ -212,7 +212,7 @@ class Forge extends BaseForge
                 }
             }
 
-            if (! is_array($this->keys[$i]['fields'])) {
+            if (!is_array($this->keys[$i]['fields'])) {
                 $this->keys[$i]['fields'] = [$this->keys[$i]['fields']];
             }
 
@@ -228,7 +228,7 @@ class Forge extends BaseForge
                     . ' (' . implode(', ', $this->db->escapeIdentifiers($this->keys[$i]['fields'])) . ')';
             } else {
                 $sqls[$index] .= ",\n\t{$unique}KEY " . $keyName
-                . ' (' . implode(', ', $this->db->escapeIdentifiers($this->keys[$i]['fields'])) . ')';
+                    . ' (' . implode(', ', $this->db->escapeIdentifiers($this->keys[$i]['fields'])) . ')';
             }
         }
 

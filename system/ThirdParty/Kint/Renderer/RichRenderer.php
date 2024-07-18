@@ -243,9 +243,9 @@ class RichRenderer extends AbstractRenderer
         }
 
         $children = $this->renderChildren($o);
-        $header = $this->renderHeaderWrapper($o, (bool) \strlen($children), $this->renderHeader($o));
+        $header = $this->renderHeaderWrapper($o, (bool)\strlen($children), $this->renderHeader($o));
 
-        return '<dl>'.$header.$children.'</dl>';
+        return '<dl>' . $header . $children . '</dl>';
     }
 
     public function renderNothing(): string
@@ -287,10 +287,10 @@ class RichRenderer extends AbstractRenderer
         $out .= $contents;
 
         if (!empty($ap)) {
-            $out .= '<div class="access-path">'.$this->escape($ap).'</div>';
+            $out .= '<div class="access-path">' . $this->escape($ap) . '</div>';
         }
 
-        return $out.'</dt>';
+        return $out . '</dt>';
     }
 
     public function renderHeader(Value $o): string
@@ -298,14 +298,14 @@ class RichRenderer extends AbstractRenderer
         $output = '';
 
         if (null !== ($s = $o->getModifiers())) {
-            $output .= '<var>'.$s.'</var> ';
+            $output .= '<var>' . $s . '</var> ';
         }
 
         if (null !== ($s = $o->getName())) {
-            $output .= '<dfn>'.$this->escape($s).'</dfn> ';
+            $output .= '<dfn>' . $this->escape($s) . '</dfn> ';
 
             if ($s = $o->getOperator()) {
-                $output .= $this->escape($s, 'ASCII').' ';
+                $output .= $this->escape($s, 'ASCII') . ' ';
             }
         }
 
@@ -315,13 +315,13 @@ class RichRenderer extends AbstractRenderer
             }
 
             if ($o->reference) {
-                $s = '&amp;'.$s;
+                $s = '&amp;' . $s;
             }
 
-            $output .= '<var>'.$s.'</var>';
+            $output .= '<var>' . $s . '</var>';
 
             if ($o instanceof InstanceValue && isset($o->spl_object_id)) {
-                $output .= '#'.((int) $o->spl_object_id);
+                $output .= '#' . ((int)$o->spl_object_id);
             }
 
             $output .= ' ';
@@ -331,7 +331,7 @@ class RichRenderer extends AbstractRenderer
             if (self::$escape_types) {
                 $s = $this->escape($s);
             }
-            $output .= '('.$s.') ';
+            $output .= '(' . $s . ') ';
         }
 
         if (null !== ($s = $o->getValueShort())) {
@@ -378,7 +378,7 @@ class RichRenderer extends AbstractRenderer
                     $output .= '<li>';
                 }
 
-                $output .= $this->escape($tab->getLabel()).'</li>';
+                $output .= $this->escape($tab->getLabel()) . '</li>';
             }
 
             $output .= '</ul><ul class="kint-tab-contents">';
@@ -390,13 +390,13 @@ class RichRenderer extends AbstractRenderer
                     $output .= '<li>';
                 }
 
-                $output .= $tab.'</li>';
+                $output .= $tab . '</li>';
             }
 
             $output .= '</ul>';
         }
 
-        return $output.'</dd>';
+        return $output . '</dd>';
     }
 
     public function preRender(): string
@@ -418,16 +418,16 @@ class RichRenderer extends AbstractRenderer
                     case 'script':
                         $output .= '<script class="kint-rich-script"';
                         if (null !== self::$js_nonce) {
-                            $output .= ' nonce="'.\htmlspecialchars(self::$js_nonce).'"';
+                            $output .= ' nonce="' . \htmlspecialchars(self::$js_nonce) . '"';
                         }
-                        $output .= '>'.$contents.'</script>';
+                        $output .= '>' . $contents . '</script>';
                         break;
                     case 'style':
                         $output .= '<style class="kint-rich-style"';
                         if (null !== self::$css_nonce) {
-                            $output .= ' nonce="'.\htmlspecialchars(self::$css_nonce).'"';
+                            $output .= ' nonce="' . \htmlspecialchars(self::$css_nonce) . '"';
                         }
-                        $output .= '>'.$contents.'</style>';
+                        $output .= '>' . $contents . '</style>';
                         break;
                     default:
                         $output .= $contents;
@@ -481,14 +481,14 @@ class RichRenderer extends AbstractRenderer
                     continue;
                 }
 
-                $output .= '<li>'.$this->ideLink($step['file'], $step['line']); // closing tag not required
+                $output .= '<li>' . $this->ideLink($step['file'], $step['line']); // closing tag not required
                 if (isset($step['function']) &&
                     !\in_array($step['function'], ['include', 'include_once', 'require', 'require_once'], true)
                 ) {
                     $output .= ' [';
                     $output .= $step['class'] ?? '';
                     $output .= $step['type'] ?? '';
-                    $output .= $step['function'].'()]';
+                    $output .= $step['function'] . '()]';
                 }
             }
             $output .= '</ol>';
@@ -526,7 +526,7 @@ class RichRenderer extends AbstractRenderer
 
     public function ideLink(string $file, int $line): string
     {
-        $path = $this->escape(Kint::shortenPath($file)).':'.$line;
+        $path = $this->escape(Kint::shortenPath($file)) . ':' . $line;
         $ideLink = Kint::getIdeLink($file, $line);
 
         if (!$ideLink) {
@@ -539,7 +539,7 @@ class RichRenderer extends AbstractRenderer
             $class = 'class="kint-ide-link" ';
         }
 
-        return '<a '.$class.'href="'.$this->escape($ideLink).'">'.$path.'</a>';
+        return '<a ' . $class . 'href="' . $this->escape($ideLink) . '">' . $path . '</a>';
     }
 
     protected function calledFrom(): string
@@ -547,10 +547,10 @@ class RichRenderer extends AbstractRenderer
         $output = '';
 
         if (isset($this->call_info['callee']['file'])) {
-            $output .= ' '.$this->ideLink(
-                $this->call_info['callee']['file'],
-                $this->call_info['callee']['line']
-            );
+            $output .= ' ' . $this->ideLink(
+                    $this->call_info['callee']['file'],
+                    $this->call_info['callee']['line']
+                );
         }
 
         if (
@@ -567,15 +567,15 @@ class RichRenderer extends AbstractRenderer
             $output .= ' [';
             $output .= $this->call_info['callee']['class'] ?? '';
             $output .= $this->call_info['callee']['type'] ?? '';
-            $output .= $this->call_info['callee']['function'].'()]';
+            $output .= $this->call_info['callee']['function'] . '()]';
         }
 
         if ('' !== $output) {
-            $output = 'Called from'.$output;
+            $output = 'Called from' . $output;
         }
 
         if (null !== self::$timestamp) {
-            $output .= ' '.\date(self::$timestamp);
+            $output .= ' ' . \date(self::$timestamp);
         }
 
         return $output;
@@ -626,7 +626,7 @@ class RichRenderer extends AbstractRenderer
             }
 
             if ($show_contents) {
-                return '<pre>'.$this->escape($rep->contents)."\n</pre>";
+                return '<pre>' . $this->escape($rep->contents) . "\n</pre>";
             }
         }
 
@@ -658,13 +658,13 @@ class RichRenderer extends AbstractRenderer
 
     protected static function renderJs(): string
     {
-        return \file_get_contents(KINT_DIR.'/resources/compiled/shared.js').\file_get_contents(KINT_DIR.'/resources/compiled/rich.js');
+        return \file_get_contents(KINT_DIR . '/resources/compiled/shared.js') . \file_get_contents(KINT_DIR . '/resources/compiled/rich.js');
     }
 
     protected static function renderCss(): string
     {
-        if (\file_exists(KINT_DIR.'/resources/compiled/'.self::$theme)) {
-            return \file_get_contents(KINT_DIR.'/resources/compiled/'.self::$theme);
+        if (\file_exists(KINT_DIR . '/resources/compiled/' . self::$theme)) {
+            return \file_get_contents(KINT_DIR . '/resources/compiled/' . self::$theme);
         }
 
         return \file_get_contents(self::$theme);

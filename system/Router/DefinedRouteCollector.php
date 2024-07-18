@@ -48,9 +48,9 @@ final class DefinedRouteCollector
                     $routeName = $this->routeCollection->getRoutesOptions($route, $method)['as'] ?? $route;
 
                     yield [
-                        'method'  => $method,
-                        'route'   => $route,
-                        'name'    => $routeName,
+                        'method' => $method,
+                        'route' => $route,
+                        'name' => $routeName,
                         'handler' => $handler,
                     ];
                 }

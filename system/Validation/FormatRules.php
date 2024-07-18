@@ -29,8 +29,8 @@ class FormatRules
      */
     public function alpha($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return ctype_alpha($str);
@@ -49,12 +49,12 @@ class FormatRules
             return true;
         }
 
-        if (! is_string($value)) {
-            $value = (string) $value;
+        if (!is_string($value)) {
+            $value = (string)$value;
         }
 
         // @see https://regex101.com/r/LhqHPO/1
-        return (bool) preg_match('/\A[A-Z ]+\z/i', $value);
+        return (bool)preg_match('/\A[A-Z ]+\z/i', $value);
     }
 
     /**
@@ -70,8 +70,8 @@ class FormatRules
             return false;
         }
 
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return preg_match('/\A[a-z0-9_-]+\z/i', $str) === 1;
@@ -96,8 +96,8 @@ class FormatRules
             return false;
         }
 
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return preg_match('/\A[A-Z0-9 ~!#$%\&\*\-_+=|:.]+\z/i', $str) === 1;
@@ -110,8 +110,8 @@ class FormatRules
      */
     public function alpha_numeric($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return ctype_alnum($str);
@@ -124,12 +124,12 @@ class FormatRules
      */
     public function alpha_numeric_space($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         // @see https://regex101.com/r/0AZDME/1
-        return (bool) preg_match('/\A[A-Z0-9 ]+\z/i', $str);
+        return (bool)preg_match('/\A[A-Z0-9 ]+\z/i', $str);
     }
 
     /**
@@ -152,12 +152,12 @@ class FormatRules
      */
     public function decimal($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         // @see https://regex101.com/r/HULifl/2/
-        return (bool) preg_match('/\A[-+]?\d{0,}\.?\d+\z/', $str);
+        return (bool)preg_match('/\A[-+]?\d{0,}\.?\d+\z/', $str);
     }
 
     /**
@@ -167,8 +167,8 @@ class FormatRules
      */
     public function hex($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return ctype_xdigit($str);
@@ -181,11 +181,11 @@ class FormatRules
      */
     public function integer($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
-        return (bool) preg_match('/\A[\-+]?\d+\z/', $str);
+        return (bool)preg_match('/\A[\-+]?\d+\z/', $str);
     }
 
     /**
@@ -195,8 +195,8 @@ class FormatRules
      */
     public function is_natural($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return ctype_digit($str);
@@ -209,8 +209,8 @@ class FormatRules
      */
     public function is_natural_no_zero($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return $str !== '0' && ctype_digit($str);
@@ -223,12 +223,12 @@ class FormatRules
      */
     public function numeric($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         // @see https://regex101.com/r/bb9wtr/2
-        return (bool) preg_match('/\A[\-+]?\d*\.?\d+\z/', $str);
+        return (bool)preg_match('/\A[\-+]?\d*\.?\d+\z/', $str);
     }
 
     /**
@@ -238,15 +238,15 @@ class FormatRules
      */
     public function regex_match($str, string $pattern): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
-        if (! str_starts_with($pattern, '/')) {
+        if (!str_starts_with($pattern, '/')) {
             $pattern = "/{$pattern}/";
         }
 
-        return (bool) preg_match($pattern, $str);
+        return (bool)preg_match($pattern, $str);
     }
 
     /**
@@ -259,8 +259,8 @@ class FormatRules
      */
     public function timezone($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return in_array($str, timezone_identifiers_list(), true);
@@ -280,8 +280,8 @@ class FormatRules
             return false;
         }
 
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         return base64_encode(base64_decode($str, true)) === $str;
@@ -294,8 +294,8 @@ class FormatRules
      */
     public function valid_json($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         json_decode($str);
@@ -310,8 +310,8 @@ class FormatRules
      */
     public function valid_email($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         // @see https://regex101.com/r/wlJG1t/1/
@@ -319,7 +319,7 @@ class FormatRules
             $str = $matches[1] . '@' . idn_to_ascii($matches[2], 0, INTL_IDNA_VARIANT_UTS46);
         }
 
-        return (bool) filter_var($str, FILTER_VALIDATE_EMAIL);
+        return (bool)filter_var($str, FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -332,8 +332,8 @@ class FormatRules
      */
     public function valid_emails($str = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         foreach (explode(',', $str) as $email) {
@@ -359,8 +359,8 @@ class FormatRules
      */
     public function valid_ip($ip = null, ?string $which = null): bool
     {
-        if (! is_string($ip)) {
-            $ip = (string) $ip;
+        if (!is_string($ip)) {
+            $ip = (string)$ip;
         }
 
         if ($ip === '') {
@@ -368,13 +368,13 @@ class FormatRules
         }
 
         $option = match (strtolower($which ?? '')) {
-            'ipv4'  => FILTER_FLAG_IPV4,
-            'ipv6'  => FILTER_FLAG_IPV6,
+            'ipv4' => FILTER_FLAG_IPV4,
+            'ipv6' => FILTER_FLAG_IPV6,
             default => 0,
         };
 
         return filter_var($ip, FILTER_VALIDATE_IP, $option) !== false
-            || (! ctype_print($ip) && filter_var(inet_ntop($ip), FILTER_VALIDATE_IP, $option) !== false);
+            || (!ctype_print($ip) && filter_var(inet_ntop($ip), FILTER_VALIDATE_IP, $option) !== false);
     }
 
     /**
@@ -391,12 +391,12 @@ class FormatRules
             return false;
         }
 
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         if (preg_match('/\A(?:([^:]*)\:)?\/\/(.+)\z/', $str, $matches)) {
-            if (! in_array($matches[1], ['http', 'https'], true)) {
+            if (!in_array($matches[1], ['http', 'https'], true)) {
                 return false;
             }
 
@@ -420,12 +420,12 @@ class FormatRules
             return false;
         }
 
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         // parse_url() may return null and false
-        $scheme       = strtolower((string) parse_url($str, PHP_URL_SCHEME));
+        $scheme = strtolower((string)parse_url($str, PHP_URL_SCHEME));
         $validSchemes = explode(
             ',',
             strtolower($validSchemes ?? 'http,https')
@@ -438,13 +438,13 @@ class FormatRules
     /**
      * Checks for a valid date and matches a given date format
      *
-     * @param string|null           $str
+     * @param string|null $str
      * @param non-empty-string|null $format
      */
     public function valid_date($str = null, ?string $format = null): bool
     {
-        if (! is_string($str)) {
-            $str = (string) $str;
+        if (!is_string($str)) {
+            $str = (string)$str;
         }
 
         if ($str === '') {
@@ -455,7 +455,7 @@ class FormatRules
             return strtotime($str) !== false;
         }
 
-        $date   = DateTime::createFromFormat($format, $str);
+        $date = DateTime::createFromFormat($format, $str);
         $errors = DateTime::getLastErrors();
 
         if ($date === false) {

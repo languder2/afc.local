@@ -28,7 +28,7 @@ final class PhpStreamWrapper
     public $context;
 
     private static string $content = '';
-    private int $position          = 0;
+    private int $position = 0;
 
     public static function setContent(string $content)
     {

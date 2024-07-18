@@ -43,27 +43,27 @@ echo $message;
 /** @var Paths $paths */
 
 // The path to the application directory.
-if (! defined('APPPATH')) {
+if (!defined('APPPATH')) {
     define('APPPATH', realpath(rtrim($paths->appDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
 }
 
 // The path to the project root directory. Just above APPPATH.
-if (! defined('ROOTPATH')) {
+if (!defined('ROOTPATH')) {
     define('ROOTPATH', realpath(APPPATH . '../') . DIRECTORY_SEPARATOR);
 }
 
 // The path to the system directory.
-if (! defined('SYSTEMPATH')) {
+if (!defined('SYSTEMPATH')) {
     define('SYSTEMPATH', realpath(rtrim($paths->systemDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
 }
 
 // The path to the writable directory.
-if (! defined('WRITEPATH')) {
+if (!defined('WRITEPATH')) {
     define('WRITEPATH', realpath(rtrim($paths->writableDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
 }
 
 // The path to the tests directory
-if (! defined('TESTPATH')) {
+if (!defined('TESTPATH')) {
     define('TESTPATH', realpath(rtrim($paths->testsDirectory, '\\/ ')) . DIRECTORY_SEPARATOR);
 }
 
@@ -73,7 +73,7 @@ if (! defined('TESTPATH')) {
  * ---------------------------------------------------------------
  */
 
-if (! defined('APP_NAMESPACE')) {
+if (!defined('APP_NAMESPACE')) {
     require_once APPPATH . 'Config/Constants.php';
 }
 
@@ -101,7 +101,7 @@ require_once SYSTEMPATH . 'Common.php';
  * files can use the path constants.
  */
 
-if (! class_exists(Autoload::class, false)) {
+if (!class_exists(Autoload::class, false)) {
     require_once SYSTEMPATH . 'Config/AutoloadConfig.php';
     require_once APPPATH . 'Config/Autoload.php';
     require_once SYSTEMPATH . 'Modules/Modules.php';
@@ -132,15 +132,15 @@ Services::exceptions()->initialize();
  */
 
 // Run this check for manual installations
-if (! is_file(COMPOSER_PATH)) {
+if (!is_file(COMPOSER_PATH)) {
     $missingExtensions = [];
 
     foreach ([
-        'intl',
-        'json',
-        'mbstring',
-    ] as $extension) {
-        if (! extension_loaded($extension)) {
+                 'intl',
+                 'json',
+                 'mbstring',
+             ] as $extension) {
+        if (!extension_loaded($extension)) {
             $missingExtensions[] = $extension;
         }
     }

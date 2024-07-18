@@ -35,27 +35,28 @@ class OutgoingRequest extends Message implements OutgoingRequestInterface
     protected $uri;
 
     /**
-     * @param string      $method HTTP method
+     * @param string $method HTTP method
      * @param string|null $body
      */
     public function __construct(
         string $method,
-        ?URI $uri = null,
-        array $headers = [],
-        $body = null,
+        ?URI   $uri = null,
+        array  $headers = [],
+               $body = null,
         string $version = '1.1'
-    ) {
+    )
+    {
         $this->method = $method;
-        $this->uri    = $uri;
+        $this->uri = $uri;
 
         foreach ($headers as $header => $value) {
             $this->setHeader($header, $value);
         }
 
-        $this->body            = $body;
+        $this->body = $body;
         $this->protocolVersion = $version;
 
-        if (! $this->hasHeader('Host') && $this->uri->getHost() !== '') {
+        if (!$this->hasHeader('Host') && $this->uri->getHost() !== '') {
             $this->setHeader('Host', $this->getHostFromUri($this->uri));
         }
     }
@@ -100,7 +101,7 @@ class OutgoingRequest extends Message implements OutgoingRequestInterface
      */
     public function withMethod($method)
     {
-        $request         = clone $this;
+        $request = clone $this;
         $request->method = $method;
 
         return $request;
@@ -119,14 +120,14 @@ class OutgoingRequest extends Message implements OutgoingRequestInterface
     /**
      * Returns an instance with the provided URI.
      *
-     * @param URI  $uri          New request URI to use.
+     * @param URI $uri New request URI to use.
      * @param bool $preserveHost Preserve the original state of the Host header.
      *
      * @return static
      */
     public function withUri(URI $uri, $preserveHost = false)
     {
-        $request      = clone $this;
+        $request = clone $this;
         $request->uri = $uri;
 
         if ($preserveHost) {
@@ -140,7 +141,7 @@ class OutgoingRequest extends Message implements OutgoingRequestInterface
                 return $request;
             }
 
-            if (! $this->isHostHeaderMissingOrEmpty()) {
+            if (!$this->isHostHeaderMissingOrEmpty()) {
                 return $request;
             }
         }
@@ -154,7 +155,7 @@ class OutgoingRequest extends Message implements OutgoingRequestInterface
 
     private function isHostHeaderMissingOrEmpty(): bool
     {
-        if (! $this->hasHeader('Host')) {
+        if (!$this->hasHeader('Host')) {
             return true;
         }
 

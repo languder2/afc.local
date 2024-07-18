@@ -35,7 +35,7 @@ class Rules
      * The value does not match another field in $data.
      *
      * @param array|bool|float|int|object|string|null $str
-     * @param array                                   $data Other field/value pairs
+     * @param array $data Other field/value pairs
      */
     public function differs(
         $str,
@@ -43,16 +43,17 @@ class Rules
         array $data,
         ?string $error = null,
         ?string $field = null
-    ): bool {
+    ): bool
+    {
         if (str_contains($otherField, '.')) {
             return $str !== dot_array_search($otherField, $data);
         }
 
-        if (! array_key_exists($field, $data)) {
+        if (!array_key_exists($field, $data)) {
             return false;
         }
 
-        if (! array_key_exists($otherField, $data)) {
+        if (!array_key_exists($otherField, $data)) {
             return false;
         }
 
@@ -78,10 +79,10 @@ class Rules
     public function exact_length($str, string $val): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -96,10 +97,10 @@ class Rules
     public function greater_than($str, string $min): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -114,10 +115,10 @@ class Rules
     public function greater_than_equal_to($str, string $min): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -160,7 +161,7 @@ class Rules
         if (
             $whereField !== null && $whereField !== ''
             && $whereValue !== null && $whereValue !== ''
-            && ! preg_match('/^\{(\w+)\}$/', $whereValue)
+            && !preg_match('/^\{(\w+)\}$/', $whereValue)
         ) {
             $row = $row->where($whereField, $whereValue);
         }
@@ -176,10 +177,10 @@ class Rules
     public function in_list($value, string $list): bool
     {
         if (is_int($value) || is_float($value)) {
-            $value = (string) $value;
+            $value = (string)$value;
         }
 
-        if (! is_string($value)) {
+        if (!is_string($value)) {
             return false;
         }
 
@@ -220,7 +221,7 @@ class Rules
         if (
             $ignoreField !== null && $ignoreField !== ''
             && $ignoreValue !== null && $ignoreValue !== ''
-            && ! preg_match('/^\{(\w+)\}$/', $ignoreValue)
+            && !preg_match('/^\{(\w+)\}$/', $ignoreValue)
         ) {
             $row = $row->where("{$ignoreField} !=", $ignoreValue);
         }
@@ -236,10 +237,10 @@ class Rules
     public function less_than($str, string $max): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -254,10 +255,10 @@ class Rules
     public function less_than_equal_to($str, string $max): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -268,7 +269,7 @@ class Rules
      * Matches the value of another field in $data.
      *
      * @param array|bool|float|int|object|string|null $str
-     * @param array                                   $data Other field/value pairs
+     * @param array $data Other field/value pairs
      */
     public function matches(
         $str,
@@ -276,16 +277,17 @@ class Rules
         array $data,
         ?string $error = null,
         ?string $field = null
-    ): bool {
+    ): bool
+    {
         if (str_contains($otherField, '.')) {
             return $str === dot_array_search($otherField, $data);
         }
 
-        if (! array_key_exists($field, $data)) {
+        if (!array_key_exists($field, $data)) {
             return false;
         }
 
-        if (! array_key_exists($otherField, $data)) {
+        if (!array_key_exists($otherField, $data)) {
             return false;
         }
 
@@ -300,10 +302,10 @@ class Rules
     public function max_length($str, string $val): bool
     {
         if (is_int($str) || is_float($str) || null === $str) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -318,10 +320,10 @@ class Rules
     public function min_length($str, string $val): bool
     {
         if (is_int($str) || is_float($str)) {
-            $str = (string) $str;
+            $str = (string)$str;
         }
 
-        if (! is_string($str)) {
+        if (!is_string($str)) {
             return false;
         }
 
@@ -350,10 +352,10 @@ class Rules
         }
 
         if (is_int($value) || is_float($value)) {
-            $value = (string) $value;
+            $value = (string)$value;
         }
 
-        if (! is_string($value)) {
+        if (!is_string($value)) {
             return false;
         }
 
@@ -377,8 +379,8 @@ class Rules
      *     required_with[password]
      *
      * @param array|bool|float|int|object|string|null $str
-     * @param string|null                             $fields List of fields that we should check if present
-     * @param array                                   $data   Complete list of fields from the form
+     * @param string|null $fields List of fields that we should check if present
+     * @param array $data Complete list of fields from the form
      */
     public function required_with($str = null, ?string $fields = null, array $data = []): bool
     {
@@ -394,8 +396,8 @@ class Rules
      *     required_without[id,email]
      *
      * @param array|bool|float|int|object|string|null $str
-     * @param string|null                             $otherFields The param fields of required_without[].
-     * @param string|null                             $field       This rule param fields aren't present, this field is required.
+     * @param string|null $otherFields The param fields of required_without[].
+     * @param string|null $field This rule param fields aren't present, this field is required.
      */
     public function required_without(
         $str = null,
@@ -403,7 +405,8 @@ class Rules
         array $data = [],
         ?string $error = null,
         ?string $field = null
-    ): bool {
+    ): bool
+    {
         return $this->nonStrictRules->required_without($str, $otherFields, $data, $error, $field);
     }
 
@@ -411,9 +414,9 @@ class Rules
      * The field exists in $data.
      *
      * @param array|bool|float|int|object|string|null $value The field value.
-     * @param string|null                             $param The rule's parameter.
-     * @param array                                   $data  The data to be validated.
-     * @param string|null                             $field The field name.
+     * @param string|null $param The rule's parameter.
+     * @param array $data The data to be validated.
+     * @param string|null $field The field name.
      */
     public function field_exists(
         $value = null,
@@ -421,7 +424,8 @@ class Rules
         array $data = [],
         ?string $error = null,
         ?string $field = null
-    ): bool {
+    ): bool
+    {
         if (str_contains($field, '.')) {
             return ArrayHelper::dotKeyExists($field, $data);
         }

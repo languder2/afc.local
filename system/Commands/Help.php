@@ -77,7 +77,7 @@ class Help extends BaseCommand
         $command ??= 'help';
         $commands = $this->commands->getCommands();
 
-        if (! $this->commands->verifyCommand($command, $commands)) {
+        if (!$this->commands->verifyCommand($command, $commands)) {
             return;
         }
 

@@ -45,7 +45,7 @@ class Cell implements Stringable
      */
     public function render(): string
     {
-        if (! function_exists('decamelize')) {
+        if (!function_exists('decamelize')) {
             helper('inflector');
         }
 
@@ -79,17 +79,17 @@ class Cell implements Stringable
         $properties = $this->includeComputedProperties($properties);
         $properties = array_merge($properties, $data);
 
-        $view = (string) $view;
+        $view = (string)$view;
 
         if ($view === '') {
-            $viewName  = decamelize(class_basename(static::class));
+            $viewName = decamelize(class_basename(static::class));
             $directory = dirname((new ReflectionClass($this))->getFileName()) . DIRECTORY_SEPARATOR;
 
             $possibleView1 = $directory . substr($viewName, 0, strrpos($viewName, '_cell')) . '.php';
             $possibleView2 = $directory . $viewName . '.php';
         }
 
-        if ($view !== '' && ! is_file($view)) {
+        if ($view !== '' && !is_file($view)) {
             $directory = dirname((new ReflectionClass($this))->getFileName()) . DIRECTORY_SEPARATOR;
 
             $view = $directory . $view . '.php';
@@ -97,7 +97,7 @@ class Cell implements Stringable
 
         $candidateViews = array_filter(
             [$view, $possibleView1 ?? '', $possibleView2 ?? ''],
-            static fn (string $path): bool => $path !== '' && is_file($path)
+            static fn(string $path): bool => $path !== '' && is_file($path)
         );
 
         if ($candidateViews === []) {
@@ -133,7 +133,7 @@ class Cell implements Stringable
     private function includeComputedProperties(array $properties): array
     {
         $reservedProperties = ['data', 'view'];
-        $privateProperties  = $this->getNonPublicProperties();
+        $privateProperties = $this->getNonPublicProperties();
 
         foreach ($privateProperties as $property) {
             $name = $property->getName();

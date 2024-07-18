@@ -24,7 +24,7 @@ final class DotArrayFilter
      * This code comes from the dot_array_search() function.
      *
      * @param array $indexes The dot array syntax pattern to use for filtering.
-     * @param array $array   The array to filter.
+     * @param array $array The array to filter.
      *
      * @return array The filtered array.
      */
@@ -42,7 +42,7 @@ final class DotArrayFilter
             );
 
             $segments = array_map(
-                static fn ($key) => str_replace('\.', '.', $key),
+                static fn($key) => str_replace('\.', '.', $key),
                 $segments
             );
 
@@ -56,7 +56,7 @@ final class DotArrayFilter
      * Used by `run()` to recursively filter the array with wildcards.
      *
      * @param array $indexes The dot array syntax pattern to use for filtering.
-     * @param array $array   The array to filter.
+     * @param array $array The array to filter.
      *
      * @return array The filtered array.
      */
@@ -70,7 +70,7 @@ final class DotArrayFilter
         // Grab the current index.
         $currentIndex = array_shift($indexes);
 
-        if (! isset($array[$currentIndex]) && $currentIndex !== '*') {
+        if (!isset($array[$currentIndex]) && $currentIndex !== '*') {
             return [];
         }
 
@@ -79,7 +79,7 @@ final class DotArrayFilter
             $answer = [];
 
             foreach ($array as $key => $value) {
-                if (! is_array($value)) {
+                if (!is_array($value)) {
                     continue;
                 }
 

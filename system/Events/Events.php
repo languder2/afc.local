@@ -22,9 +22,9 @@ use Config\Modules;
  */
 class Events
 {
-    public const PRIORITY_LOW    = 200;
+    public const PRIORITY_LOW = 200;
     public const PRIORITY_NORMAL = 100;
-    public const PRIORITY_HIGH   = 10;
+    public const PRIORITY_HIGH = 10;
 
     /**
      * The list of listeners.
@@ -78,7 +78,7 @@ class Events
 
         $config = config(Modules::class);
         $events = APPPATH . 'Config' . DIRECTORY_SEPARATOR . 'Events.php';
-        $files  = [];
+        $files = [];
 
         if ($config->shouldDiscover('events')) {
             $files = service('locator')->search('Config/Events.php');
@@ -110,22 +110,22 @@ class Events
      *  Events::on('create', [$myInstance, 'myMethod']);  // Method on an existing instance
      *  Events::on('create', function() {});              // Closure
      *
-     * @param string   $eventName
+     * @param string $eventName
      * @param callable $callback
-     * @param int      $priority
+     * @param int $priority
      *
      * @return void
      */
     public static function on($eventName, $callback, $priority = self::PRIORITY_NORMAL)
     {
-        if (! isset(static::$listeners[$eventName])) {
+        if (!isset(static::$listeners[$eventName])) {
             static::$listeners[$eventName] = [
                 true, // If there's only 1 item, it's sorted.
                 [$priority],
                 [$callback],
             ];
         } else {
-            static::$listeners[$eventName][0]   = false; // Not sorted
+            static::$listeners[$eventName][0] = false; // Not sorted
             static::$listeners[$eventName][1][] = $priority;
             static::$listeners[$eventName][2][] = $callback;
         }
@@ -138,12 +138,12 @@ class Events
      *  b) a method returns false, at which point execution of subscribers stops.
      *
      * @param string $eventName
-     * @param mixed  $arguments
+     * @param mixed $arguments
      */
     public static function trigger($eventName, ...$arguments): bool
     {
         // Read in our Config/Events file so that we have them all!
-        if (! static::$initialized) {
+        if (!static::$initialized) {
             static::initialize();
         }
 
@@ -157,7 +157,7 @@ class Events
             if (CI_DEBUG) {
                 static::$performanceLog[] = [
                     'start' => $start,
-                    'end'   => microtime(true),
+                    'end' => microtime(true),
                     'event' => strtolower($eventName),
                 ];
             }
@@ -178,12 +178,12 @@ class Events
      */
     public static function listeners($eventName): array
     {
-        if (! isset(static::$listeners[$eventName])) {
+        if (!isset(static::$listeners[$eventName])) {
             return [];
         }
 
         // The list is not sorted
-        if (! static::$listeners[$eventName][0]) {
+        if (!static::$listeners[$eventName][0]) {
             // Sort it!
             array_multisort(static::$listeners[$eventName][1], SORT_NUMERIC, static::$listeners[$eventName][2]);
 
@@ -204,7 +204,7 @@ class Events
      */
     public static function removeListener($eventName, callable $listener): bool
     {
-        if (! isset(static::$listeners[$eventName])) {
+        if (!isset(static::$listeners[$eventName])) {
             return false;
         }
 

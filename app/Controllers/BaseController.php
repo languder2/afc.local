@@ -4,12 +4,14 @@ namespace App\Controllers;
 
 use App\Models\GeneralModel;
 use CodeIgniter\Controller;
+use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Session\Session;
-use mysql_xdevapi\DatabaseObject;
+use Config\Database;
+use Config\Services;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -41,12 +43,11 @@ abstract class BaseController extends Controller
     protected $helpers = [];
     protected Session $session;
     protected GeneralModel $model;
-    protected object $db;
+    protected BaseConnection $db;
     /**
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.
      */
-    // protected $session;
 
     /**
      * @return void
@@ -60,8 +61,8 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
 
-        $this->session = \Config\Services::session();
-        $this->db = \Config\Database::connect();
-        $this->model= model(GeneralModel::class);
+        $this->session = Services::session();
+        $this->db = Database::connect();
+        $this->model = model(GeneralModel::class);
     }
 }

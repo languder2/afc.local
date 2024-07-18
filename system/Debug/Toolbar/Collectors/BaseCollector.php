@@ -83,7 +83,7 @@ class BaseCollector
      */
     public function hasTabContent(): bool
     {
-        return (bool) $this->hasTabContent;
+        return (bool)$this->hasTabContent;
     }
 
     /**
@@ -91,7 +91,7 @@ class BaseCollector
      */
     public function hasLabel(): bool
     {
-        return (bool) $this->hasLabel;
+        return (bool)$this->hasLabel;
     }
 
     /**
@@ -99,7 +99,7 @@ class BaseCollector
      */
     public function hasTimelineData(): bool
     {
-        return (bool) $this->hasTimeline;
+        return (bool)$this->hasTimeline;
     }
 
     /**
@@ -108,7 +108,7 @@ class BaseCollector
      */
     public function timelineData(): array
     {
-        if (! $this->hasTimeline) {
+        if (!$this->hasTimeline) {
             return [];
         }
 
@@ -121,7 +121,7 @@ class BaseCollector
      */
     public function hasVarData(): bool
     {
-        return (bool) $this->hasVarData;
+        return (bool)$this->hasVarData;
     }
 
     /**
@@ -222,17 +222,17 @@ class BaseCollector
     public function getAsArray(): array
     {
         return [
-            'title'           => $this->getTitle(),
-            'titleSafe'       => $this->getTitle(true),
-            'titleDetails'    => $this->getTitleDetails(),
-            'display'         => $this->display(),
-            'badgeValue'      => $this->getBadgeValue(),
-            'isEmpty'         => $this->isEmpty(),
-            'hasTabContent'   => $this->hasTabContent(),
-            'hasLabel'        => $this->hasLabel(),
-            'icon'            => $this->icon(),
+            'title' => $this->getTitle(),
+            'titleSafe' => $this->getTitle(true),
+            'titleDetails' => $this->getTitleDetails(),
+            'display' => $this->display(),
+            'badgeValue' => $this->getBadgeValue(),
+            'isEmpty' => $this->isEmpty(),
+            'hasTabContent' => $this->hasTabContent(),
+            'hasLabel' => $this->hasLabel(),
+            'icon' => $this->icon(),
             'hasTimelineData' => $this->hasTimelineData(),
-            'timelineData'    => $this->timelineData(),
+            'timelineData' => $this->timelineData(),
         ];
     }
 }

@@ -57,7 +57,7 @@ class PreparedQuery extends BasePreparedQuery
      */
     public function _prepare(string $sql, array $options = []): PreparedQuery
     {
-        $this->name = (string) random_int(1, 10_000_000_000_000_000);
+        $this->name = (string)random_int(1, 10_000_000_000_000_000);
 
         $sql = $this->parameterize($sql);
 
@@ -65,8 +65,8 @@ class PreparedQuery extends BasePreparedQuery
         // than what was put in.
         $this->query->setQuery($sql);
 
-        if (! $this->statement = pg_prepare($this->db->connID, $this->name, $sql)) {
-            $this->errorCode   = 0;
+        if (!$this->statement = pg_prepare($this->db->connID, $this->name, $sql)) {
+            $this->errorCode = 0;
             $this->errorString = pg_last_error($this->db->connID);
 
             if ($this->db->DBDebug) {
@@ -83,13 +83,13 @@ class PreparedQuery extends BasePreparedQuery
      */
     public function _execute(array $data): bool
     {
-        if (! isset($this->statement)) {
+        if (!isset($this->statement)) {
             throw new BadMethodCallException('You must call prepare before trying to execute a prepared statement.');
         }
 
         $this->result = pg_execute($this->db->connID, $this->name, $data);
 
-        return (bool) $this->result;
+        return (bool)$this->result;
     }
 
     /**

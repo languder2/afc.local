@@ -136,134 +136,6 @@ trait GeneratorTrait
     }
 
     /**
-     * Generate a view file from an existing template.
-     *
-     * @param string                         $view   namespaced view name that is generated
-     * @param array<int|string, string|null> $params
-     */
-    protected function generateView(string $view, array $params): void
-    {
-        $this->params = $params;
-
-        $target = $this->buildPath($view);
-
-        // Check if path is empty.
-        if ($target === '') {
-            return;
-        }
-
-        $this->generateFile($target, $this->buildContent($view));
-    }
-
-    /**
-     * Handles writing the file to disk, and all of the safety checks around that.
-     *
-     * @param string $target file path
-     */
-    private function generateFile(string $target, string $content): void
-    {
-        if ($this->getOption('namespace') === 'CodeIgniter') {
-            // @codeCoverageIgnoreStart
-            CLI::write(lang('CLI.generator.usingCINamespace'), 'yellow');
-            CLI::newLine();
-
-            if (
-                CLI::prompt(
-                    'Are you sure you want to continue?',
-                    ['y', 'n'],
-                    'required'
-                ) === 'n'
-            ) {
-                CLI::newLine();
-                CLI::write(lang('CLI.generator.cancelOperation'), 'yellow');
-                CLI::newLine();
-
-                return;
-            }
-
-            CLI::newLine();
-            // @codeCoverageIgnoreEnd
-        }
-
-        $isFile = is_file($target);
-
-        // Overwriting files unknowingly is a serious annoyance, So we'll check if
-        // we are duplicating things, If 'force' option is not supplied, we bail.
-        if (! $this->getOption('force') && $isFile) {
-            CLI::error(
-                lang('CLI.generator.fileExist', [clean_path($target)]),
-                'light_gray',
-                'red'
-            );
-            CLI::newLine();
-
-            return;
-        }
-
-        // Check if the directory to save the file is existing.
-        $dir = dirname($target);
-
-        if (! is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
-        helper('filesystem');
-
-        // Build the class based on the details we have, We'll be getting our file
-        // contents from the template, and then we'll do the necessary replacements.
-        if (! write_file($target, $content)) {
-            // @codeCoverageIgnoreStart
-            CLI::error(
-                lang('CLI.generator.fileError', [clean_path($target)]),
-                'light_gray',
-                'red'
-            );
-            CLI::newLine();
-
-            return;
-            // @codeCoverageIgnoreEnd
-        }
-
-        if ($this->getOption('force') && $isFile) {
-            CLI::write(
-                lang('CLI.generator.fileOverwrite', [clean_path($target)]),
-                'yellow'
-            );
-            CLI::newLine();
-
-            return;
-        }
-
-        CLI::write(
-            lang('CLI.generator.fileCreate', [clean_path($target)]),
-            'green'
-        );
-        CLI::newLine();
-    }
-
-    /**
-     * Prepare options and do the necessary replacements.
-     *
-     * @param string $class namespaced classname or namespaced view.
-     *
-     * @return string generated file content
-     */
-    protected function prepare(string $class): string
-    {
-        return $this->parseTemplate($class);
-    }
-
-    /**
-     * Change file basename before saving.
-     *
-     * Useful for components where the file name has a date.
-     */
-    protected function basename(string $filename): string
-    {
-        return basename($filename);
-    }
-
-    /**
      * Parses the class name and checks if it is already qualified.
      */
     protected function qualifyClassName(): string
@@ -334,60 +206,172 @@ trait GeneratorTrait
     }
 
     /**
-     * Gets the generator view as defined in the `Config\Generators::$views`,
-     * with fallback to `$template` when the defined view does not exist.
-     *
-     * @param array<string, mixed> $data
+     * Gets a single command-line option. Returns TRUE if the option exists,
+     * but doesn't have a value, and is simply acting as a flag.
      */
-    protected function renderTemplate(array $data = []): string
+    protected function getOption(string $name): string|bool|null
     {
-        try {
-            $template = $this->templatePath ?? config(Generators::class)->views[$this->name];
-
-            return view($template, $data, ['debug' => false]);
-        } catch (Throwable $e) {
-            log_message('error', (string) $e);
-
-            return view(
-                "CodeIgniter\\Commands\\Generators\\Views\\{$this->template}",
-                $data,
-                ['debug' => false]
-            );
+        if (!array_key_exists($name, $this->params)) {
+            return CLI::getOption($name);
         }
+
+        return $this->params[$name] ?? true;
     }
 
     /**
-     * Performs pseudo-variables contained within view file.
-     *
-     * @param string                          $class   namespaced classname or namespaced view.
-     * @param list<string>                    $search
-     * @param list<string>                    $replace
-     * @param array<string, bool|string|null> $data
-     *
-     * @return string generated file content
+     * Gets the namespace from the command-line option,
+     * or the default namespace if the option is not set.
+     * Can be overridden by directly setting $this->namespace.
      */
-    protected function parseTemplate(
-        string $class,
-        array $search = [],
-        array $replace = [],
-        array $data = []
-    ): string {
-        // Retrieves the namespace part from the fully qualified class name.
-        $namespace = trim(
-            implode(
+    protected function getNamespace(): string
+    {
+        return $this->namespace ?? trim(
+            str_replace(
+                '/',
                 '\\',
-                array_slice(explode('\\', $class), 0, -1)
+                $this->getOption('namespace') ?? APP_NAMESPACE
             ),
             '\\'
         );
-        $search[]  = '<@php';
-        $search[]  = '{namespace}';
-        $search[]  = '{class}';
-        $replace[] = '<?php';
-        $replace[] = $namespace;
-        $replace[] = str_replace($namespace . '\\', '', $class);
+    }
 
-        return str_replace($search, $replace, $this->renderTemplate($data));
+    /**
+     * Builds the file path from the class name.
+     *
+     * @param string $class namespaced classname or namespaced view.
+     */
+    protected function buildPath(string $class): string
+    {
+        $namespace = $this->getNamespace();
+
+        // Check if the namespace is actually defined and we are not just typing gibberish.
+        $base = service('autoloader')->getNamespace($namespace);
+
+        if (!$base = reset($base)) {
+            CLI::error(
+                lang('CLI.namespaceNotDefined', [$namespace]),
+                'light_gray',
+                'red'
+            );
+            CLI::newLine();
+
+            return '';
+        }
+
+        $realpath = realpath($base);
+        $base = ($realpath !== false) ? $realpath : $base;
+
+        $file = $base . DIRECTORY_SEPARATOR
+            . str_replace(
+                '\\',
+                DIRECTORY_SEPARATOR,
+                trim(str_replace($namespace . '\\', '', $class), '\\')
+            ) . '.php';
+
+        return implode(
+                DIRECTORY_SEPARATOR,
+                array_slice(
+                    explode(DIRECTORY_SEPARATOR, $file),
+                    0,
+                    -1
+                )
+            ) . DIRECTORY_SEPARATOR . $this->basename($file);
+    }
+
+    /**
+     * Change file basename before saving.
+     *
+     * Useful for components where the file name has a date.
+     */
+    protected function basename(string $filename): string
+    {
+        return basename($filename);
+    }
+
+    /**
+     * Handles writing the file to disk, and all of the safety checks around that.
+     *
+     * @param string $target file path
+     */
+    private function generateFile(string $target, string $content): void
+    {
+        if ($this->getOption('namespace') === 'CodeIgniter') {
+            // @codeCoverageIgnoreStart
+            CLI::write(lang('CLI.generator.usingCINamespace'), 'yellow');
+            CLI::newLine();
+
+            if (
+                CLI::prompt(
+                    'Are you sure you want to continue?',
+                    ['y', 'n'],
+                    'required'
+                ) === 'n'
+            ) {
+                CLI::newLine();
+                CLI::write(lang('CLI.generator.cancelOperation'), 'yellow');
+                CLI::newLine();
+
+                return;
+            }
+
+            CLI::newLine();
+            // @codeCoverageIgnoreEnd
+        }
+
+        $isFile = is_file($target);
+
+        // Overwriting files unknowingly is a serious annoyance, So we'll check if
+        // we are duplicating things, If 'force' option is not supplied, we bail.
+        if (!$this->getOption('force') && $isFile) {
+            CLI::error(
+                lang('CLI.generator.fileExist', [clean_path($target)]),
+                'light_gray',
+                'red'
+            );
+            CLI::newLine();
+
+            return;
+        }
+
+        // Check if the directory to save the file is existing.
+        $dir = dirname($target);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        helper('filesystem');
+
+        // Build the class based on the details we have, We'll be getting our file
+        // contents from the template, and then we'll do the necessary replacements.
+        if (!write_file($target, $content)) {
+            // @codeCoverageIgnoreStart
+            CLI::error(
+                lang('CLI.generator.fileError', [clean_path($target)]),
+                'light_gray',
+                'red'
+            );
+            CLI::newLine();
+
+            return;
+            // @codeCoverageIgnoreEnd
+        }
+
+        if ($this->getOption('force') && $isFile) {
+            CLI::write(
+                lang('CLI.generator.fileOverwrite', [clean_path($target)]),
+                'yellow'
+            );
+            CLI::newLine();
+
+            return;
+        }
+
+        CLI::write(
+            lang('CLI.generator.fileCreate', [clean_path($target)]),
+            'green'
+        );
+        CLI::newLine();
     }
 
     /**
@@ -417,63 +401,93 @@ trait GeneratorTrait
     }
 
     /**
-     * Builds the file path from the class name.
+     * Prepare options and do the necessary replacements.
      *
      * @param string $class namespaced classname or namespaced view.
+     *
+     * @return string generated file content
      */
-    protected function buildPath(string $class): string
+    protected function prepare(string $class): string
     {
-        $namespace = $this->getNamespace();
-
-        // Check if the namespace is actually defined and we are not just typing gibberish.
-        $base = service('autoloader')->getNamespace($namespace);
-
-        if (! $base = reset($base)) {
-            CLI::error(
-                lang('CLI.namespaceNotDefined', [$namespace]),
-                'light_gray',
-                'red'
-            );
-            CLI::newLine();
-
-            return '';
-        }
-
-        $realpath = realpath($base);
-        $base     = ($realpath !== false) ? $realpath : $base;
-
-        $file = $base . DIRECTORY_SEPARATOR
-            . str_replace(
-                '\\',
-                DIRECTORY_SEPARATOR,
-                trim(str_replace($namespace . '\\', '', $class), '\\')
-            ) . '.php';
-
-        return implode(
-            DIRECTORY_SEPARATOR,
-            array_slice(
-                explode(DIRECTORY_SEPARATOR, $file),
-                0,
-                -1
-            )
-        ) . DIRECTORY_SEPARATOR . $this->basename($file);
+        return $this->parseTemplate($class);
     }
 
     /**
-     * Gets the namespace from the command-line option,
-     * or the default namespace if the option is not set.
-     * Can be overridden by directly setting $this->namespace.
+     * Performs pseudo-variables contained within view file.
+     *
+     * @param string $class namespaced classname or namespaced view.
+     * @param list<string> $search
+     * @param list<string> $replace
+     * @param array<string, bool|string|null> $data
+     *
+     * @return string generated file content
      */
-    protected function getNamespace(): string
+    protected function parseTemplate(
+        string $class,
+        array  $search = [],
+        array  $replace = [],
+        array  $data = []
+    ): string
     {
-        return $this->namespace ?? trim(
-            str_replace(
-                '/',
+        // Retrieves the namespace part from the fully qualified class name.
+        $namespace = trim(
+            implode(
                 '\\',
-                $this->getOption('namespace') ?? APP_NAMESPACE
+                array_slice(explode('\\', $class), 0, -1)
             ),
             '\\'
         );
+        $search[] = '<@php';
+        $search[] = '{namespace}';
+        $search[] = '{class}';
+        $replace[] = '<?php';
+        $replace[] = $namespace;
+        $replace[] = str_replace($namespace . '\\', '', $class);
+
+        return str_replace($search, $replace, $this->renderTemplate($data));
+    }
+
+    /**
+     * Gets the generator view as defined in the `Config\Generators::$views`,
+     * with fallback to `$template` when the defined view does not exist.
+     *
+     * @param array<string, mixed> $data
+     */
+    protected function renderTemplate(array $data = []): string
+    {
+        try {
+            $template = $this->templatePath ?? config(Generators::class)->views[$this->name];
+
+            return view($template, $data, ['debug' => false]);
+        } catch (Throwable $e) {
+            log_message('error', (string)$e);
+
+            return view(
+                "CodeIgniter\\Commands\\Generators\\Views\\{$this->template}",
+                $data,
+                ['debug' => false]
+            );
+        }
+    }
+
+    /**
+     * Generate a view file from an existing template.
+     *
+     * @param string $view namespaced view name that is generated
+     * @param array<int|string, string|null> $params
+     */
+    protected function generateView(string $view, array $params): void
+    {
+        $this->params = $params;
+
+        $target = $this->buildPath($view);
+
+        // Check if path is empty.
+        if ($target === '') {
+            return;
+        }
+
+        $this->generateFile($target, $this->buildContent($view));
     }
 
     /**
@@ -510,18 +524,5 @@ trait GeneratorTrait
         $this->enabledSuffixing = $enabledSuffixing;
 
         return $this;
-    }
-
-    /**
-     * Gets a single command-line option. Returns TRUE if the option exists,
-     * but doesn't have a value, and is simply acting as a flag.
-     */
-    protected function getOption(string $name): string|bool|null
-    {
-        if (! array_key_exists($name, $this->params)) {
-            return CLI::getOption($name);
-        }
-
-        return $this->params[$name] ?? true;
     }
 }

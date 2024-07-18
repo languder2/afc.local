@@ -93,15 +93,15 @@ class Connection extends BaseConnection
         // Do we have a socket path?
         if ($this->hostname[0] === '/') {
             $hostname = null;
-            $port     = null;
-            $socket   = $this->hostname;
+            $port = null;
+            $socket = $this->hostname;
         } else {
             $hostname = ($persistent === true) ? 'p:' . $this->hostname : $this->hostname;
-            $port     = empty($this->port) ? null : $this->port;
-            $socket   = '';
+            $port = empty($this->port) ? null : $this->port;
+            $socket = '';
         }
 
-        $clientFlags  = ($this->compress === true) ? MYSQLI_CLIENT_COMPRESS : 0;
+        $clientFlags = ($this->compress === true) ? MYSQLI_CLIENT_COMPRESS : 0;
         $this->mysqli = mysqli_init();
 
         mysqli_report(MYSQLI_REPORT_ALL & ~MYSQLI_REPORT_INDEX);
@@ -136,19 +136,19 @@ class Connection extends BaseConnection
         if (is_array($this->encrypt)) {
             $ssl = [];
 
-            if (! empty($this->encrypt['ssl_key'])) {
+            if (!empty($this->encrypt['ssl_key'])) {
                 $ssl['key'] = $this->encrypt['ssl_key'];
             }
-            if (! empty($this->encrypt['ssl_cert'])) {
+            if (!empty($this->encrypt['ssl_cert'])) {
                 $ssl['cert'] = $this->encrypt['ssl_cert'];
             }
-            if (! empty($this->encrypt['ssl_ca'])) {
+            if (!empty($this->encrypt['ssl_ca'])) {
                 $ssl['ca'] = $this->encrypt['ssl_ca'];
             }
-            if (! empty($this->encrypt['ssl_capath'])) {
+            if (!empty($this->encrypt['ssl_capath'])) {
                 $ssl['capath'] = $this->encrypt['ssl_capath'];
             }
-            if (! empty($this->encrypt['ssl_cipher'])) {
+            if (!empty($this->encrypt['ssl_cipher'])) {
                 $ssl['cipher'] = $this->encrypt['ssl_cipher'];
             }
 
@@ -207,7 +207,7 @@ class Connection extends BaseConnection
                     return false;
                 }
 
-                if (! $this->mysqli->set_charset($this->charset)) {
+                if (!$this->mysqli->set_charset($this->charset)) {
                     log_message('error', "Database: Unable to set the configured connection charset ('{$this->charset}').");
 
                     $this->mysqli->close();
@@ -309,7 +309,7 @@ class Connection extends BaseConnection
         try {
             return $this->connID->query($this->prepQuery($sql), $this->resultMode);
         } catch (mysqli_sql_exception $e) {
-            log_message('error', (string) $e);
+            log_message('error', (string)$e);
 
             if ($this->DBDebug) {
                 throw new DatabaseException($e->getMessage(), $e->getCode(), $e);
@@ -346,7 +346,7 @@ class Connection extends BaseConnection
      */
     protected function _escapeString(string $str): string
     {
-        if (! $this->connID) {
+        if (!$this->connID) {
             $this->initialize();
         }
 
@@ -431,14 +431,14 @@ class Connection extends BaseConnection
         $retVal = [];
 
         for ($i = 0, $c = count($query); $i < $c; $i++) {
-            $retVal[$i]       = new stdClass();
+            $retVal[$i] = new stdClass();
             $retVal[$i]->name = $query[$i]->Field;
 
             sscanf($query[$i]->Type, '%[a-z](%d)', $retVal[$i]->type, $retVal[$i]->max_length);
 
-            $retVal[$i]->nullable    = $query[$i]->Null === 'YES';
-            $retVal[$i]->default     = $query[$i]->Default;
-            $retVal[$i]->primary_key = (int) ($query[$i]->Key === 'PRI');
+            $retVal[$i]->nullable = $query[$i]->Null === 'YES';
+            $retVal[$i]->default = $query[$i]->Default;
+            $retVal[$i]->primary_key = (int)($query[$i]->Key === 'PRI');
         }
 
         return $retVal;
@@ -460,7 +460,7 @@ class Connection extends BaseConnection
             throw new DatabaseException(lang('Database.failGetIndexData'));
         }
 
-        if (! $indexes = $query->getResultArray()) {
+        if (!$indexes = $query->getResultArray()) {
             return [];
         }
 
@@ -468,7 +468,7 @@ class Connection extends BaseConnection
 
         foreach ($indexes as $index) {
             if (empty($keys[$index['Key_name']])) {
-                $keys[$index['Key_name']]       = new stdClass();
+                $keys[$index['Key_name']] = new stdClass();
                 $keys[$index['Key_name']]->name = $index['Key_name'];
 
                 if ($index['Key_name'] === 'PRIMARY') {
@@ -525,18 +525,18 @@ class Connection extends BaseConnection
             throw new DatabaseException(lang('Database.failGetForeignKeyData'));
         }
 
-        $query   = $query->getResultObject();
+        $query = $query->getResultObject();
         $indexes = [];
 
         foreach ($query as $row) {
-            $indexes[$row->CONSTRAINT_NAME]['constraint_name']       = $row->CONSTRAINT_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['table_name']            = $row->TABLE_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['column_name'][]         = $row->COLUMN_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['foreign_table_name']    = $row->REFERENCED_TABLE_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['constraint_name'] = $row->CONSTRAINT_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['table_name'] = $row->TABLE_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['column_name'][] = $row->COLUMN_NAME;
+            $indexes[$row->CONSTRAINT_NAME]['foreign_table_name'] = $row->REFERENCED_TABLE_NAME;
             $indexes[$row->CONSTRAINT_NAME]['foreign_column_name'][] = $row->REFERENCED_COLUMN_NAME;
-            $indexes[$row->CONSTRAINT_NAME]['on_delete']             = $row->DELETE_RULE;
-            $indexes[$row->CONSTRAINT_NAME]['on_update']             = $row->UPDATE_RULE;
-            $indexes[$row->CONSTRAINT_NAME]['match']                 = $row->MATCH_OPTION;
+            $indexes[$row->CONSTRAINT_NAME]['on_delete'] = $row->DELETE_RULE;
+            $indexes[$row->CONSTRAINT_NAME]['on_update'] = $row->UPDATE_RULE;
+            $indexes[$row->CONSTRAINT_NAME]['match'] = $row->MATCH_OPTION;
         }
 
         return $this->foreignKeyDataToObjects($indexes);
@@ -571,15 +571,15 @@ class Connection extends BaseConnection
      */
     public function error(): array
     {
-        if (! empty($this->mysqli->connect_errno)) {
+        if (!empty($this->mysqli->connect_errno)) {
             return [
-                'code'    => $this->mysqli->connect_errno,
+                'code' => $this->mysqli->connect_errno,
                 'message' => $this->mysqli->connect_error,
             ];
         }
 
         return [
-            'code'    => $this->connID->errno,
+            'code' => $this->connID->errno,
             'message' => $this->connID->error,
         ];
     }

@@ -40,7 +40,7 @@ class DOMParser
      */
     public function __construct()
     {
-        if (! extension_loaded('DOM')) {
+        if (!extension_loaded('DOM')) {
             throw new BadMethodCallException('DOM extension is required, but not currently loaded.'); // @codeCoverageIgnore
         }
 
@@ -71,7 +71,7 @@ class DOMParser
         // turning off some errors
         libxml_use_internal_errors(true);
 
-        if (! $this->dom->loadHTML($content)) {
+        if (!$this->dom->loadHTML($content)) {
             // unclear how we would get here, given that we are trapping libxml errors
             // @codeCoverageIgnoreStart
             libxml_clear_errors();
@@ -94,7 +94,7 @@ class DOMParser
      */
     public function withFile(string $path)
     {
-        if (! is_file($path)) {
+        if (!is_file($path)) {
             throw new InvalidArgumentException(basename($path) . ' is not a valid file.');
         }
 
@@ -117,7 +117,7 @@ class DOMParser
 
         $result = $this->doXPath($search, $element);
 
-        return (bool) $result->length;
+        return (bool)$result->length;
     }
 
     /**
@@ -125,7 +125,7 @@ class DOMParser
      */
     public function dontSee(?string $search = null, ?string $element = null): bool
     {
-        return ! $this->see($search, $element);
+        return !$this->see($search, $element);
     }
 
     /**
@@ -161,7 +161,7 @@ class DOMParser
     {
         $result = $this->doXPath(null, 'input', ["[@value=\"{$value}\"][@name=\"{$field}\"]"]);
 
-        return (bool) $result->length;
+        return (bool)$result->length;
     }
 
     /**
@@ -174,7 +174,7 @@ class DOMParser
             '[@checked="checked"]',
         ]);
 
-        return (bool) $result->length;
+        return (bool)$result->length;
     }
 
     /**
@@ -184,7 +184,7 @@ class DOMParser
     {
         $xpath = new DOMXPath($this->dom);
 
-        return (bool) $xpath->query($path)->length;
+        return (bool)$xpath->query($path)->length;
     }
 
     /**
@@ -192,7 +192,7 @@ class DOMParser
      */
     public function dontSeeXPath(string $path): bool
     {
-        return ! $this->seeXPath($path);
+        return !$this->seeXPath($path);
     }
 
     /**
@@ -213,14 +213,12 @@ class DOMParser
             $path = ($selector['tag'] === '')
                 ? "id(\"{$selector['id']}\")"
                 : "//{$selector['tag']}[@id=\"{$selector['id']}\"]";
-        }
-        // By Class
+        } // By Class
         elseif (isset($selector['class'])) {
             $path = ($selector['tag'] === '')
                 ? "//*[@class=\"{$selector['class']}\"]"
                 : "//{$selector['tag']}[@class=\"{$selector['class']}\"]";
-        }
-        // By tag only
+        } // By tag only
         elseif ($selector['tag'] !== '') {
             $path = "//{$selector['tag']}";
         }
@@ -255,20 +253,19 @@ class DOMParser
      */
     public function parseSelector(string $selector)
     {
-        $id    = null;
+        $id = null;
         $class = null;
-        $attr  = null;
+        $attr = null;
 
         // ID?
         if (str_contains($selector, '#')) {
             [$tag, $id] = explode('#', $selector);
-        }
-        // Attribute
+        } // Attribute
         elseif (str_contains($selector, '[') && str_contains($selector, ']')) {
-            $open  = strpos($selector, '[');
+            $open = strpos($selector, '[');
             $close = strpos($selector, ']');
 
-            $tag  = substr($selector, 0, $open);
+            $tag = substr($selector, 0, $open);
             $text = substr($selector, $open + 1, $close - 2);
 
             // We only support a single attribute currently
@@ -277,24 +274,22 @@ class DOMParser
 
             [$name, $value] = explode('=', $text);
 
-            $name  = trim($name);
+            $name = trim($name);
             $value = trim($value);
-            $attr  = [$name => trim($value, '] ')];
-        }
-        // Class?
+            $attr = [$name => trim($value, '] ')];
+        } // Class?
         elseif (str_contains($selector, '.')) {
             [$tag, $class] = explode('.', $selector);
-        }
-        // Otherwise, assume the entire string is our tag
+        } // Otherwise, assume the entire string is our tag
         else {
             $tag = $selector;
         }
 
         return [
-            'tag'   => $tag,
-            'id'    => $id,
+            'tag' => $tag,
+            'id' => $id,
             'class' => $class,
-            'attr'  => $attr,
+            'attr' => $attr,
         ];
     }
 }

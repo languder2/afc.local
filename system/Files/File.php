@@ -47,7 +47,7 @@ class File extends SplFileInfo
      */
     public function __construct(string $path, bool $checkFile = false)
     {
-        if ($checkFile && ! is_file($path)) {
+        if ($checkFile && !is_file($path)) {
             throw FileNotFoundException::forFileNotFound($path);
         }
 
@@ -77,8 +77,8 @@ class File extends SplFileInfo
     public function getSizeByUnit(string $unit = 'b')
     {
         return match (strtolower($unit)) {
-            'kb'    => number_format($this->getSize() / 1024, 3),
-            'mb'    => number_format(($this->getSize() / 1024) / 1024, 3),
+            'kb' => number_format($this->getSize() / 1024, 3),
+            'mb' => number_format(($this->getSize() / 1024) / 1024, 3),
             default => $this->getSize(),
         };
     }
@@ -106,11 +106,11 @@ class File extends SplFileInfo
      */
     public function getMimeType(): string
     {
-        if (! function_exists('finfo_open')) {
+        if (!function_exists('finfo_open')) {
             return $this->originalMimeType ?? 'application/octet-stream'; // @codeCoverageIgnore
         }
 
-        $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $this->getRealPath() ?: $this->__toString());
         finfo_close($finfo);
 
@@ -142,7 +142,7 @@ class File extends SplFileInfo
 
         $oldName = $this->getRealPath() ?: $this->__toString();
 
-        if (! @rename($oldName, $destination)) {
+        if (!@rename($oldName, $destination)) {
             $error = error_get_last();
 
             throw FileException::forUnableToMove($this->getBasename(), $targetPath, strip_tags($error['message']));
@@ -167,7 +167,7 @@ class File extends SplFileInfo
         }
 
         while (is_file($destination)) {
-            $info      = pathinfo($destination);
+            $info = pathinfo($destination);
             $extension = isset($info['extension']) ? '.' . $info['extension'] : '';
 
             if (str_contains($info['filename'], $delimiter)) {
@@ -176,7 +176,7 @@ class File extends SplFileInfo
                 if (is_numeric(end($parts))) {
                     $i = end($parts);
                     array_pop($parts);
-                    $parts[]     = ++$i;
+                    $parts[] = ++$i;
                     $destination = $info['dirname'] . DIRECTORY_SEPARATOR . implode($delimiter, $parts) . $extension;
                 } else {
                     $destination = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . $delimiter . ++$i . $extension;

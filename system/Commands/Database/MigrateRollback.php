@@ -72,7 +72,7 @@ class MigrateRollback extends BaseCommand
             // @codeCoverageIgnoreStart
             $force = array_key_exists('f', $params) || CLI::getOption('f');
 
-            if (! $force && CLI::prompt(lang('Migrations.rollBackConfirm'), ['y', 'n']) === 'n') {
+            if (!$force && CLI::prompt(lang('Migrations.rollBackConfirm'), ['y', 'n']) === 'n') {
                 return;
             }
             // @codeCoverageIgnoreEnd
@@ -84,7 +84,7 @@ class MigrateRollback extends BaseCommand
             $batch = $params['b'] ?? CLI::getOption('b') ?? $runner->getLastBatch() - 1;
             CLI::write(lang('Migrations.rollingBack') . ' ' . $batch, 'yellow');
 
-            if (! $runner->regress($batch)) {
+            if (!$runner->regress($batch)) {
                 CLI::error(lang('Migrations.generalFault'), 'light_gray', 'red'); // @codeCoverageIgnore
             }
 

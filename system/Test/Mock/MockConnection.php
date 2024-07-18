@@ -172,7 +172,7 @@ class MockConnection extends BaseConnection
     public function error(): array
     {
         return [
-            'code'    => 0,
+            'code' => 0,
             'message' => '',
         ];
     }

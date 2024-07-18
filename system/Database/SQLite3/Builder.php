@@ -101,7 +101,7 @@ class Builder extends BaseBuilder
 
         $index = current($constraints);
 
-        $ids   = [];
+        $ids = [];
         $final = [];
 
         foreach ($values as $val) {
@@ -143,7 +143,7 @@ class Builder extends BaseBuilder
             $constraints = $this->QBOptions['constraints'] ?? [];
 
             if (empty($constraints)) {
-                $fieldNames = array_map(static fn ($columnName) => trim($columnName, '`'), $keys);
+                $fieldNames = array_map(static fn($columnName) => trim($columnName, '`'), $keys);
 
                 $allIndexes = array_filter($this->db->getIndexData($table), static function ($index) use ($fieldNames) {
                     $hasAllFields = count(array_intersect($index->fields, $fieldNames)) === count($index->fields);
@@ -151,7 +151,7 @@ class Builder extends BaseBuilder
                     return ($index->type === 'PRIMARY' || $index->type === 'UNIQUE') && $hasAllFields;
                 });
 
-                foreach (array_map(static fn ($index) => $index->fields, $allIndexes) as $index) {
+                foreach (array_map(static fn($index) => $index->fields, $allIndexes) as $index) {
                     $constraints[] = current($index);
                     break;
                 }
@@ -179,7 +179,7 @@ class Builder extends BaseBuilder
 
             $sql = 'INSERT INTO ' . $table . ' (';
 
-            $sql .= implode(', ', array_map(static fn ($columnName) => $columnName, $keys));
+            $sql .= implode(', ', array_map(static fn($columnName) => $columnName, $keys));
 
             $sql .= ")\n";
 
@@ -192,9 +192,9 @@ class Builder extends BaseBuilder
             $sql .= implode(
                 ",\n",
                 array_map(
-                    static fn ($key, $value) => $key . ($value instanceof RawSql ?
-                        " = {$value}" :
-                        " = {$alias}.{$value}"),
+                    static fn($key, $value) => $key . ($value instanceof RawSql ?
+                            " = {$value}" :
+                            " = {$alias}.{$value}"),
                     array_keys($updateFields),
                     $updateFields
                 )
@@ -263,16 +263,16 @@ class Builder extends BaseBuilder
             $data = $this->QBOptions['setQueryAsData'];
         } else {
             $data = implode(
-                " UNION ALL\n",
-                array_map(
-                    static fn ($value) => 'SELECT ' . implode(', ', array_map(
-                        static fn ($key, $index) => $index . ' ' . $key,
-                        $keys,
-                        $value
-                    )),
-                    $values
-                )
-            ) . "\n";
+                    " UNION ALL\n",
+                    array_map(
+                        static fn($value) => 'SELECT ' . implode(', ', array_map(
+                                static fn($key, $index) => $index . ' ' . $key,
+                                $keys,
+                                $value
+                            )),
+                        $values
+                    )
+                ) . "\n";
         }
 
         return str_replace('{:_table_:}', $data, $sql);

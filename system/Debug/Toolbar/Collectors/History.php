@@ -63,7 +63,7 @@ class History extends BaseCollector
      * Specify time limit & file count for debug history.
      *
      * @param string $current Current history time
-     * @param int    $limit   Max history files
+     * @param int $limit Max history files
      *
      * @return void
      */
@@ -71,7 +71,7 @@ class History extends BaseCollector
     {
         $filenames = glob(WRITEPATH . 'debugbar/debugbar_*.json');
 
-        $files   = [];
+        $files = [];
         $counter = 0;
 
         foreach (array_reverse($filenames) as $filename) {
@@ -94,13 +94,13 @@ class History extends BaseCollector
 
                 // Debugbar files shown in History Collector
                 $files[] = [
-                    'time'        => $time,
-                    'datetime'    => DateTime::createFromFormat('U.u', $time)->format('Y-m-d H:i:s.u'),
-                    'active'      => $time === $current,
-                    'status'      => $contents->vars->response->statusCode,
-                    'method'      => $contents->method,
-                    'url'         => $contents->url,
-                    'isAJAX'      => $contents->isAJAX ? 'Yes' : 'No',
+                    'time' => $time,
+                    'datetime' => DateTime::createFromFormat('U.u', $time)->format('Y-m-d H:i:s.u'),
+                    'active' => $time === $current,
+                    'status' => $contents->vars->response->statusCode,
+                    'method' => $contents->method,
+                    'url' => $contents->url,
+                    'isAJAX' => $contents->isAJAX ? 'Yes' : 'No',
                     'contentType' => $contents->vars->response->contentType,
                 ];
             }

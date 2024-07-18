@@ -18,18 +18,20 @@ use InvalidArgumentException;
 abstract class BaseCast implements CastInterface
 {
     public static function get(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): mixed {
+    ): mixed
+    {
         return $value;
     }
 
     public static function set(
-        mixed $value,
-        array $params = [],
+        mixed   $value,
+        array   $params = [],
         ?object $helper = null
-    ): mixed {
+    ): mixed
+    {
         return $value;
     }
 

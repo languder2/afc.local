@@ -84,7 +84,7 @@ class DatabaseHandler extends BaseHandler
             throw SessionException::forMissingDatabaseTable();
         }
 
-        $this->db       = Database::connect($this->DBGroup);
+        $this->db = Database::connect($this->DBGroup);
         $this->platform = $this->db->getPlatform();
     }
 
@@ -120,7 +120,7 @@ class DatabaseHandler extends BaseHandler
             return '';
         }
 
-        if (! isset($this->sessionID)) {
+        if (!isset($this->sessionID)) {
             $this->sessionID = $id;
         }
 
@@ -138,7 +138,7 @@ class DatabaseHandler extends BaseHandler
             // PHP7 will reuse the same SessionHandler object after
             // ID regeneration, so we need to explicitly set this to
             // FALSE instead of relying on the default ...
-            $this->rowExists   = false;
+            $this->rowExists = false;
             $this->fingerprint = md5('');
 
             return '';
@@ -147,7 +147,7 @@ class DatabaseHandler extends BaseHandler
         $result = is_bool($result) ? '' : $this->decodeData($result->data);
 
         $this->fingerprint = md5($result);
-        $this->rowExists   = true;
+        $this->rowExists = true;
 
         return $result;
     }
@@ -175,7 +175,7 @@ class DatabaseHandler extends BaseHandler
     /**
      * Writes the session data to the session storage.
      *
-     * @param string $id   The session ID
+     * @param string $id The session ID
      * @param string $data The encoded session data
      */
     public function write($id, $data): bool
@@ -191,17 +191,17 @@ class DatabaseHandler extends BaseHandler
 
         if ($this->rowExists === false) {
             $insertData = [
-                'id'         => $this->idPrefix . $id,
+                'id' => $this->idPrefix . $id,
                 'ip_address' => $this->ipAddress,
-                'data'       => $this->prepareData($data),
+                'data' => $this->prepareData($data),
             ];
 
-            if (! $this->db->table($this->table)->set('timestamp', 'now()', false)->insert($insertData)) {
+            if (!$this->db->table($this->table)->set('timestamp', 'now()', false)->insert($insertData)) {
                 return $this->fail();
             }
 
             $this->fingerprint = md5($data);
-            $this->rowExists   = true;
+            $this->rowExists = true;
 
             return true;
         }
@@ -218,7 +218,7 @@ class DatabaseHandler extends BaseHandler
             $updateData['data'] = $this->prepareData($data);
         }
 
-        if (! $builder->set('timestamp', 'now()', false)->update($updateData)) {
+        if (!$builder->set('timestamp', 'now()', false)->update($updateData)) {
             return $this->fail();
         }
 
@@ -240,7 +240,7 @@ class DatabaseHandler extends BaseHandler
      */
     public function close(): bool
     {
-        return ($this->lock && ! $this->releaseLock()) ? $this->fail() : true;
+        return ($this->lock && !$this->releaseLock()) ? $this->fail() : true;
     }
 
     /**
@@ -257,7 +257,7 @@ class DatabaseHandler extends BaseHandler
                 $builder = $builder->where('ip_address', $this->ipAddress);
             }
 
-            if (! $builder->delete()) {
+            if (!$builder->delete()) {
                 return $this->fail();
             }
         }
@@ -283,7 +283,7 @@ class DatabaseHandler extends BaseHandler
     public function gc($max_lifetime)
     {
         $separator = ' ';
-        $interval  = implode($separator, ['', "{$max_lifetime} second", '']);
+        $interval = implode($separator, ['', "{$max_lifetime} second", '']);
 
         return $this->db->table($this->table)->where(
             'timestamp <',
@@ -297,7 +297,7 @@ class DatabaseHandler extends BaseHandler
      */
     protected function releaseLock(): bool
     {
-        if (! $this->lock) {
+        if (!$this->lock) {
             return true;
         }
 

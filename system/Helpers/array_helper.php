@@ -15,7 +15,7 @@ use CodeIgniter\Helpers\Array\ArrayHelper;
 
 // CodeIgniter Array Helpers
 
-if (! function_exists('dot_array_search')) {
+if (!function_exists('dot_array_search')) {
     /**
      * Searches an array through dot syntax. Supports
      * wildcard searches, like foo.*.bar
@@ -28,7 +28,7 @@ if (! function_exists('dot_array_search')) {
     }
 }
 
-if (! function_exists('array_deep_search')) {
+if (!function_exists('array_deep_search')) {
     /**
      * Returns the value of an element at a key in an array of uncertain depth.
      *
@@ -52,7 +52,7 @@ if (! function_exists('array_deep_search')) {
     }
 }
 
-if (! function_exists('array_sort_by_multiple_keys')) {
+if (!function_exists('array_sort_by_multiple_keys')) {
     /**
      * Sorts a multidimensional array by its elements values. The array
      * columns to be used for sorting are passed as an associative
@@ -74,7 +74,7 @@ if (! function_exists('array_sort_by_multiple_keys')) {
      * For information on multi-level array sorting, refer to Example #3 here:
      * https://www.php.net/manual/de/function.array-multisort.php
      *
-     * @param array $array       the reference of the array to be sorted
+     * @param array $array the reference of the array to be sorted
      * @param array $sortColumns an associative array of columns to sort
      *                           after and their sorting flags
      */
@@ -121,12 +121,12 @@ if (! function_exists('array_sort_by_multiple_keys')) {
     }
 }
 
-if (! function_exists('array_flatten_with_dots')) {
+if (!function_exists('array_flatten_with_dots')) {
     /**
      * Flatten a multidimensional array using dots as separators.
      *
      * @param iterable $array The multi-dimensional array
-     * @param string   $id    Something to initially prepend to the flattened keys
+     * @param string $id Something to initially prepend to the flattened keys
      *
      * @return array The flattened array
      */
@@ -148,13 +148,13 @@ if (! function_exists('array_flatten_with_dots')) {
     }
 }
 
-if (! function_exists('array_group_by')) {
+if (!function_exists('array_group_by')) {
     /**
      * Groups all rows by their index values. Result's depth equals number of indexes
      *
-     * @param array $array        Data array (i.e. from query result)
-     * @param array $indexes      Indexes to group by. Dot syntax used. Returns $array if empty
-     * @param bool  $includeEmpty If true, null and '' are also added as valid keys to group
+     * @param array $array Data array (i.e. from query result)
+     * @param array $indexes Indexes to group by. Dot syntax used. Returns $array if empty
+     * @param bool $includeEmpty If true, null and '' are also added as valid keys to group
      *
      * @return array Result array where rows are grouped together by indexes values.
      */

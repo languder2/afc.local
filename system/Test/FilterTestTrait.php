@@ -117,12 +117,12 @@ trait FilterTestTrait
      * Returns a callable method for a filter position
      * using the local HTTP instances.
      *
-     * @param FilterInterface|string $filter   The filter instance, class, or alias
-     * @param string                 $position "before" or "after"
+     * @param FilterInterface|string $filter The filter instance, class, or alias
+     * @param string $position "before" or "after"
      */
     protected function getFilterCaller($filter, string $position): Closure
     {
-        if (! in_array($position, ['before', 'after'], true)) {
+        if (!in_array($position, ['before', 'after'], true)) {
             throw new InvalidArgumentException('Invalid filter position passed: ' . $position);
         }
 
@@ -132,12 +132,12 @@ trait FilterTestTrait
 
         if (is_string($filter)) {
             // Check for an alias (no namespace)
-            if (! str_contains($filter, '\\')) {
-                if (! isset($this->filtersConfig->aliases[$filter])) {
+            if (!str_contains($filter, '\\')) {
+                if (!isset($this->filtersConfig->aliases[$filter])) {
                     throw new RuntimeException("No filter found with alias '{$filter}'");
                 }
 
-                $filterClasses = (array) $this->filtersConfig->aliases[$filter];
+                $filterClasses = (array)$this->filtersConfig->aliases[$filter];
             } else {
                 // FQCN
                 $filterClasses = [$filter];
@@ -149,7 +149,7 @@ trait FilterTestTrait
                 // Get an instance
                 $filter = new $class();
 
-                if (! $filter instanceof FilterInterface) {
+                if (!$filter instanceof FilterInterface) {
                     throw FilterException::forIncorrectInterface($filter::class);
                 }
 
@@ -206,14 +206,14 @@ trait FilterTestTrait
      * Gets an array of filter aliases enabled
      * for the given route at position.
      *
-     * @param string $route    The route to test
+     * @param string $route The route to test
      * @param string $position "before" or "after"
      *
      * @return list<string> The filter aliases
      */
     protected function getFiltersForRoute(string $route, string $position): array
     {
-        if (! in_array($position, ['before', 'after'], true)) {
+        if (!in_array($position, ['before', 'after'], true)) {
             throw new InvalidArgumentException('Invalid filter position passed:' . $position);
         }
 
@@ -238,9 +238,9 @@ trait FilterTestTrait
      * Asserts that the given route at position uses
      * the filter (by its alias).
      *
-     * @param string $route    The route to test
+     * @param string $route The route to test
      * @param string $position "before" or "after"
-     * @param string $alias    Alias for the anticipated filter
+     * @param string $alias Alias for the anticipated filter
      */
     protected function assertFilter(string $route, string $position, string $alias): void
     {
@@ -257,9 +257,9 @@ trait FilterTestTrait
      * Asserts that the given route at position does not
      * use the filter (by its alias).
      *
-     * @param string $route    The route to test
+     * @param string $route The route to test
      * @param string $position "before" or "after"
-     * @param string $alias    Alias for the anticipated filter
+     * @param string $alias Alias for the anticipated filter
      */
     protected function assertNotFilter(string $route, string $position, string $alias)
     {
@@ -276,7 +276,7 @@ trait FilterTestTrait
      * Asserts that the given route at position has
      * at least one filter set.
      *
-     * @param string $route    The route to test
+     * @param string $route The route to test
      * @param string $position "before" or "after"
      */
     protected function assertHasFilters(string $route, string $position)
@@ -293,7 +293,7 @@ trait FilterTestTrait
      * Asserts that the given route at position has
      * no filters set.
      *
-     * @param string $route    The route to test
+     * @param string $route The route to test
      * @param string $position "before" or "after"
      */
     protected function assertNotHasFilters(string $route, string $position)

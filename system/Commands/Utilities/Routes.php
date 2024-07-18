@@ -73,7 +73,7 @@ class Routes extends BaseCommand
      * @var array<string, string>
      */
     protected $options = [
-        '-h'     => 'Sort by Handler.',
+        '-h' => 'Sort by Handler.',
         '--host' => 'Specify hostname in request URI.',
     ];
 
@@ -83,12 +83,12 @@ class Routes extends BaseCommand
     public function run(array $params)
     {
         $sortByHandler = array_key_exists('h', $params);
-        $host          = $params['host'] ?? null;
+        $host = $params['host'] ?? null;
 
         // Set HTTP_HOST
         if ($host) {
-            $request              = service('request');
-            $_SERVER              = $request->getServer();
+            $request = service('request');
+            $_SERVER = $request->getServer();
             $_SERVER['HTTP_HOST'] = $host;
             $request->setGlobal('server', $_SERVER);
         }
@@ -102,15 +102,15 @@ class Routes extends BaseCommand
 
         $methods = Router::HTTP_METHODS;
 
-        $tbody           = [];
-        $uriGenerator    = new SampleURIGenerator();
+        $tbody = [];
+        $uriGenerator = new SampleURIGenerator();
         $filterCollector = new FilterCollector();
 
         $definedRouteCollector = new DefinedRouteCollector($collection);
 
         foreach ($definedRouteCollector->collect() as $route) {
             $sampleUri = $uriGenerator->get($route['route']);
-            $filters   = $filterCollector->get($route['method'], $sampleUri);
+            $filters = $filterCollector->get($route['method'], $sampleUri);
 
             $routeName = ($route['route'] === $route['name']) ? '»' : $route['name'];
 
@@ -185,7 +185,7 @@ class Routes extends BaseCommand
 
         // Sort by Handler.
         if ($sortByHandler) {
-            usort($tbody, static fn ($handler1, $handler2) => strcmp($handler1[3], $handler2[3]));
+            usort($tbody, static fn($handler1, $handler2) => strcmp($handler1[3], $handler2[3]));
         }
 
         if ($host) {

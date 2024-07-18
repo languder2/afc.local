@@ -72,7 +72,7 @@ class Pager implements PagerInterface
     public function __construct(PagerConfig $config, RendererInterface $view)
     {
         $this->config = $config;
-        $this->view   = $view;
+        $this->view = $view;
     }
 
     /**
@@ -101,9 +101,9 @@ class Pager implements PagerInterface
      * Allows for a simple, manual, form of pagination where all of the data
      * is provided by the user. The URL is the current URI.
      *
-     * @param string      $template The output template alias to render.
-     * @param int         $segment  (whether page number is provided by URI segment)
-     * @param string|null $group    optional group (i.e. if we'd like to define custom path)
+     * @param string $template The output template alias to render.
+     * @param int $segment (whether page number is provided by URI segment)
+     * @param string|null $group optional group (i.e. if we'd like to define custom path)
      */
     public function makeLinks(int $page, ?int $perPage, int $total, string $template = 'default_full', int $segment = 0, ?string $group = 'default'): string
     {
@@ -120,7 +120,7 @@ class Pager implements PagerInterface
      */
     protected function displayLinks(string $group, string $template): string
     {
-        if (! array_key_exists($template, $this->config->templates)) {
+        if (!array_key_exists($template, $this->config->templates)) {
             throw PagerException::forInvalidTemplate($template);
         }
 
@@ -149,12 +149,12 @@ class Pager implements PagerInterface
         }
 
         $perPage ??= $this->config->perPage;
-        $pageCount = (int) ceil($total / $perPage);
+        $pageCount = (int)ceil($total / $perPage);
 
         $this->groups[$group]['currentPage'] = $page > $pageCount ? $pageCount : $page;
-        $this->groups[$group]['perPage']     = $perPage;
-        $this->groups[$group]['total']       = $total;
-        $this->groups[$group]['pageCount']   = $pageCount;
+        $this->groups[$group]['perPage'] = $perPage;
+        $this->groups[$group]['total'] = $total;
+        $this->groups[$group]['pageCount'] = $pageCount;
 
         return $this;
     }
@@ -238,11 +238,11 @@ class Pager implements PagerInterface
     {
         $this->ensureGroup($group);
 
-        if (! is_numeric($this->groups[$group]['total']) || ! is_numeric($this->groups[$group]['perPage'])) {
+        if (!is_numeric($this->groups[$group]['total']) || !is_numeric($this->groups[$group]['perPage'])) {
             return null;
         }
 
-        return (int) ceil($this->groups[$group]['total'] / $this->groups[$group]['perPage']);
+        return (int)ceil($this->groups[$group]['total'] / $this->groups[$group]['perPage']);
     }
 
     /**
@@ -281,7 +281,7 @@ class Pager implements PagerInterface
         if ($this->only !== null) {
             $query = array_intersect_key($_GET, array_flip($this->only));
 
-            if (! $segment) {
+            if (!$segment) {
                 $query[$this->groups[$group]['pageSelector']] = $page;
             }
 
@@ -312,7 +312,7 @@ class Pager implements PagerInterface
         $curr = $this->getCurrentPage($group);
         $page = null;
 
-        if (! empty($last) && $curr !== 0 && $last === $curr) {
+        if (!empty($last) && $curr !== 0 && $last === $curr) {
             return null;
         }
 
@@ -333,8 +333,8 @@ class Pager implements PagerInterface
         $this->ensureGroup($group);
 
         $first = $this->getFirstPage($group);
-        $curr  = $this->getCurrentPage($group);
-        $page  = null;
+        $curr = $this->getCurrentPage($group);
+        $page = null;
 
         if ($first !== 0 && $curr !== 0 && $first === $curr) {
             return null;
@@ -354,7 +354,7 @@ class Pager implements PagerInterface
     {
         $this->ensureGroup($group);
 
-        return (int) $this->groups[$group]['perPage'];
+        return (int)$this->groups[$group]['perPage'];
     }
 
     /**
@@ -365,15 +365,15 @@ class Pager implements PagerInterface
      */
     public function getDetails(string $group = 'default'): array
     {
-        if (! array_key_exists($group, $this->groups)) {
+        if (!array_key_exists($group, $this->groups)) {
             throw PagerException::forInvalidPaginationGroup($group);
         }
 
         $newGroup = $this->groups[$group];
 
-        $newGroup['next']     = $this->getNextPageURI($group);
+        $newGroup['next'] = $this->getNextPageURI($group);
         $newGroup['previous'] = $this->getPreviousPageURI($group);
-        $newGroup['segment']  = $this->segment[$group] ?? 0;
+        $newGroup['segment'] = $this->segment[$group] ?? 0;
 
         return $newGroup;
     }
@@ -400,12 +400,12 @@ class Pager implements PagerInterface
         }
 
         $this->groups[$group] = [
-            'currentUri'   => clone current_url(true),
-            'uri'          => clone current_url(true),
-            'hasMore'      => false,
-            'total'        => null,
-            'perPage'      => $perPage ?? $this->config->perPage,
-            'pageCount'    => 1,
+            'currentUri' => clone current_url(true),
+            'uri' => clone current_url(true),
+            'hasMore' => false,
+            'total' => null,
+            'perPage' => $perPage ?? $this->config->perPage,
+            'pageCount' => 1,
             'pageSelector' => $group === 'default' ? 'page' : 'page_' . $group,
         ];
 
@@ -425,7 +425,7 @@ class Pager implements PagerInterface
     {
         if (array_key_exists($group, $this->segment)) {
             try {
-                $this->groups[$group]['currentPage'] = (int) $this->groups[$group]['currentUri']
+                $this->groups[$group]['currentPage'] = (int)$this->groups[$group]['currentUri']
                     ->setSilent(false)->getSegment($this->segment[$group]);
             } catch (HTTPException) {
                 $this->groups[$group]['currentPage'] = 1;
@@ -433,7 +433,7 @@ class Pager implements PagerInterface
         } else {
             $pageSelector = $this->groups[$group]['pageSelector'];
 
-            $page = (int) ($_GET[$pageSelector] ?? 1);
+            $page = (int)($_GET[$pageSelector] ?? 1);
 
             $this->groups[$group]['currentPage'] = $page < 1 ? 1 : $page;
         }

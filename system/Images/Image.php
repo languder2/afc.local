@@ -65,9 +65,9 @@ class Image extends File
      * Makes a copy of itself to the new location. If no filename is provided
      * it will use the existing filename.
      *
-     * @param string      $targetPath The directory to store the file in
+     * @param string $targetPath The directory to store the file in
      * @param string|null $targetName The new name of the copied file.
-     * @param int         $perms      File permissions to be applied after copy.
+     * @param int $perms File permissions to be applied after copy.
      */
     public function copy(string $targetPath, ?string $targetName = null, int $perms = 0644): bool
     {
@@ -79,11 +79,11 @@ class Image extends File
             throw ImageException::forInvalidFile($targetName);
         }
 
-        if (! is_dir($targetPath)) {
+        if (!is_dir($targetPath)) {
             mkdir($targetPath, 0755, true);
         }
 
-        if (! copy($this->getPathname(), "{$targetPath}{$targetName}")) {
+        if (!copy($this->getPathname(), "{$targetPath}{$targetName}")) {
             throw ImageException::forCopyError($targetPath);
         }
 
@@ -103,14 +103,14 @@ class Image extends File
     {
         $path = $this->getPathname();
 
-        if (! $vals = getimagesize($path)) {
+        if (!$vals = getimagesize($path)) {
             throw ImageException::forFileNotSupported();
         }
 
         $types = [
-            IMAGETYPE_GIF  => 'gif',
+            IMAGETYPE_GIF => 'gif',
             IMAGETYPE_JPEG => 'jpeg',
-            IMAGETYPE_PNG  => 'png',
+            IMAGETYPE_PNG => 'png',
             IMAGETYPE_WEBP => 'webp',
         ];
 
@@ -118,19 +118,19 @@ class Image extends File
 
         if ($return === true) {
             return [
-                'width'      => $vals[0],
-                'height'     => $vals[1],
+                'width' => $vals[0],
+                'height' => $vals[1],
                 'image_type' => $vals[2],
-                'size_str'   => $vals[3],
-                'mime_type'  => $mime,
+                'size_str' => $vals[3],
+                'mime_type' => $mime,
             ];
         }
 
-        $this->origWidth  = $vals[0];
+        $this->origWidth = $vals[0];
         $this->origHeight = $vals[1];
-        $this->imageType  = $vals[2];
-        $this->sizeStr    = $vals[3];
-        $this->mime       = $mime;
+        $this->imageType = $vals[2];
+        $this->sizeStr = $vals[3];
+        $this->mime = $mime;
 
         return true;
     }

@@ -15,7 +15,7 @@ use CodeIgniter\I18n\Time;
 
 // CodeIgniter Date Helpers
 
-if (! function_exists('now')) {
+if (!function_exists('now')) {
     /**
      * Get "now" time
      *
@@ -50,15 +50,15 @@ if (! function_exists('now')) {
     }
 }
 
-if (! function_exists('timezone_select')) {
+if (!function_exists('timezone_select')) {
     /**
      * Generates a select field of all available timezones
      *
      * Returns a string with the formatted HTML
      *
-     * @param string $class   Optional class to apply to the select field
+     * @param string $class Optional class to apply to the select field
      * @param string $default Default value for initial selection
-     * @param int    $what    One of the DateTimeZone class constants (for listIdentifiers)
+     * @param int $what One of the DateTimeZone class constants (for listIdentifiers)
      * @param string $country A two-letter ISO 3166-1 compatible country code (for listIdentifiers)
      *
      * @throws Exception

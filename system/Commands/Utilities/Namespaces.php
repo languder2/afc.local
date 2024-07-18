@@ -78,7 +78,7 @@ class Namespaces extends BaseCommand
      */
     public function run(array $params)
     {
-        $params['m'] = (int) ($params['m'] ?? 60);
+        $params['m'] = (int)($params['m'] ?? 60);
 
         $tbody = array_key_exists('c', $params) ? $this->outputCINamespaces($params) : $this->outputAllNamespaces($params);
 
@@ -138,7 +138,7 @@ class Namespaces extends BaseCommand
         $tbody = [];
 
         foreach ($config->psr4 as $ns => $paths) {
-            foreach ((array) $paths as $path) {
+            foreach ((array)$paths as $path) {
                 if (array_key_exists('r', $params)) {
                     $pathOutput = $this->truncate($path, $maxLength);
                 } else {

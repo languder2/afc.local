@@ -52,14 +52,14 @@ abstract class BaseHandler implements CacheInterface
      * Keys that exceed MAX_KEY_LENGTH are hashed.
      * From https://github.com/symfony/cache/blob/7b024c6726af21fd4984ac8d1eae2b9f3d90de88/CacheItem.php#L158
      *
-     * @param string $key    The key to validate
+     * @param string $key The key to validate
      * @param string $prefix Optional prefix to include in length calculations
      *
      * @throws InvalidArgumentException When $key is not valid
      */
     public static function validateKey($key, $prefix = ''): string
     {
-        if (! is_string($key)) {
+        if (!is_string($key)) {
             throw new InvalidArgumentException('Cache key must be a string');
         }
         if ($key === '') {
@@ -78,8 +78,8 @@ abstract class BaseHandler implements CacheInterface
     /**
      * Get an item from the cache, or execute the given Closure and store the result.
      *
-     * @param string           $key      Cache item name
-     * @param int              $ttl      Time to live
+     * @param string $key Cache item name
+     * @param int $ttl Time to live
      * @param Closure(): mixed $callback Callback return value
      *
      * @return array|bool|float|int|object|string|null

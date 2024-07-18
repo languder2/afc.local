@@ -190,13 +190,13 @@ class Session implements SessionInterface
         $cookie = config(CookieConfig::class);
 
         $this->cookie = (new Cookie($this->config->cookieName, '', [
-            'expires'  => $this->config->expiration === 0 ? 0 : Time::now()->getTimestamp() + $this->config->expiration,
-            'path'     => $cookie->path,
-            'domain'   => $cookie->domain,
-            'secure'   => $cookie->secure,
+            'expires' => $this->config->expiration === 0 ? 0 : Time::now()->getTimestamp() + $this->config->expiration,
+            'path' => $cookie->path,
+            'domain' => $cookie->domain,
+            'secure' => $cookie->secure,
             'httponly' => true, // for security
             'samesite' => $cookie->samesite ?? Cookie::SAMESITE_LAX,
-            'raw'      => $cookie->raw ?? false,
+            'raw' => $cookie->raw ?? false,
         ]))->withPrefix(''); // Cookie prefix should be ignored.
 
         helper('array');
@@ -217,7 +217,7 @@ class Session implements SessionInterface
             // @codeCoverageIgnoreEnd
         }
 
-        if ((bool) ini_get('session.auto_start')) {
+        if ((bool)ini_get('session.auto_start')) {
             $this->logger->error('Session: session.auto_start is enabled in php.ini. Aborting.');
 
             return;
@@ -234,7 +234,7 @@ class Session implements SessionInterface
 
         // Sanitize the cookie, because apparently PHP doesn't do that for userspace handlers
         if (isset($_COOKIE[$this->config->cookieName])
-            && (! is_string($_COOKIE[$this->config->cookieName]) || ! preg_match('#\A' . $this->sidRegexp . '\z#', $_COOKIE[$this->config->cookieName]))
+            && (!is_string($_COOKIE[$this->config->cookieName]) || !preg_match('#\A' . $this->sidRegexp . '\z#', $_COOKIE[$this->config->cookieName]))
         ) {
             unset($_COOKIE[$this->config->cookieName]);
         }
@@ -242,13 +242,13 @@ class Session implements SessionInterface
         $this->startSession();
 
         // Is session ID auto-regeneration configured? (ignoring ajax requests)
-        if ((! isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest')
+        if ((!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest')
             && ($regenerateTime = $this->config->timeToUpdate) > 0
         ) {
-            if (! isset($_SESSION['__ci_last_regenerate'])) {
+            if (!isset($_SESSION['__ci_last_regenerate'])) {
                 $_SESSION['__ci_last_regenerate'] = Time::now()->getTimestamp();
             } elseif ($_SESSION['__ci_last_regenerate'] < (Time::now()->getTimestamp() - $regenerateTime)) {
-                $this->regenerate((bool) $this->config->regenerateDestroy);
+                $this->regenerate((bool)$this->config->regenerateDestroy);
             }
         }
         // Another work-around ... PHP doesn't seem to send the session cookie
@@ -286,9 +286,9 @@ class Session implements SessionInterface
 
         $params = [
             'lifetime' => $this->config->expiration,
-            'path'     => $this->cookie->getPath(),
-            'domain'   => $this->cookie->getDomain(),
-            'secure'   => $this->cookie->isSecure(),
+            'path' => $this->cookie->getPath(),
+            'domain' => $this->cookie->getDomain(),
+            'secure' => $this->cookie->isSecure(),
             'httponly' => true, // HTTP only; Yes, this is intentional and not configurable for security reasons.
             'samesite' => $sameSite,
         ];
@@ -297,7 +297,7 @@ class Session implements SessionInterface
         session_set_cookie_params($params);
 
         if ($this->config->expiration > 0) {
-            ini_set('session.gc_maxlifetime', (string) $this->config->expiration);
+            ini_set('session.gc_maxlifetime', (string)$this->config->expiration);
         }
 
         if ($this->config->savePath !== '') {
@@ -328,19 +328,19 @@ class Session implements SessionInterface
      */
     protected function configureSidLength()
     {
-        $bitsPerCharacter = (int) (ini_get('session.sid_bits_per_character') !== false
+        $bitsPerCharacter = (int)(ini_get('session.sid_bits_per_character') !== false
             ? ini_get('session.sid_bits_per_character')
             : 4);
 
-        $sidLength = (int) (ini_get('session.sid_length') !== false
+        $sidLength = (int)(ini_get('session.sid_length') !== false
             ? ini_get('session.sid_length')
             : 40);
 
         if (($sidLength * $bitsPerCharacter) < 160) {
             $bits = ($sidLength * $bitsPerCharacter);
             // Add as many more characters as necessary to reach at least 160 bits
-            $sidLength += (int) ceil((160 % $bits) / $bitsPerCharacter);
-            ini_set('session.sid_length', (string) $sidLength);
+            $sidLength += (int)ceil((160 % $bits) / $bitsPerCharacter);
+            ini_set('session.sid_length', (string)$sidLength);
         }
 
         // Yes, 4,5,6 are the only known possible values as of 2016-10-27
@@ -369,7 +369,7 @@ class Session implements SessionInterface
      */
     protected function initVars()
     {
-        if (! isset($_SESSION['__ci_vars'])) {
+        if (!isset($_SESSION['__ci_vars'])) {
             return;
         }
 
@@ -378,8 +378,7 @@ class Session implements SessionInterface
         foreach ($_SESSION['__ci_vars'] as $key => &$value) {
             if ($value === 'new') {
                 $_SESSION['__ci_vars'][$key] = 'old';
-            }
-            // DO NOT move this above the 'new' check!
+            } // DO NOT move this above the 'new' check!
             elseif ($value === 'old' || $value < $currentTime) {
                 unset($_SESSION[$key], $_SESSION['__ci_vars'][$key]);
             }
@@ -405,10 +404,10 @@ class Session implements SessionInterface
 
     private function removeOldSessionCookie(): void
     {
-        $response              = service('response');
+        $response = service('response');
         $cookieStoreInResponse = $response->getCookieStore();
 
-        if (! $cookieStoreInResponse->has($this->config->cookieName)) {
+        if (!$cookieStoreInResponse->has($this->config->cookieName)) {
             return;
         }
 
@@ -458,7 +457,7 @@ class Session implements SessionInterface
      * If $data is an array, it is expected to be an array of key/value pairs
      * to be set as session properties.
      *
-     * @param array|string                            $data  Property name or associative array of properties
+     * @param array|string $data Property name or associative array of properties
      * @param array|bool|float|int|object|string|null $value Property value if single key provided
      */
     public function set($data, $value = null)
@@ -497,7 +496,7 @@ class Session implements SessionInterface
             return $value;
         }
 
-        if (! isset($_SESSION) || $_SESSION === []) {
+        if (!isset($_SESSION) || $_SESSION === []) {
             return $key === null ? [] : null;
         }
 
@@ -511,7 +510,7 @@ class Session implements SessionInterface
         $keys = array_keys($_SESSION);
 
         foreach ($keys as $key) {
-            if (! in_array($key, $_exclude, true)) {
+            if (!in_array($key, $_exclude, true)) {
                 $userdata[$key] = $_SESSION[$key];
             }
         }
@@ -532,8 +531,8 @@ class Session implements SessionInterface
     /**
      * Push new value onto session value that is array.
      *
-     * @param string $key  Identifier of the session property we are interested in.
-     * @param array  $data value to be pushed to existing session key.
+     * @param string $key Identifier of the session property we are interested in.
+     * @param array $data value to be pushed to existing session key.
      */
     public function push(string $key, array $data)
     {
@@ -568,7 +567,7 @@ class Session implements SessionInterface
      * Magic method to set variables in the session by simply calling
      *  $session->foo = bar;
      *
-     * @param string       $key   Identifier of the session property to set.
+     * @param string $key Identifier of the session property to set.
      * @param array|string $value
      */
     public function __set(string $key, $value)
@@ -620,7 +619,7 @@ class Session implements SessionInterface
      * Otherwise, it is interpreted as the identifier of a specific
      * flashdata property, with $value containing the property value.
      *
-     * @param array|string                            $data  Property identifier or associative array of properties
+     * @param array|string $data Property identifier or associative array of properties
      * @param array|bool|float|int|object|string|null $value Property value if $data is a scalar
      */
     public function setFlashdata($data, $value = null)
@@ -642,14 +641,14 @@ class Session implements SessionInterface
     {
         if (isset($key)) {
             return (isset($_SESSION['__ci_vars'], $_SESSION['__ci_vars'][$key], $_SESSION[$key])
-                && ! is_int($_SESSION['__ci_vars'][$key])) ? $_SESSION[$key] : null;
+                && !is_int($_SESSION['__ci_vars'][$key])) ? $_SESSION[$key] : null;
         }
 
         $flashdata = [];
 
         if (isset($_SESSION['__ci_vars'])) {
             foreach ($_SESSION['__ci_vars'] as $key => &$value) {
-                if (! is_int($value)) {
+                if (!is_int($value)) {
                     $flashdata[$key] = $_SESSION[$key];
                 }
             }
@@ -679,7 +678,7 @@ class Session implements SessionInterface
     {
         if (is_array($key)) {
             foreach ($key as $sessionKey) {
-                if (! isset($_SESSION[$sessionKey])) {
+                if (!isset($_SESSION[$sessionKey])) {
                     return false;
                 }
             }
@@ -691,7 +690,7 @@ class Session implements SessionInterface
             return true;
         }
 
-        if (! isset($_SESSION[$key])) {
+        if (!isset($_SESSION[$key])) {
             return false;
         }
 
@@ -707,16 +706,16 @@ class Session implements SessionInterface
      */
     public function unmarkFlashdata($key)
     {
-        if (! isset($_SESSION['__ci_vars'])) {
+        if (!isset($_SESSION['__ci_vars'])) {
             return;
         }
 
-        if (! is_array($key)) {
+        if (!is_array($key)) {
             $key = [$key];
         }
 
         foreach ($key as $k) {
-            if (isset($_SESSION['__ci_vars'][$k]) && ! is_int($_SESSION['__ci_vars'][$k])) {
+            if (isset($_SESSION['__ci_vars'][$k]) && !is_int($_SESSION['__ci_vars'][$k])) {
                 unset($_SESSION['__ci_vars'][$k]);
             }
         }
@@ -733,14 +732,14 @@ class Session implements SessionInterface
      */
     public function getFlashKeys(): array
     {
-        if (! isset($_SESSION['__ci_vars'])) {
+        if (!isset($_SESSION['__ci_vars'])) {
             return [];
         }
 
         $keys = [];
 
         foreach (array_keys($_SESSION['__ci_vars']) as $key) {
-            if (! is_int($_SESSION['__ci_vars'][$key])) {
+            if (!is_int($_SESSION['__ci_vars'][$key])) {
                 $keys[] = $key;
             }
         }
@@ -752,9 +751,9 @@ class Session implements SessionInterface
      * Sets new data into the session, and marks it as temporary data
      * with a set lifespan.
      *
-     * @param array|string                            $data  Session data key or associative array of items
+     * @param array|string $data Session data key or associative array of items
      * @param array|bool|float|int|object|string|null $value Value to store
-     * @param int                                     $ttl   Time-to-live in seconds
+     * @param int $ttl Time-to-live in seconds
      */
     public function setTempdata($data, $value = null, int $ttl = 300)
     {
@@ -774,7 +773,7 @@ class Session implements SessionInterface
     {
         if (isset($key)) {
             return (isset($_SESSION['__ci_vars'], $_SESSION['__ci_vars'][$key], $_SESSION[$key])
-                    && is_int($_SESSION['__ci_vars'][$key])) ? $_SESSION[$key] : null;
+                && is_int($_SESSION['__ci_vars'][$key])) ? $_SESSION[$key] : null;
         }
 
         $tempdata = [];
@@ -806,7 +805,7 @@ class Session implements SessionInterface
      * it has a set lifespan within the session.
      *
      * @param array|string $key Property identifier or array of them
-     * @param int          $ttl Time to live, in seconds
+     * @param int $ttl Time to live, in seconds
      *
      * @return bool False if any of the properties were not set
      */
@@ -828,7 +827,7 @@ class Session implements SessionInterface
                     $v += Time::now()->getTimestamp();
                 }
 
-                if (! array_key_exists($k, $_SESSION)) {
+                if (!array_key_exists($k, $_SESSION)) {
                     return false;
                 }
 
@@ -840,7 +839,7 @@ class Session implements SessionInterface
             return true;
         }
 
-        if (! isset($_SESSION[$key])) {
+        if (!isset($_SESSION[$key])) {
             return false;
         }
 
@@ -857,11 +856,11 @@ class Session implements SessionInterface
      */
     public function unmarkTempdata($key)
     {
-        if (! isset($_SESSION['__ci_vars'])) {
+        if (!isset($_SESSION['__ci_vars'])) {
             return;
         }
 
-        if (! is_array($key)) {
+        if (!is_array($key)) {
             $key = [$key];
         }
 
@@ -881,7 +880,7 @@ class Session implements SessionInterface
      */
     public function getTempKeys(): array
     {
-        if (! isset($_SESSION['__ci_vars'])) {
+        if (!isset($_SESSION['__ci_vars'])) {
             return [];
         }
 
@@ -927,7 +926,7 @@ class Session implements SessionInterface
      */
     protected function setCookie()
     {
-        $expiration   = $this->config->expiration === 0 ? 0 : Time::now()->getTimestamp() + $this->config->expiration;
+        $expiration = $this->config->expiration === 0 ? 0 : Time::now()->getTimestamp() + $this->config->expiration;
         $this->cookie = $this->cookie->withValue(session_id())->withExpires($expiration);
 
         $response = service('response');

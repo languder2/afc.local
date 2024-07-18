@@ -66,9 +66,9 @@ class InfoCache extends BaseCommand
             return;
         }
 
-        $cache  = CacheFactory::getHandler($config);
+        $cache = CacheFactory::getHandler($config);
         $caches = $cache->getCacheInfo();
-        $tbody  = [];
+        $tbody = [];
 
         foreach ($caches as $key => $field) {
             $tbody[] = [

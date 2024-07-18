@@ -35,13 +35,13 @@ class Cors
      * }
      */
     private array $config = [
-        'allowedOrigins'         => [],
+        'allowedOrigins' => [],
         'allowedOriginsPatterns' => [],
-        'supportsCredentials'    => false,
-        'allowedHeaders'         => [],
-        'exposedHeaders'         => [],
-        'allowedMethods'         => [],
-        'maxAge'                 => 7200,
+        'supportsCredentials' => false,
+        'allowedHeaders' => [],
+        'exposedHeaders' => [],
+        'allowedMethods' => [],
+        'maxAge' => 7200,
     ];
 
     /**
@@ -102,33 +102,9 @@ class Cors
         return $response;
     }
 
-    private function checkWildcard(string $name, int $count): void
-    {
-        if (in_array('*', $this->config[$name], true) && $count > 1) {
-            throw new ConfigException(
-                "If wildcard is specified, you must set `'{$name}' => ['*']`."
-                . ' But using wildcard is not recommended.'
-            );
-        }
-    }
-
-    private function checkWildcardAndCredentials(string $name, string $header): void
-    {
-        if (
-            $this->config[$name] === ['*']
-            && $this->config['supportsCredentials']
-        ) {
-            throw new ConfigException(
-                'When responding to a credentialed request, '
-                . 'the server must not specify the "*" wildcard for the '
-                . $header . ' response-header value.'
-            );
-        }
-    }
-
     private function setAllowOrigin(RequestInterface $request, ResponseInterface $response): void
     {
-        $originCount        = count($this->config['allowedOrigins']);
+        $originCount = count($this->config['allowedOrigins']);
         $originPatternCount = count($this->config['allowedOriginsPatterns']);
 
         $this->checkWildcard('allowedOrigins', $originCount);
@@ -142,7 +118,7 @@ class Cors
         }
 
         // Multiple Origins.
-        if (! $request->hasHeader('Origin')) {
+        if (!$request->hasHeader('Origin')) {
             return;
         }
 
@@ -166,6 +142,30 @@ class Cors
                     return;
                 }
             }
+        }
+    }
+
+    private function checkWildcard(string $name, int $count): void
+    {
+        if (in_array('*', $this->config[$name], true) && $count > 1) {
+            throw new ConfigException(
+                "If wildcard is specified, you must set `'{$name}' => ['*']`."
+                . ' But using wildcard is not recommended.'
+            );
+        }
+    }
+
+    private function checkWildcardAndCredentials(string $name, string $header): void
+    {
+        if (
+            $this->config[$name] === ['*']
+            && $this->config['supportsCredentials']
+        ) {
+            throw new ConfigException(
+                'When responding to a credentialed request, '
+                . 'the server must not specify the "*" wildcard for the '
+                . $header . ' response-header value.'
+            );
         }
     }
 
@@ -193,7 +193,7 @@ class Cors
 
     private function setAllowMaxAge(ResponseInterface $response): void
     {
-        $response->setHeader('Access-Control-Max-Age', (string) $this->config['maxAge']);
+        $response->setHeader('Access-Control-Max-Age', (string)$this->config['maxAge']);
     }
 
     private function setAllowCredentials(ResponseInterface $response): void

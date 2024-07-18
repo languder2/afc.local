@@ -54,21 +54,21 @@ class FileHandler extends BaseHandler
      */
     public function __construct(Cache $config)
     {
-        if (! property_exists($config, 'file')) {
+        if (!property_exists($config, 'file')) {
             $config->file = [
                 'storePath' => $config->storePath ?? WRITEPATH . 'cache',
-                'mode'      => 0640,
+                'mode' => 0640,
             ];
         }
 
-        $this->path = ! empty($config->file['storePath']) ? $config->file['storePath'] : WRITEPATH . 'cache';
+        $this->path = !empty($config->file['storePath']) ? $config->file['storePath'] : WRITEPATH . 'cache';
         $this->path = rtrim($this->path, '/') . '/';
 
-        if (! is_really_writable($this->path)) {
+        if (!is_really_writable($this->path)) {
             throw CacheException::forUnableToWrite($this->path);
         }
 
-        $this->mode   = $config->file['mode'] ?? 0640;
+        $this->mode = $config->file['mode'] ?? 0640;
         $this->prefix = $config->prefix;
     }
 
@@ -84,7 +84,7 @@ class FileHandler extends BaseHandler
      */
     public function get(string $key)
     {
-        $key  = static::validateKey($key, $this->prefix);
+        $key = static::validateKey($key, $this->prefix);
         $data = $this->getItem($key);
 
         return is_array($data) ? $data['data'] : null;
@@ -99,7 +99,7 @@ class FileHandler extends BaseHandler
 
         $contents = [
             'time' => Time::now()->getTimestamp(),
-            'ttl'  => $ttl,
+            'ttl' => $ttl,
             'data' => $value,
         ];
 
@@ -153,7 +153,7 @@ class FileHandler extends BaseHandler
     public function increment(string $key, int $offset = 1)
     {
         $prefixedKey = static::validateKey($key, $this->prefix);
-        $tmp         = $this->getItem($prefixedKey);
+        $tmp = $this->getItem($prefixedKey);
 
         if ($tmp === false) {
             $tmp = ['data' => 0, 'ttl' => 60];
@@ -161,7 +161,7 @@ class FileHandler extends BaseHandler
 
         ['data' => $value, 'ttl' => $ttl] = $tmp;
 
-        if (! is_int($value)) {
+        if (!is_int($value)) {
             return false;
         }
 
@@ -207,8 +207,8 @@ class FileHandler extends BaseHandler
 
         return [
             'expire' => $data['ttl'] > 0 ? $data['time'] + $data['ttl'] : null,
-            'mtime'  => filemtime($this->path . $key),
-            'data'   => $data['data'],
+            'mtime' => filemtime($this->path . $key),
+            'data' => $data['data'],
         ];
     }
 
@@ -228,21 +228,21 @@ class FileHandler extends BaseHandler
      */
     protected function getItem(string $filename)
     {
-        if (! is_file($this->path . $filename)) {
+        if (!is_file($this->path . $filename)) {
             return false;
         }
 
         $data = @unserialize(file_get_contents($this->path . $filename));
 
-        if (! is_array($data)) {
+        if (!is_array($data)) {
             return false;
         }
 
-        if (! isset($data['ttl']) || ! is_int($data['ttl'])) {
+        if (!isset($data['ttl']) || !is_int($data['ttl'])) {
             return false;
         }
 
-        if (! isset($data['time']) || ! is_int($data['time'])) {
+        if (!isset($data['time']) || !is_int($data['time'])) {
             return false;
         }
 
@@ -290,17 +290,17 @@ class FileHandler extends BaseHandler
      * If the second parameter is set to TRUE, any directories contained
      * within the supplied base directory will be nuked as well.
      *
-     * @param string $path   File path
-     * @param bool   $delDir Whether to delete any directories found in the path
-     * @param bool   $htdocs Whether to skip deleting .htaccess and index page files
-     * @param int    $_level Current directory depth level (default: 0; internal use only)
+     * @param string $path File path
+     * @param bool $delDir Whether to delete any directories found in the path
+     * @param bool $htdocs Whether to skip deleting .htaccess and index page files
+     * @param int $_level Current directory depth level (default: 0; internal use only)
      */
     protected function deleteFiles(string $path, bool $delDir = false, bool $htdocs = false, int $_level = 0): bool
     {
         // Trim the trailing slash
         $path = rtrim($path, '/\\');
 
-        if (! $currentDir = @opendir($path)) {
+        if (!$currentDir = @opendir($path)) {
             return false;
         }
 
@@ -308,7 +308,7 @@ class FileHandler extends BaseHandler
             if ($filename !== '.' && $filename !== '..') {
                 if (is_dir($path . DIRECTORY_SEPARATOR . $filename) && $filename[0] !== '.') {
                     $this->deleteFiles($path . DIRECTORY_SEPARATOR . $filename, $delDir, $htdocs, $_level + 1);
-                } elseif ($htdocs !== true || ! preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i', $filename)) {
+                } elseif ($htdocs !== true || !preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i', $filename)) {
                     @unlink($path . DIRECTORY_SEPARATOR . $filename);
                 }
             }
@@ -325,16 +325,16 @@ class FileHandler extends BaseHandler
      *
      * Any sub-folders contained within the specified path are read as well.
      *
-     * @param string $sourceDir    Path to source
-     * @param bool   $topLevelOnly Look only at the top level directory specified?
-     * @param bool   $_recursion   Internal variable to determine recursion status - do not use in calls
+     * @param string $sourceDir Path to source
+     * @param bool $topLevelOnly Look only at the top level directory specified?
+     * @param bool $_recursion Internal variable to determine recursion status - do not use in calls
      *
      * @return array|false
      */
     protected function getDirFileInfo(string $sourceDir, bool $topLevelOnly = true, bool $_recursion = false)
     {
         static $_filedata = [];
-        $relativePath     = $sourceDir;
+        $relativePath = $sourceDir;
 
         if ($fp = @opendir($sourceDir)) {
             // reset the array and make sure $source_dir has a trailing slash on the initial call
@@ -347,8 +347,8 @@ class FileHandler extends BaseHandler
             while (false !== ($file = readdir($fp))) {
                 if (is_dir($sourceDir . $file) && $file[0] !== '.' && $topLevelOnly === false) {
                     $this->getDirFileInfo($sourceDir . $file . DIRECTORY_SEPARATOR, $topLevelOnly, true);
-                } elseif (! is_dir($sourceDir . $file) && $file[0] !== '.') {
-                    $_filedata[$file]                  = $this->getFileInfo($sourceDir . $file);
+                } elseif (!is_dir($sourceDir . $file) && $file[0] !== '.') {
+                    $_filedata[$file] = $this->getFileInfo($sourceDir . $file);
                     $_filedata[$file]['relative_path'] = $relativePath;
                 }
             }
@@ -367,14 +367,14 @@ class FileHandler extends BaseHandler
      * Options are: name, server_path, size, date, readable, writable, executable, fileperms
      * Returns FALSE if the file cannot be found.
      *
-     * @param string       $file           Path to file
+     * @param string $file Path to file
      * @param array|string $returnedValues Array or comma separated string of information returned
      *
      * @return array|false
      */
     protected function getFileInfo(string $file, $returnedValues = ['name', 'server_path', 'size', 'date'])
     {
-        if (! is_file($file)) {
+        if (!is_file($file)) {
             return false;
         }
 

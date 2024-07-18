@@ -37,11 +37,11 @@ class RedirectException extends Exception implements ResponsableInterface, HTTPE
 
     /**
      * @param ResponseInterface|string $message Response object or a string containing a relative URI.
-     * @param int                      $code    HTTP status code to redirect if $message is a string.
+     * @param int $code HTTP status code to redirect if $message is a string.
      */
     public function __construct($message = '', int $code = 0, ?Throwable $previous = null)
     {
-        if (! is_string($message) && ! $message instanceof ResponseInterface) {
+        if (!is_string($message) && !$message instanceof ResponseInterface) {
             throw new InvalidArgumentException(
                 'RedirectException::__construct() first argument must be a string or ResponseInterface',
                 0,
@@ -51,7 +51,7 @@ class RedirectException extends Exception implements ResponsableInterface, HTTPE
 
         if ($message instanceof ResponseInterface) {
             $this->response = $message;
-            $message        = '';
+            $message = '';
 
             if ($this->response->getHeaderLine('Location') === '' && $this->response->getHeaderLine('Refresh') === '') {
                 throw new LogicException(
@@ -76,7 +76,7 @@ class RedirectException extends Exception implements ResponsableInterface, HTTPE
 
         service('logger')->info(
             'REDIRECTED ROUTE at '
-             . ($this->response->getHeaderLine('Location') ?: substr($this->response->getHeaderLine('Refresh'), 6))
+            . ($this->response->getHeaderLine('Location') ?: substr($this->response->getHeaderLine('Refresh'), 6))
         );
 
         return $this->response;

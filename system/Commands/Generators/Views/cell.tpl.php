@@ -6,5 +6,5 @@ use CodeIgniter\View\Cells\Cell;
 
 class {class} extends Cell
 {
-    //
+//
 }

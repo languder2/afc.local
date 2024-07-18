@@ -133,18 +133,18 @@ class OpenSSLHandler extends BaseHandler
             ? $this->digestSize[$this->digest]
             : $this->digestSize[$this->digest] * 2;
 
-        $hmacKey  = self::substr($data, 0, $hmacLength);
-        $data     = self::substr($data, $hmacLength);
+        $hmacKey = self::substr($data, 0, $hmacLength);
+        $data = self::substr($data, $hmacLength);
         $hmacCalc = \hash_hmac($this->digest, $data, $authKey, $this->rawData);
 
-        if (! hash_equals($hmacKey, $hmacCalc)) {
+        if (!hash_equals($hmacKey, $hmacCalc)) {
             throw EncryptionException::forAuthenticationFailed();
         }
 
         $data = $this->rawData ? $data : base64_decode($data, true);
 
         if ($ivSize = \openssl_cipher_iv_length($this->cipher)) {
-            $iv   = self::substr($data, 0, $ivSize);
+            $iv = self::substr($data, 0, $ivSize);
             $data = self::substr($data, $ivSize);
         } else {
             $iv = null;

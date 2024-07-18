@@ -42,7 +42,7 @@ class Honeypot
     {
         $this->config = $config;
 
-        if ($this->config->container === '' || ! str_contains($this->config->container, '{template}')) {
+        if ($this->config->container === '' || !str_contains($this->config->container, '{template}')) {
             $this->config->container = '<div style="display:none">{template}</div>';
         }
 
@@ -66,7 +66,7 @@ class Honeypot
     {
         assert($request instanceof IncomingRequest);
 
-        return ! empty($request->getPost($this->config->name));
+        return !empty($request->getPost($this->config->name));
     }
 
     /**
@@ -92,11 +92,11 @@ class Honeypot
         $prepField = $this->prepareTemplate($this->config->template);
 
         $bodyBefore = $response->getBody();
-        $bodyAfter  = str_ireplace('</form>', $prepField . '</form>', $bodyBefore);
+        $bodyAfter = str_ireplace('</form>', $prepField . '</form>', $bodyBefore);
 
         if ($response->getCSP()->enabled() && ($bodyBefore !== $bodyAfter)) {
             // Add style tag for the container tag in the head tag.
-            $style     = '<style ' . csp_style_nonce() . '>#' . $this->config->containerId . ' { display:none }</style>';
+            $style = '<style ' . csp_style_nonce() . '>#' . $this->config->containerId . ' { display:none }</style>';
             $bodyAfter = str_ireplace('</head>', $style . '</head>', $bodyAfter);
         }
 

@@ -55,7 +55,7 @@ class Files extends BaseCollector
      */
     public function display(): array
     {
-        $rawFiles  = get_included_files();
+        $rawFiles = get_included_files();
         $coreFiles = [];
         $userFiles = [];
 

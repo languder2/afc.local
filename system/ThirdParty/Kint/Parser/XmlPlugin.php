@@ -61,11 +61,11 @@ class XmlPlugin extends AbstractPlugin
             return;
         }
 
-        if (!\method_exists(\get_class($this), 'xmlTo'.self::$parse_method)) {
+        if (!\method_exists(\get_class($this), 'xmlTo' . self::$parse_method)) {
             return;
         }
 
-        $xml = \call_user_func([\get_class($this), 'xmlTo'.self::$parse_method], $var, $o->access_path);
+        $xml = \call_user_func([\get_class($this), 'xmlTo' . self::$parse_method], $var, $o->access_path);
 
         if (empty($xml)) {
             return;
@@ -102,7 +102,7 @@ class XmlPlugin extends AbstractPlugin
         if (null === $parent_path) {
             $access_path = null;
         } else {
-            $access_path = 'simplexml_load_string('.$parent_path.')';
+            $access_path = 'simplexml_load_string(' . $parent_path . ')';
         }
 
         $name = $xml->getName();
@@ -115,7 +115,7 @@ class XmlPlugin extends AbstractPlugin
      *
      * If it errors loading then we wouldn't have gotten this far in the first place.
      *
-     * @psalm-param non-empty-string $var         The XML string
+     * @psalm-param non-empty-string $var The XML string
      *
      * @param ?string $parent_path The path to the parent, in this case the XML string
      *
@@ -142,7 +142,7 @@ class XmlPlugin extends AbstractPlugin
         if (null === $parent_path) {
             $access_path = null;
         } else {
-            $access_path = '(function($s){$x = new \\DomDocument(); $x->loadXML($s); return $x;})('.$parent_path.')->'.$access_path;
+            $access_path = '(function($s){$x = new \\DomDocument(); $x->loadXML($s); return $x;})(' . $parent_path . ')->' . $access_path;
         }
 
         $name = $xml->nodeName ?? null;

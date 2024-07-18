@@ -167,7 +167,7 @@ abstract class AbstractRenderer implements RendererInterface
                 return \call_user_func_array('array_merge', $containers);
             case self::SORT_FULL:
                 \usort($contents, [self::class, 'sortPropertiesFull']);
-                // no break
+            // no break
             default:
                 return $contents;
         }

@@ -127,15 +127,15 @@ final class ResponseCache
             $cachedResponse = unserialize($cachedResponse);
 
             if (
-                ! is_array($cachedResponse)
-                || ! isset($cachedResponse['output'])
-                || ! isset($cachedResponse['headers'])
+                !is_array($cachedResponse)
+                || !isset($cachedResponse['output'])
+                || !isset($cachedResponse['headers'])
             ) {
                 throw new Exception('Error unserializing page cache');
             }
 
             $headers = $cachedResponse['headers'];
-            $output  = $cachedResponse['output'];
+            $output = $cachedResponse['output'];
 
             // Clear all default headers
             foreach (array_keys($response->headers()) as $key) {

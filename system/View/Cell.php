@@ -68,10 +68,10 @@ class Cell
     /**
      * Render a cell, returning its body as a string.
      *
-     * @param string                            $library   Cell class and method name.
-     * @param array<string, string>|string|null $params    Parameters to pass to the method.
-     * @param int                               $ttl       Number of seconds to cache the cell.
-     * @param string|null                       $cacheName Cache item name.
+     * @param string $library Cell class and method name.
+     * @param array<string, string>|string|null $params Parameters to pass to the method.
+     * @param int $ttl Number of seconds to cache the cell.
+     * @param string|null $cacheName Cache item name.
      *
      * @throws ReflectionException
      */
@@ -96,7 +96,7 @@ class Cell
             $instance->initController(Services::request(), service('response'), service('logger'));
         }
 
-        if (! method_exists($instance, $method)) {
+        if (!method_exists($instance, $method)) {
             throw ViewException::forInvalidCellMethod($class, $method);
         }
 
@@ -117,7 +117,7 @@ class Cell
      * If a string, it should be in the format "key1=value key2=value".
      * It will be split and returned as an array.
      *
-     * @param         array<string, string>|string|null       $params
+     * @param array<string, string>|string|null $params
      * @phpstan-param array<string, string>|string|float|null $params
      *
      * @return array<string, string>
@@ -126,7 +126,7 @@ class Cell
     {
         if (
             ($params === null || $params === '' || $params === [])
-            || (! is_string($params) && ! is_array($params))
+            || (!is_string($params) && !is_array($params))
         ) {
             return [];
         }
@@ -173,7 +173,7 @@ class Cell
 
         // controlled cells might be called with just
         // the class name, so add a default method
-        if (! str_contains($library, ':')) {
+        if (!str_contains($library, ':')) {
             $library .= ':render';
         }
 
@@ -186,7 +186,7 @@ class Cell
         // locate and return an instance of the cell
         $object = Factories::cells($class, ['getShared' => false]);
 
-        if (! is_object($object)) {
+        if (!is_object($object)) {
             throw ViewException::forInvalidCellClass($class);
         }
 
@@ -207,12 +207,12 @@ class Cell
     {
         // Only allow public properties to be set, or protected/private
         // properties that have a method to get them (get<Foo>Property())
-        $publicProperties  = $instance->getPublicProperties();
+        $publicProperties = $instance->getPublicProperties();
         $privateProperties = array_column($instance->getNonPublicProperties(), 'name');
-        $publicParams      = array_intersect_key($params, $publicProperties);
+        $publicParams = array_intersect_key($params, $publicProperties);
 
         foreach ($params as $key => $value) {
-            $getter = 'get' . ucfirst((string) $key) . 'Property';
+            $getter = 'get' . ucfirst((string)$key) . 'Property';
             if (in_array($key, $privateProperties, true) && method_exists($instance, $getter)) {
                 $publicParams[$key] = $value;
             }
@@ -264,17 +264,17 @@ class Cell
     /**
      * Renders the non-Cell class, passing in the string/array params.
      *
+     * @param object $instance
      * @todo Determine if this can be refactored to use $this-getMethodParams().
      *
-     * @param object $instance
      */
     final protected function renderSimpleClass($instance, string $method, array $params, string $class): string
     {
         // Try to match up the parameter list we were provided
         // with the parameter name in the callback method.
-        $refMethod  = new ReflectionMethod($instance, $method);
+        $refMethod = new ReflectionMethod($instance, $method);
         $paramCount = $refMethod->getNumberOfParameters();
-        $refParams  = $refMethod->getParameters();
+        $refParams = $refMethod->getParameters();
 
         if ($paramCount === 0) {
             if ($params !== []) {
@@ -283,13 +283,13 @@ class Cell
 
             $output = $instance->{$method}();
         } elseif (($paramCount === 1)
-            && ((! array_key_exists($refParams[0]->name, $params))
-            || (array_key_exists($refParams[0]->name, $params)
-            && count($params) !== 1))
+            && ((!array_key_exists($refParams[0]->name, $params))
+                || (array_key_exists($refParams[0]->name, $params)
+                    && count($params) !== 1))
         ) {
             $output = $instance->{$method}($params);
         } else {
-            $fireArgs     = [];
+            $fireArgs = [];
             $methodParams = [];
 
             foreach ($refParams as $arg) {
@@ -300,7 +300,7 @@ class Cell
             }
 
             foreach (array_keys($params) as $key) {
-                if (! isset($methodParams[$key])) {
+                if (!isset($methodParams[$key])) {
                     throw ViewException::forInvalidCellParameter($key);
                 }
             }

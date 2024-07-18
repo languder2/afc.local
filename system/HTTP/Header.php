@@ -67,17 +67,6 @@ class Header implements Stringable
     }
 
     /**
-     * Gets the raw value of the header. This may return either a string
-     * or an array, depending on whether the header has multiple values or not.
-     *
-     * @return array<int|string, array<string, string>|string>|string
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
      * Sets the name of the header, overwriting any previous value.
      *
      * @return $this
@@ -90,6 +79,17 @@ class Header implements Stringable
     }
 
     /**
+     * Gets the raw value of the header. This may return either a string
+     * or an array, depending on whether the header has multiple values or not.
+     *
+     * @return array<int|string, array<string, string>|string>|string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
      * Sets the value of the header, overwriting any previous value(s).
      *
      * @param array<int|string, array<string, string>|string>|string|null $value
@@ -98,7 +98,7 @@ class Header implements Stringable
      */
     public function setValue($value = null)
     {
-        $this->value = is_array($value) ? $value : (string) $value;
+        $this->value = is_array($value) ? $value : (string)$value;
 
         return $this;
     }
@@ -117,12 +117,12 @@ class Header implements Stringable
             return $this;
         }
 
-        if (! is_array($this->value)) {
+        if (!is_array($this->value)) {
             $this->value = [$this->value];
         }
 
-        if (! in_array($value, $this->value, true)) {
-            $this->value[] = is_array($value) ? $value : (string) $value;
+        if (!in_array($value, $this->value, true)) {
+            $this->value[] = is_array($value) ? $value : (string)$value;
         }
 
         return $this;
@@ -142,13 +142,22 @@ class Header implements Stringable
             return $this;
         }
 
-        if (! is_array($this->value)) {
+        if (!is_array($this->value)) {
             $this->value = [$this->value];
         }
 
         array_unshift($this->value, $value);
 
         return $this;
+    }
+
+    /**
+     * Returns a representation of the entire header string, including
+     * the header name and all values converted to the proper format.
+     */
+    public function __toString(): string
+    {
+        return $this->name . ': ' . $this->getValueLine();
     }
 
     /**
@@ -165,17 +174,17 @@ class Header implements Stringable
         if (is_string($this->value)) {
             return $this->value;
         }
-        if (! is_array($this->value)) {
+        if (!is_array($this->value)) {
             return '';
         }
 
         $options = [];
 
         foreach ($this->value as $key => $value) {
-            if (is_string($key) && ! is_array($value)) {
+            if (is_string($key) && !is_array($value)) {
                 $options[] = $key . '=' . $value;
             } elseif (is_array($value)) {
-                $key       = key($value);
+                $key = key($value);
                 $options[] = $key . '=' . $value[$key];
             } elseif (is_numeric($key)) {
                 $options[] = $value;
@@ -183,14 +192,5 @@ class Header implements Stringable
         }
 
         return implode(', ', $options);
-    }
-
-    /**
-     * Returns a representation of the entire header string, including
-     * the header name and all values converted to the proper format.
-     */
-    public function __toString(): string
-    {
-        return $this->name . ': ' . $this->getValueLine();
     }
 }

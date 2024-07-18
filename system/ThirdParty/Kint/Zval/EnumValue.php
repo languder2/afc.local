@@ -45,10 +45,10 @@ class EnumValue extends InstanceValue
     {
         if ($this->enumval instanceof BackedEnum) {
             if (\is_string($this->enumval->value)) {
-                return '"'.$this->enumval->value.'"';
+                return '"' . $this->enumval->value . '"';
             }   // Int
 
-            return (string) $this->enumval->value;
+            return (string)$this->enumval->value;
         }
 
         return null;
@@ -58,7 +58,7 @@ class EnumValue extends InstanceValue
     {
         if (isset($this->classname)) {
             if (isset($this->enumval->name)) {
-                return $this->classname.'::'.$this->enumval->name;
+                return $this->classname . '::' . $this->enumval->name;
             }
 
             return $this->classname;

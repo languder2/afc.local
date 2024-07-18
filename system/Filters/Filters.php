@@ -75,7 +75,7 @@ class Filters
      */
     protected $filters = [
         'before' => [],
-        'after'  => [],
+        'after' => [],
     ];
 
     /**
@@ -88,7 +88,7 @@ class Filters
      */
     protected $filtersClass = [
         'before' => [],
-        'after'  => [],
+        'after' => [],
     ];
 
     /**
@@ -112,7 +112,7 @@ class Filters
      */
     public function __construct($config, RequestInterface $request, ResponseInterface $response, ?Modules $modules = null)
     {
-        $this->config  = $config;
+        $this->config = $config;
         $this->request = &$request;
         $this->setResponse($response);
 
@@ -169,7 +169,7 @@ class Filters
      * Runs through all of the filters for the specified
      * uri and position.
      *
-     * @param         string           $uri      URI path relative to baseURL
+     * @param string $uri URI path relative to baseURL
      * @phpstan-param 'before'|'after' $position
      *
      * @return RequestInterface|ResponseInterface|string|null
@@ -196,7 +196,7 @@ class Filters
         foreach ($filterClasses as $className) {
             $class = new $className();
 
-            if (! $class instanceof FilterInterface) {
+            if (!$class instanceof FilterInterface) {
                 throw FilterException::forIncorrectInterface($class::class);
             }
 
@@ -234,7 +234,7 @@ class Filters
         foreach ($filterClasses as $className) {
             $class = new $className();
 
-            if (! $class instanceof FilterInterface) {
+            if (!$class instanceof FilterInterface) {
                 throw FilterException::forIncorrectInterface($class::class);
             }
 
@@ -301,10 +301,10 @@ class Filters
     public function getRequiredFilters(string $position = 'before'): array
     {
         // For backward compatibility. For users who do not update Config\Filters.
-        if (! isset($this->config->required[$position])) {
+        if (!isset($this->config->required[$position])) {
             $baseConfig = config(BaseFiltersConfig::class); // @phpstan-ignore-line
-            $filters    = $baseConfig->required[$position];
-            $aliases    = $baseConfig->aliases;
+            $filters = $baseConfig->required[$position];
+            $aliases = $baseConfig->aliases;
         } else {
             $filters = $this->config->required[$position];
             $aliases = $this->config->aliases;
@@ -325,7 +325,7 @@ class Filters
         }
 
         foreach ($filters as $alias) {
-            if (! array_key_exists($alias, $aliases)) {
+            if (!array_key_exists($alias, $aliases)) {
                 throw FilterException::forNoAlias($alias);
             }
         }
@@ -337,12 +337,12 @@ class Filters
      * Set the toolbar filter to the last position to be executed.
      *
      * @param list<string> $filters `after` filter array
-     * @param bool         $remove  if true, remove `toolbar` filter
+     * @param bool $remove if true, remove `toolbar` filter
      */
     private function setToolbarToLast(array $filters, bool $remove = false): array
     {
         $afters = [];
-        $found  = false;
+        $found = false;
 
         foreach ($filters as $alias) {
             if ($alias === 'toolbar') {
@@ -354,7 +354,7 @@ class Filters
             $afters[] = $alias;
         }
 
-        if ($found && ! $remove) {
+        if ($found && !$remove) {
             $afters[] = 'toolbar';
         }
 
@@ -424,7 +424,7 @@ class Filters
 
         $this->filters = $this->filtersClass = [
             'before' => [],
-            'after'  => [],
+            'after' => [],
         ];
 
         return $this;
@@ -459,11 +459,11 @@ class Filters
     {
         $alias ??= md5($class);
 
-        if (! isset($this->config->{$section})) {
+        if (!isset($this->config->{$section})) {
             $this->config->{$section} = [];
         }
 
-        if (! isset($this->config->{$section}[$when])) {
+        if (!isset($this->config->{$section}[$when])) {
             $this->config->{$section}[$when] = [];
         }
 
@@ -486,23 +486,23 @@ class Filters
     private function enableFilter(string $name, string $when = 'before'): void
     {
         // Get arguments and clean name
-        [$name, $arguments]     = $this->getCleanName($name);
+        [$name, $arguments] = $this->getCleanName($name);
         $this->arguments[$name] = ($arguments !== []) ? $arguments : null;
 
         if (class_exists($name)) {
             $this->config->aliases[$name] = $name;
-        } elseif (! array_key_exists($name, $this->config->aliases)) {
+        } elseif (!array_key_exists($name, $this->config->aliases)) {
             throw FilterException::forNoAlias($name);
         }
 
-        $classNames = (array) $this->config->aliases[$name];
+        $classNames = (array)$this->config->aliases[$name];
 
         foreach ($classNames as $className) {
             $this->argumentsClass[$className] = $this->arguments[$name] ?? null;
         }
 
-        if (! isset($this->filters[$when][$name])) {
-            $this->filters[$when][]    = $name;
+        if (!isset($this->filters[$when][$name])) {
+            $this->filters[$when][] = $name;
             $this->filtersClass[$when] = array_merge($this->filtersClass[$when], $classNames);
         }
     }
@@ -573,7 +573,7 @@ class Filters
      */
     protected function processGlobals(?string $uri = null)
     {
-        if (! isset($this->config->globals) || ! is_array($this->config->globals)) {
+        if (!isset($this->config->globals) || !is_array($this->config->globals)) {
             return;
         }
 
@@ -630,7 +630,7 @@ class Filters
      */
     protected function processMethods()
     {
-        if (! isset($this->config->methods) || ! is_array($this->config->methods)) {
+        if (!isset($this->config->methods) || !is_array($this->config->methods)) {
             return;
         }
 
@@ -651,7 +651,7 @@ class Filters
                 E_USER_DEPRECATED
             );
 
-            $found  = true;
+            $found = true;
             $method = strtolower($method);
         }
 
@@ -674,7 +674,7 @@ class Filters
      */
     protected function processFilters(?string $uri = null)
     {
-        if (! isset($this->config->filters) || ! $this->config->filters) {
+        if (!isset($this->config->filters) || !$this->config->filters) {
             return;
         }
 
@@ -725,7 +725,7 @@ class Filters
         }
 
         if (isset($filters['after'])) {
-            if (! $oldFilterOrder) {
+            if (!$oldFilterOrder) {
                 $filters['after'] = array_reverse($filters['after']);
             }
 
@@ -734,9 +734,9 @@ class Filters
     }
 
     /**
-     * @param string $name      filter alias
-     * @param array  $arguments filter arguments
-     * @param bool   $check     if true, check if already defined
+     * @param string $name filter alias
+     * @param array $arguments filter arguments
+     * @param bool $check if true, check if already defined
      */
     private function registerArguments(string $name, array $arguments, bool $check = true): void
     {
@@ -751,7 +751,7 @@ class Filters
             $this->arguments[$name] = $arguments;
         }
 
-        $classNames = (array) $this->config->aliases[$name];
+        $classNames = (array)$this->config->aliases[$name];
 
         foreach ($classNames as $className) {
             $this->argumentsClass[$className] = $this->arguments[$name] ?? null;
@@ -774,7 +774,7 @@ class Filters
                 $alias = $rules;
             }
 
-            if (! array_key_exists($alias, $this->config->aliases)) {
+            if (!array_key_exists($alias, $this->config->aliases)) {
                 throw FilterException::forNoAlias($alias);
             }
 
@@ -800,7 +800,7 @@ class Filters
     /**
      * Check paths for match for URI
      *
-     * @param string       $uri   URI to test against
+     * @param string $uri URI to test against
      * @param array|string $paths The path patterns to test
      *
      * @return bool True if any of the paths apply to the URI
@@ -823,7 +823,7 @@ class Filters
     /**
      * Check except paths
      *
-     * @param string       $uri   URI path relative to baseURL (all lowercase)
+     * @param string $uri URI path relative to baseURL (all lowercase)
      * @param array|string $paths The except path patterns
      *
      * @return bool True if the URI matches except paths.
@@ -846,8 +846,8 @@ class Filters
     /**
      * Check the URI path as pseudo-regex
      *
-     * @param string $uri   URI path relative to baseURL (all lowercase, URL-decoded)
-     * @param array  $paths The except path patterns
+     * @param string $uri URI path relative to baseURL (all lowercase, URL-decoded)
+     * @param array $paths The except path patterns
      */
     private function checkPseudoRegex(string $uri, array $paths): bool
     {

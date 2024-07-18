@@ -75,7 +75,7 @@ class ParameterValue extends Value
 
     public function getName(): string
     {
-        return '$'.$this->name;
+        return '$' . $this->name;
     }
 
     public function getDefault(): ?string

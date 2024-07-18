@@ -53,14 +53,14 @@ class InvalidChars implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (! $request instanceof IncomingRequest) {
+        if (!$request instanceof IncomingRequest) {
             return;
         }
 
         $data = [
-            'get'      => $request->getGet(),
-            'post'     => $request->getPost(),
-            'cookie'   => $request->getCookie(),
+            'get' => $request->getGet(),
+            'post' => $request->getPost(),
+            'cookie' => $request->getCookie(),
             'rawInput' => $request->getRawInput(),
         ];
 

@@ -58,7 +58,7 @@ class FilterCheck extends BaseCommand
      */
     protected $arguments = [
         'method' => 'The HTTP method. GET, POST, PUT, etc.',
-        'route'  => 'The route (URI path) to check filters.',
+        'route' => 'The route (URI path) to check filters.',
     ];
 
     /**
@@ -74,7 +74,7 @@ class FilterCheck extends BaseCommand
     public function run(array $params)
     {
         $tbody = [];
-        if (! isset($params[0], $params[1])) {
+        if (!isset($params[0], $params[1])) {
             CLI::error('You must specify a HTTP verb and a route.');
             CLI::write('  Usage: ' . $this->usage);
             CLI::write('Example: filter:check GET /');
@@ -84,7 +84,7 @@ class FilterCheck extends BaseCommand
         }
 
         $method = $params[0];
-        $route  = $params[1];
+        $route = $params[1];
 
         // Load Routes
         service('routes')->loadRoutes();
@@ -137,7 +137,7 @@ class FilterCheck extends BaseCommand
         $colored = [];
 
         foreach ($required['before'] as $filter) {
-            $filter    = CLI::color($filter, 'yellow');
+            $filter = CLI::color($filter, 'yellow');
             $colored[] = $filter;
         }
         $output['before'] = array_merge($colored, $filters['before']);
@@ -145,7 +145,7 @@ class FilterCheck extends BaseCommand
         $colored = [];
 
         foreach ($required['after'] as $filter) {
-            $filter    = CLI::color($filter, 'yellow');
+            $filter = CLI::color($filter, 'yellow');
             $colored[] = $filter;
         }
         $output['after'] = array_merge($filters['after'], $colored);

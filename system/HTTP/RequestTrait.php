@@ -70,7 +70,7 @@ trait RequestTrait
 
         $proxyIPs = $this->config->proxyIPs;
 
-        if (! empty($proxyIPs) && (! is_array($proxyIPs) || is_int(array_key_first($proxyIPs)))) {
+        if (!empty($proxyIPs) && (!is_array($proxyIPs) || is_int(array_key_first($proxyIPs)))) {
             throw new ConfigException(
                 'You must set an array with Proxy IP address key and HTTP header name value in Config\App::$proxyIPs.'
             );
@@ -86,7 +86,7 @@ trait RequestTrait
         // @TODO Extract all this IP address logic to another class.
         foreach ($proxyIPs as $proxyIP => $header) {
             // Check if we have an IP address or a subnet
-            if (! str_contains($proxyIP, '/')) {
+            if (!str_contains($proxyIP, '/')) {
                 // An IP address (and not a subnet) is specified.
                 // We can compare right away.
                 if ($proxyIP === $this->ipAddress) {
@@ -102,17 +102,17 @@ trait RequestTrait
             }
 
             // We have a subnet ... now the heavy lifting begins
-            if (! isset($separator)) {
+            if (!isset($separator)) {
                 $separator = $ipValidator($this->ipAddress, 'ipv6') ? ':' : '.';
             }
 
             // If the proxy entry doesn't match the IP protocol - skip it
-            if (! str_contains($proxyIP, $separator)) {
+            if (!str_contains($proxyIP, $separator)) {
                 continue;
             }
 
             // Convert the REMOTE_ADDR IP address to binary, if needed
-            if (! isset($ip, $sprintf)) {
+            if (!isset($ip, $sprintf)) {
                 if ($separator === ':') {
                     // Make sure we're having the "full" IPv6 format
                     $ip = explode(':', str_replace('::', str_repeat(':', 9 - substr_count($this->ipAddress, ':')), $this->ipAddress));
@@ -123,7 +123,7 @@ trait RequestTrait
 
                     $sprintf = '%016b%016b%016b%016b%016b%016b%016b%016b';
                 } else {
-                    $ip      = explode('.', $this->ipAddress);
+                    $ip = explode('.', $this->ipAddress);
                     $sprintf = '%08b%08b%08b%08b';
                 }
 
@@ -155,7 +155,7 @@ trait RequestTrait
             }
         }
 
-        if (! $ipValidator($this->ipAddress)) {
+        if (!$ipValidator($this->ipAddress)) {
             return $this->ipAddress = '0.0.0.0';
         }
 
@@ -163,78 +163,17 @@ trait RequestTrait
     }
 
     /**
-     * Gets the client IP address from the HTTP header.
-     */
-    private function getClientIP(string $header): ?string
-    {
-        $ipValidator = [
-            new FormatRules(),
-            'valid_ip',
-        ];
-        $spoof     = null;
-        $headerObj = $this->header($header);
-
-        if ($headerObj !== null) {
-            $spoof = $headerObj->getValue();
-
-            // Some proxies typically list the whole chain of IP
-            // addresses through which the client has reached us.
-            // e.g. client_ip, proxy_ip1, proxy_ip2, etc.
-            sscanf($spoof, '%[^,]', $spoof);
-
-            if (! $ipValidator($spoof)) {
-                $spoof = null;
-            }
-        }
-
-        return $spoof;
-    }
-
-    /**
      * Fetch an item from the $_SERVER array.
      *
-     * @param array|string|null $index  Index for item to be fetched from $_SERVER
-     * @param int|null          $filter A filter name to be applied
-     * @param array|int|null    $flags
+     * @param array|string|null $index Index for item to be fetched from $_SERVER
+     * @param int|null $filter A filter name to be applied
+     * @param array|int|null $flags
      *
      * @return mixed
      */
     public function getServer($index = null, $filter = null, $flags = null)
     {
         return $this->fetchGlobal('server', $index, $filter, $flags);
-    }
-
-    /**
-     * Fetch an item from the $_ENV array.
-     *
-     * @param array|string|null $index  Index for item to be fetched from $_ENV
-     * @param int|null          $filter A filter name to be applied
-     * @param array|int|null    $flags
-     *
-     * @return mixed
-     *
-     * @deprecated 4.4.4 This method does not work from the beginning. Use `env()`.
-     */
-    public function getEnv($index = null, $filter = null, $flags = null)
-    {
-        // @phpstan-ignore-next-line
-        return $this->fetchGlobal('env', $index, $filter, $flags);
-    }
-
-    /**
-     * Allows manually setting the value of PHP global, like $_GET, $_POST, etc.
-     *
-     * @param         string                                   $name  Supergrlobal name (lowercase)
-     * @phpstan-param 'get'|'post'|'request'|'cookie'|'server' $name
-     * @param         mixed                                    $value
-     *
-     * @return $this
-     */
-    public function setGlobal(string $name, $value)
-    {
-        $this->globals[$name] = $value;
-
-        return $this;
     }
 
     /**
@@ -247,23 +186,23 @@ trait RequestTrait
      *
      * http://php.net/manual/en/filter.filters.sanitize.php
      *
-     * @param         string                                   $name   Supergrlobal name (lowercase)
+     * @param string $name Supergrlobal name (lowercase)
      * @phpstan-param 'get'|'post'|'request'|'cookie'|'server' $name
-     * @param         array|string|null                        $index
-     * @param         int|null                                 $filter Filter constant
-     * @param         array|int|null                           $flags  Options
+     * @param array|string|null $index
+     * @param int|null $filter Filter constant
+     * @param array|int|null $flags Options
      *
      * @return array|bool|float|int|object|string|null
      */
     public function fetchGlobal(string $name, $index = null, ?int $filter = null, $flags = null)
     {
-        if (! isset($this->globals[$name])) {
+        if (!isset($this->globals[$name])) {
             $this->populateGlobals($name);
         }
 
         // Null filters cause null values to return.
         $filter ??= FILTER_DEFAULT;
-        $flags = is_array($flags) ? $flags : (is_numeric($flags) ? (int) $flags : 0);
+        $flags = is_array($flags) ? $flags : (is_numeric($flags) ? (int)$flags : 0);
 
         // Return all values when $index is null
         if ($index === null) {
@@ -308,7 +247,7 @@ trait RequestTrait
             }
         }
 
-        if (! isset($value)) {
+        if (!isset($value)) {
             $value = $this->globals[$name][$index] ?? null;
         }
 
@@ -341,14 +280,14 @@ trait RequestTrait
      * Saves a copy of the current state of one of several PHP globals,
      * so we can retrieve them later.
      *
-     * @param         string                                   $name Superglobal name (lowercase)
+     * @param string $name Superglobal name (lowercase)
      * @phpstan-param 'get'|'post'|'request'|'cookie'|'server' $name
      *
      * @return void
      */
     protected function populateGlobals(string $name)
     {
-        if (! isset($this->globals[$name])) {
+        if (!isset($this->globals[$name])) {
             $this->globals[$name] = [];
         }
 
@@ -375,5 +314,66 @@ trait RequestTrait
                 $this->globals['server'] = $_SERVER;
                 break;
         }
+    }
+
+    /**
+     * Gets the client IP address from the HTTP header.
+     */
+    private function getClientIP(string $header): ?string
+    {
+        $ipValidator = [
+            new FormatRules(),
+            'valid_ip',
+        ];
+        $spoof = null;
+        $headerObj = $this->header($header);
+
+        if ($headerObj !== null) {
+            $spoof = $headerObj->getValue();
+
+            // Some proxies typically list the whole chain of IP
+            // addresses through which the client has reached us.
+            // e.g. client_ip, proxy_ip1, proxy_ip2, etc.
+            sscanf($spoof, '%[^,]', $spoof);
+
+            if (!$ipValidator($spoof)) {
+                $spoof = null;
+            }
+        }
+
+        return $spoof;
+    }
+
+    /**
+     * Fetch an item from the $_ENV array.
+     *
+     * @param array|string|null $index Index for item to be fetched from $_ENV
+     * @param int|null $filter A filter name to be applied
+     * @param array|int|null $flags
+     *
+     * @return mixed
+     *
+     * @deprecated 4.4.4 This method does not work from the beginning. Use `env()`.
+     */
+    public function getEnv($index = null, $filter = null, $flags = null)
+    {
+        // @phpstan-ignore-next-line
+        return $this->fetchGlobal('env', $index, $filter, $flags);
+    }
+
+    /**
+     * Allows manually setting the value of PHP global, like $_GET, $_POST, etc.
+     *
+     * @param string $name Supergrlobal name (lowercase)
+     * @phpstan-param 'get'|'post'|'request'|'cookie'|'server' $name
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function setGlobal(string $name, $value)
+    {
+        $this->globals[$name] = $value;
+
+        return $this;
     }
 }

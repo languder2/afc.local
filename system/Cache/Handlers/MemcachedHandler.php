@@ -40,10 +40,10 @@ class MemcachedHandler extends BaseHandler
      * @var array
      */
     protected $config = [
-        'host'   => '127.0.0.1',
-        'port'   => 11211,
+        'host' => '127.0.0.1',
+        'port' => 11211,
         'weight' => 1,
-        'raw'    => false,
+        'raw' => false,
     ];
 
     /**
@@ -93,7 +93,7 @@ class MemcachedHandler extends BaseHandler
 
                 // $stats should be an associate array with a key in the format of host:port.
                 // If it doesn't have the key, we know the server is not working as expected.
-                if (! isset($stats[$this->config['host'] . ':' . $this->config['port']])) {
+                if (!isset($stats[$this->config['host'] . ':' . $this->config['port']])) {
                     throw new CriticalError('Cache: Memcached connection failed.');
                 }
             } elseif (class_exists(Memcache::class)) {
@@ -132,7 +132,7 @@ class MemcachedHandler extends BaseHandler
     public function get(string $key)
     {
         $data = [];
-        $key  = static::validateKey($key, $this->prefix);
+        $key = static::validateKey($key, $this->prefix);
 
         if ($this->memcached instanceof Memcached) {
             $data = $this->memcached->get($key);
@@ -143,7 +143,7 @@ class MemcachedHandler extends BaseHandler
             }
         } elseif ($this->memcached instanceof Memcache) {
             $flags = false;
-            $data  = $this->memcached->get($key, $flags);
+            $data = $this->memcached->get($key, $flags);
 
             // check for unmatched key (i.e. $flags is untouched)
             if ($flags === false) {
@@ -161,7 +161,7 @@ class MemcachedHandler extends BaseHandler
     {
         $key = static::validateKey($key, $this->prefix);
 
-        if (! $this->config['raw']) {
+        if (!$this->config['raw']) {
             $value = [
                 $value,
                 Time::now()->getTimestamp(),
@@ -205,7 +205,7 @@ class MemcachedHandler extends BaseHandler
      */
     public function increment(string $key, int $offset = 1)
     {
-        if (! $this->config['raw']) {
+        if (!$this->config['raw']) {
             return false;
         }
 
@@ -219,7 +219,7 @@ class MemcachedHandler extends BaseHandler
      */
     public function decrement(string $key, int $offset = 1)
     {
-        if (! $this->config['raw']) {
+        if (!$this->config['raw']) {
             return false;
         }
 
@@ -251,11 +251,11 @@ class MemcachedHandler extends BaseHandler
      */
     public function getMetaData(string $key)
     {
-        $key    = static::validateKey($key, $this->prefix);
+        $key = static::validateKey($key, $this->prefix);
         $stored = $this->memcached->get($key);
 
         // if not an array, don't try to count for PHP7.2
-        if (! is_array($stored) || count($stored) !== 3) {
+        if (!is_array($stored) || count($stored) !== 3) {
             return false; // @TODO This will return null in a future release
         }
 
@@ -263,8 +263,8 @@ class MemcachedHandler extends BaseHandler
 
         return [
             'expire' => $limit > 0 ? $time + $limit : null,
-            'mtime'  => $time,
-            'data'   => $data,
+            'mtime' => $time,
+            'data' => $data,
         ];
     }
 

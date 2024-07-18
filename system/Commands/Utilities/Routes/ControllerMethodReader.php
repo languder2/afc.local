@@ -43,10 +43,10 @@ final class ControllerMethodReader
             return [];
         }
 
-        $classname      = $reflection->getName();
+        $classname = $reflection->getName();
         $classShortname = $reflection->getShortName();
 
-        $output     = [];
+        $output = [];
         $uriByClass = $this->getUriByClass($classname);
 
         if ($this->hasRemap($reflection)) {
@@ -62,7 +62,7 @@ final class ControllerMethodReader
             $output = [...$output, ...$routeWithoutController];
 
             $output[] = [
-                'route'   => $uriByClass . '[/...]',
+                'route' => $uriByClass . '[/...]',
                 'handler' => '\\' . $classname . '::' . $methodName,
             ];
 
@@ -94,13 +94,13 @@ final class ControllerMethodReader
                 $output = [...$output, ...$routeWithoutController];
 
                 $output[] = [
-                    'route'   => $uriByClass,
+                    'route' => $uriByClass,
                     'handler' => '\\' . $classname . '::' . $methodName,
                 ];
             }
 
             $output[] = [
-                'route'   => $route . '[/...]',
+                'route' => $route . '[/...]',
                 'handler' => '\\' . $classname . '::' . $methodName,
             ];
         }
@@ -131,10 +131,10 @@ final class ControllerMethodReader
     {
         // remove the namespace
         $pattern = '/' . preg_quote($this->namespace, '/') . '/';
-        $class   = ltrim(preg_replace($pattern, '', $classname), '\\');
+        $class = ltrim(preg_replace($pattern, '', $classname), '\\');
 
         $classParts = explode('\\', $class);
-        $classPath  = '';
+        $classPath = '';
 
         foreach ($classParts as $part) {
             // make the first letter lowercase, because auto routing makes
@@ -154,17 +154,18 @@ final class ControllerMethodReader
         string $uriByClass,
         string $classname,
         string $methodName
-    ): array {
+    ): array
+    {
         if ($classShortname !== $defaultController) {
             return [];
         }
 
-        $pattern                = '#' . preg_quote(lcfirst($defaultController), '#') . '\z#';
+        $pattern = '#' . preg_quote(lcfirst($defaultController), '#') . '\z#';
         $routeWithoutController = rtrim(preg_replace($pattern, '', $uriByClass), '/');
         $routeWithoutController = $routeWithoutController ?: '/';
 
         return [[
-            'route'   => $routeWithoutController,
+            'route' => $routeWithoutController,
             'handler' => '\\' . $classname . '::' . $methodName,
         ]];
     }

@@ -86,7 +86,7 @@ class Encryption
     {
         $config ??= new EncryptionConfig();
 
-        $this->key    = $config->key;
+        $this->key = $config->key;
         $this->driver = $config->driver;
         $this->digest = $config->digest ?? 'SHA512';
 
@@ -96,7 +96,7 @@ class Encryption
             'Sodium' => extension_loaded('sodium') && version_compare(SODIUM_LIBRARY_VERSION, '1.0.14', '>='),
         ];
 
-        if (! in_array($this->driver, $this->drivers, true) || (array_key_exists($this->driver, $this->handlers) && ! $this->handlers[$this->driver])) {
+        if (!in_array($this->driver, $this->drivers, true) || (array_key_exists($this->driver, $this->handlers) && !$this->handlers[$this->driver])) {
             throw EncryptionException::forNoHandlerAvailable($this->driver);
         }
     }
@@ -111,7 +111,7 @@ class Encryption
     public function initialize(?EncryptionConfig $config = null)
     {
         if ($config instanceof EncryptionConfig) {
-            $this->key    = $config->key;
+            $this->key = $config->key;
             $this->driver = $config->driver;
             $this->digest = $config->digest ?? 'SHA512';
         }
@@ -120,7 +120,7 @@ class Encryption
             throw EncryptionException::forNoDriverRequested();
         }
 
-        if (! in_array($this->driver, $this->drivers, true)) {
+        if (!in_array($this->driver, $this->drivers, true)) {
             throw EncryptionException::forUnKnownHandler($this->driver);
         }
 
@@ -130,7 +130,7 @@ class Encryption
 
         $this->hmacKey = bin2hex(\hash_hkdf($this->digest, $this->key));
 
-        $handlerName     = 'CodeIgniter\\Encryption\\Handlers\\' . $this->driver . 'Handler';
+        $handlerName = 'CodeIgniter\\Encryption\\Handlers\\' . $this->driver . 'Handler';
         $this->encrypter = new $handlerName($config);
 
         return $this->encrypter;

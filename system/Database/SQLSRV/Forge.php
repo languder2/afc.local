@@ -81,10 +81,10 @@ class Forge extends BaseForge
      * @var array
      */
     protected $unsigned = [
-        'TINYINT'  => 'SMALLINT',
+        'TINYINT' => 'SMALLINT',
         'SMALLINT' => 'INT',
-        'INT'      => 'BIGINT',
-        'REAL'     => 'FLOAT',
+        'INT' => 'BIGINT',
+        'REAL' => 'FLOAT',
     ];
 
     /**
@@ -118,7 +118,7 @@ class Forge extends BaseForge
         $this->renameTableStr = 'EXEC sp_rename [' . $this->db->escapeIdentifiers($this->db->schema) . '.%s] , %s ;';
 
         $this->dropConstraintStr = 'ALTER TABLE ' . $this->db->escapeIdentifiers($this->db->schema) . '.%s DROP CONSTRAINT %s';
-        $this->dropIndexStr      = 'DROP INDEX %s ON ' . $this->db->escapeIdentifiers($this->db->schema) . '.%s';
+        $this->dropIndexStr = 'DROP INDEX %s ON ' . $this->db->escapeIdentifiers($this->db->schema) . '.%s';
     }
 
     /**
@@ -144,7 +144,7 @@ class Forge extends BaseForge
         }
 
         try {
-            if (! $this->db->query($sql)) {
+            if (!$this->db->query($sql)) {
                 // @codeCoverageIgnoreStart
                 if ($this->db->DBDebug) {
                     throw new DatabaseException('Unable to create the specified database.');
@@ -208,7 +208,7 @@ class Forge extends BaseForge
             $fullTable = $this->db->escapeIdentifiers($this->db->schema) . '.' . $this->db->escapeIdentifiers($table);
 
             // Drop default constraints
-            $fields = implode(',', $this->db->escape((array) $columnNamesToDrop));
+            $fields = implode(',', $this->db->escape((array)$columnNamesToDrop));
 
             $sql = <<<SQL
                 SELECT name
@@ -225,7 +225,7 @@ class Forge extends BaseForge
 
             $sql = 'ALTER TABLE ' . $fullTable . ' DROP ';
 
-            $fields = array_map(static fn ($item) => 'COLUMN [' . trim($item) . ']', (array) $columnNamesToDrop);
+            $fields = array_map(static fn($item) => 'COLUMN [' . trim($item) . ']', (array)$columnNamesToDrop);
 
             return $sql . implode(',', $fields);
         }
@@ -253,7 +253,7 @@ class Forge extends BaseForge
                     . " {$field['type']}{$field['length']}";
             }
 
-            if (! empty($field['default'])) {
+            if (!empty($field['default'])) {
                 $sqls[] = $sql . ' ALTER COLUMN ADD CONSTRAINT ' . $this->db->escapeIdentifiers($field['name']) . '_def'
                     . " DEFAULT {$field['default']} FOR " . $this->db->escapeIdentifiers($field['name']);
             }
@@ -265,7 +265,7 @@ class Forge extends BaseForge
             $sqls[] = $sql . ' ALTER COLUMN ' . $this->db->escapeIdentifiers($field['name'])
                 . " {$field['type']}{$field['length']} " . ($nullable === true ? '' : 'NOT') . ' NULL';
 
-            if (! empty($field['comment'])) {
+            if (!empty($field['comment'])) {
                 $sqls[] = 'EXEC sys.sp_addextendedproperty '
                     . "@name=N'Caption', @value=N'" . $field['comment'] . "' , "
                     . "@level0type=N'SCHEMA',@level0name=N'" . $this->db->schema . "', "
@@ -273,7 +273,7 @@ class Forge extends BaseForge
                     . "@level2type=N'COLUMN',@level2name=N'" . $this->db->escapeIdentifiers($field['name']) . "'";
             }
 
-            if (! empty($field['new_name'])) {
+            if (!empty($field['new_name'])) {
                 $sqls[] = "EXEC sp_rename  '[" . $this->db->schema . '].[' . $table . '].[' . $field['name'] . "]' , '" . $field['new_name'] . "', 'COLUMN';";
             }
         }
@@ -308,7 +308,7 @@ class Forge extends BaseForge
 
         for ($i = 0, $c = count($this->keys); $i < $c; $i++) {
             for ($i2 = 0, $c2 = count($this->keys[$i]['fields']); $i2 < $c2; $i2++) {
-                if (! isset($this->fields[$this->keys[$i]['fields'][$i2]])) {
+                if (!isset($this->fields[$this->keys[$i]['fields'][$i2]])) {
                     unset($this->keys[$i]['fields'][$i2]);
                 }
             }
@@ -366,7 +366,7 @@ class Forge extends BaseForge
 
         switch (strtoupper($attributes['TYPE'])) {
             case 'MEDIUMINT':
-                $attributes['TYPE']     = 'INTEGER';
+                $attributes['TYPE'] = 'INTEGER';
                 $attributes['UNSIGNED'] = false;
                 break;
 
@@ -380,12 +380,12 @@ class Forge extends BaseForge
                 // https://learn.microsoft.com/en-us/sql/t-sql/data-types/char-and-varchar-transact-sql?view=sql-server-ver16#remarks
                 $maxLength = max(
                     array_map(
-                        static fn ($value) => strlen($value),
+                        static fn($value) => strlen($value),
                         $attributes['CONSTRAINT']
                     )
                 );
 
-                $attributes['TYPE']       = 'VARCHAR';
+                $attributes['TYPE'] = 'VARCHAR';
                 $attributes['CONSTRAINT'] = $maxLength;
                 break;
 
@@ -407,7 +407,7 @@ class Forge extends BaseForge
      */
     protected function _attributeAutoIncrement(array &$attributes, array &$field)
     {
-        if (! empty($attributes['AUTO_INCREMENT']) && $attributes['AUTO_INCREMENT'] === true && stripos($field['type'], 'INT') !== false) {
+        if (!empty($attributes['AUTO_INCREMENT']) && $attributes['AUTO_INCREMENT'] === true && stripos($field['type'], 'INT') !== false) {
             $field['auto_increment'] = ' IDENTITY(1,1)';
         }
     }

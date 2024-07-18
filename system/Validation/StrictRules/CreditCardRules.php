@@ -46,7 +46,7 @@ class CreditCardRules
      */
     public function valid_cc_number($ccNumber, string $type): bool
     {
-        if (! is_string($ccNumber)) {
+        if (!is_string($ccNumber)) {
             return false;
         }
 

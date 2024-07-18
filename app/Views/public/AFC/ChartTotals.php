@@ -1,29 +1,29 @@
 <div class="container-fluid">
     <h4>
-        <?=$chartTitle??""?>
+        <?= $chartTitle ?? "" ?>
     </h4>
     <div class="row">
         <div class="col-4">
             <div class="grid-DayCnt">
-                <?php if(isset($labels)) foreach ($labels as $key=>$label):?>
-                    <?php $code= empty($kl)?$key:$label;?>
+                <?php if (isset($labels)) foreach ($labels as $key => $label): ?>
+                    <?php $code = empty($kl) ? $key : $label; ?>
                     <div class="mb-2">
-                        <?=$label?>
+                        <?= $label ?>
                     </div>
                     <div class="mb-2 text-end">
-                        <?=$values->{$code}??0?>
+                        <?= $values->{$code} ?? 0 ?>
                     </div>
-                <?php endforeach;?>
+                <?php endforeach; ?>
                 <div class="mb-2" style="column-span: 2">
-                    <a href="/byDays/<?=$chartID??""?>">
+                    <a href="/byDays/<?= $chartID ?? "" ?>">
                         подробнее
                     </a>
                 </div>
             </div>
         </div>
         <div class="col-8">
-            <div style="position: relative; height: <?=$height??"100vh"?>; width: <?=$width??"100vw"?>">
-                <canvas id="<?=$chartID??""?>"></canvas>
+            <div style="position: relative; height: <?= $height ?? "100vh" ?>; width: <?= $width ?? "100vw" ?>">
+                <canvas id="<?= $chartID ?? "" ?>"></canvas>
             </div>
         </div>
     </div>
@@ -31,8 +31,8 @@
 <script>
     // Получение контекста для рисования
     // Функции
-    const createLineChart<?=$chartID??""?> = (labels, values) => {
-        let canv= window.document.getElementById('<?=$chartID??""?>');
+    const createLineChart<?=$chartID ?? ""?> = (labels, values) => {
+        let canv = window.document.getElementById('<?=$chartID ?? ""?>');
         let cntxt = canv.getContext('2d');
 
         let data = {
@@ -96,5 +96,5 @@
         chart = new Chart(cntxt, config);
     }
 
-    createLineChart<?=$chartID??""?>([<?=$dLabels??""?>], [<?=$dValues??""?>]);
+    createLineChart<?=$chartID ?? ""?>([<?=$dLabels ?? ""?>], [<?=$dValues ?? ""?>]);
 </script>

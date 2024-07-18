@@ -23,6 +23,6 @@ class ObjectCast extends BaseCast
      */
     public static function get($value, array $params = []): object
     {
-        return (object) $value;
+        return (object)$value;
     }
 }

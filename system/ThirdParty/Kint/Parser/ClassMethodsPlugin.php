@@ -95,7 +95,7 @@ class ClassMethodsPlugin extends AbstractPlugin
 
     private static function sort(MethodValue $a, MethodValue $b): int
     {
-        $sort = ((int) $a->static) - ((int) $b->static);
+        $sort = ((int)$a->static) - ((int)$b->static);
         if ($sort) {
             return $sort;
         }

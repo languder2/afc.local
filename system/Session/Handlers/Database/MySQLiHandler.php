@@ -42,7 +42,7 @@ class MySQLiHandler extends DatabaseHandler
      */
     protected function releaseLock(): bool
     {
-        if (! $this->lock) {
+        if (!$this->lock) {
             return true;
         }
 

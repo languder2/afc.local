@@ -40,8 +40,8 @@ abstract class BaseHandler implements EncrypterInterface
      * Byte-safe substr()
      *
      * @param string $str
-     * @param int    $start
-     * @param int    $length
+     * @param int $start
+     * @param int $length
      *
      * @return string
      */

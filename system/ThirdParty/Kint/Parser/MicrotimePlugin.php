@@ -58,16 +58,16 @@ class MicrotimePlugin extends AbstractPlugin
                 return;
             }
 
-            $usec = (int) \substr($var, 2, 6);
-            $sec = (int) \substr($var, 11, 10);
+            $usec = (int)\substr($var, 2, 6);
+            $sec = (int)\substr($var, 11, 10);
         } else {
             if ('microtime(...)' !== $o->name) {
                 return;
             }
 
-            $sec = (int) \floor($var);
+            $sec = (int)\floor($var);
             $usec = $var - $sec;
-            $usec = (int) \floor($usec * 1000000);
+            $usec = (int)\floor($usec * 1000000);
         }
 
         $time = $sec + ($usec / 1000000);

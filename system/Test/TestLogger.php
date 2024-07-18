@@ -30,7 +30,7 @@ class TestLogger extends Logger
      * The log method is overridden so that we can store log history during
      * the tests to allow us to check ->assertLogged() methods.
      *
-     * @param mixed  $level
+     * @param mixed $level
      * @param string $message
      */
     public function log($level, string|Stringable $message, array $context = []): void
@@ -42,19 +42,19 @@ class TestLogger extends Logger
         // Determine the file and line by finding the first
         // backtrace that is not part of our logging system.
         $trace = debug_backtrace();
-        $file  = null;
+        $file = null;
 
         foreach ($trace as $row) {
-            if (! in_array($row['function'], ['log', 'log_message'], true)) {
+            if (!in_array($row['function'], ['log', 'log_message'], true)) {
                 $file = basename($row['file'] ?? '');
                 break;
             }
         }
 
         self::$op_logs[] = [
-            'level'   => $level,
+            'level' => $level,
             'message' => $logMessage,
-            'file'    => $file,
+            'file' => $file,
         ];
 
         // Let the parent do it's thing.

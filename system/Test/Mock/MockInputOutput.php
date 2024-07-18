@@ -39,8 +39,8 @@ final class MockInputOutput extends InputOutput
     /**
      * Sets user inputs.
      *
-     * @param         array<int, string> $inputs
-     * @phpstan-param list<string>       $inputs
+     * @param array<int, string> $inputs
+     * @phpstan-param list<string> $inputs
      */
     public function setInputs(array $inputs): void
     {
@@ -114,7 +114,7 @@ final class MockInputOutput extends InputOutput
         PhpStreamWrapper::register();
         PhpStreamWrapper::setContent($input);
 
-        $userInput       = parent::input($prefix);
+        $userInput = parent::input($prefix);
         $this->outputs[] = CITestStreamFilter::$buffer . $input . PHP_EOL;
 
         PhpStreamWrapper::restore();

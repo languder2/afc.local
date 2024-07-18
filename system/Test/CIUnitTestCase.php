@@ -238,7 +238,7 @@ abstract class CIUnitTestCase extends TestCase
     {
         parent::setUp();
 
-        if (! $this->app) {
+        if (!$this->app) {
             $this->app = $this->createApplication();
         }
 
@@ -336,7 +336,7 @@ abstract class CIUnitTestCase extends TestCase
     {
         $_SESSION = [];
 
-        $config  = config(Session::class);
+        $config = config(Session::class);
         $session = new MockSession(new ArrayHandler($config, '0.0.0.0'), $config);
 
         Services::injectMock('session', $session);
@@ -390,7 +390,7 @@ abstract class CIUnitTestCase extends TestCase
      */
     public function assertEventTriggered(string $eventName): bool
     {
-        $found     = false;
+        $found = false;
         $eventName = strtolower($eventName);
 
         foreach (Events::getPerformanceLogs() as $log) {
@@ -447,7 +447,7 @@ abstract class CIUnitTestCase extends TestCase
      */
     public function assertCloseEnough(int $expected, $actual, string $message = '', int $tolerance = 1)
     {
-        $difference = abs($expected - (int) floor($actual));
+        $difference = abs($expected - (int)floor($actual));
 
         $this->assertLessThanOrEqual($tolerance, $difference, $message);
     }
@@ -467,15 +467,15 @@ abstract class CIUnitTestCase extends TestCase
      */
     public function assertCloseEnoughString($expected, $actual, string $message = '', int $tolerance = 1)
     {
-        $expected = (string) $expected;
-        $actual   = (string) $actual;
+        $expected = (string)$expected;
+        $actual = (string)$actual;
         if (strlen($expected) !== strlen($actual)) {
             return false;
         }
 
         try {
-            $expected   = (int) substr($expected, -2);
-            $actual     = (int) substr($actual, -2);
+            $expected = (int)substr($expected, -2);
+            $actual = (int)substr($actual, -2);
             $difference = abs($expected - $actual);
 
             $this->assertLessThanOrEqual($tolerance, $difference, $message);
@@ -510,7 +510,7 @@ abstract class CIUnitTestCase extends TestCase
      */
     protected function getHeaderEmitted(string $header, bool $ignoreCase = false, string $method = __METHOD__): ?string
     {
-        if (! function_exists('xdebug_get_headers')) {
+        if (!function_exists('xdebug_get_headers')) {
             $this->markTestSkipped($method . '() requires xdebug.');
         }
 

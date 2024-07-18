@@ -42,12 +42,12 @@ final class DataConverter
          *
          * @var array<string, string> [column => type]
          */
-        private readonly array $types,
-        array $castHandlers = [],
+        private readonly array               $types,
+        array                                $castHandlers = [],
         /**
          * Helper object.
          */
-        private readonly ?object $helper = null,
+        private readonly ?object             $helper = null,
         /**
          * Static reconstruct method name or closure to reconstruct an object.
          * Used by reconstruct().
@@ -62,7 +62,8 @@ final class DataConverter
          * @phpstan-var (Closure(TEntity, bool, bool): array<string, mixed>)|string|null
          */
         private readonly Closure|string|null $extractor = null,
-    ) {
+    )
+    {
         $this->dataCaster = new DataCaster($castHandlers, $types, $this->helper);
     }
 
@@ -105,9 +106,9 @@ final class DataConverter
     /**
      * Takes database data array and creates a specified type object.
      *
-     * @param         class-string          $classname
+     * @param class-string $classname
      * @phpstan-param class-string<TEntity> $classname
-     * @param         array<string, mixed>  $row       Raw data from database
+     * @param array<string, mixed> $row Raw data from database
      *
      * @phpstan-return TEntity
      *
@@ -156,7 +157,7 @@ final class DataConverter
      *
      * @param bool $onlyChanged Only for CodeIgniter's Entity. If true, only returns
      *                          values that have changed since object creation.
-     * @param bool $recursive   Only for CodeIgniter's Entity. If true, inner
+     * @param bool $recursive Only for CodeIgniter's Entity. If true, inner
      *                          entities will be cast as array as well.
      *
      * @return array<string, mixed>
@@ -168,7 +169,7 @@ final class DataConverter
         // Use extractor method.
         if (is_string($this->extractor) && method_exists($object, $this->extractor)) {
             $method = $this->extractor;
-            $row    = $object->{$method}($onlyChanged, $recursive);
+            $row = $object->{$method}($onlyChanged, $recursive);
 
             return $this->toDataSource($row);
         }
@@ -176,7 +177,7 @@ final class DataConverter
         // Use closure to extract.
         if ($this->extractor instanceof Closure) {
             $closure = $this->extractor;
-            $row     = $closure($object, $onlyChanged, $recursive);
+            $row = $closure($object, $onlyChanged, $recursive);
 
             return $this->toDataSource($row);
         }
@@ -187,7 +188,7 @@ final class DataConverter
             return $this->toDataSource($row);
         }
 
-        $array = (array) $object;
+        $array = (array)$object;
 
         $row = [];
 

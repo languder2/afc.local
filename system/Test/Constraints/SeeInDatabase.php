@@ -43,7 +43,7 @@ class SeeInDatabase extends Constraint
      */
     public function __construct(ConnectionInterface $db, array $data)
     {
-        $this->db   = $db;
+        $this->db = $db;
         $this->data = $data;
     }
 

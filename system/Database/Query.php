@@ -113,7 +113,7 @@ class Query implements QueryInterface, Stringable
         unset($this->swappedQueryString);
 
         if ($binds !== null) {
-            if (! is_array($binds)) {
+            if (!is_array($binds)) {
                 $binds = [$binds];
             }
 
@@ -218,7 +218,7 @@ class Query implements QueryInterface, Stringable
      */
     public function setError(int $code, string $error)
     {
-        $this->errorCode   = $code;
+        $this->errorCode = $code;
         $this->errorString = $error;
 
         return $this;
@@ -229,7 +229,7 @@ class Query implements QueryInterface, Stringable
      */
     public function hasError(): bool
     {
-        return ! empty($this->errorString);
+        return !empty($this->errorString);
     }
 
     /**
@@ -266,7 +266,7 @@ class Query implements QueryInterface, Stringable
         $sql = $this->swappedQueryString ?? $this->originalQueryString;
 
         $from = '/(\W)' . $orig . '(\S)/';
-        $to   = '\\1' . $swap . '\\2';
+        $to = '\\1' . $swap . '\\2';
 
         $this->swappedQueryString = preg_replace($from, $to, $sql);
 
@@ -290,7 +290,7 @@ class Query implements QueryInterface, Stringable
      */
     protected function compileBinds()
     {
-        $sql   = $this->swappedQueryString ?? $this->originalQueryString;
+        $sql = $this->swappedQueryString ?? $this->originalQueryString;
         $binds = $this->binds;
 
         if (empty($binds)) {
@@ -301,7 +301,7 @@ class Query implements QueryInterface, Stringable
 
         if (is_int(array_key_first($binds))) {
             $bindCount = count($binds);
-            $ml        = strlen($this->bindMarker);
+            $ml = strlen($this->bindMarker);
 
             $this->finalQueryString = $this->matchSimpleBinds($sql, $binds, $bindCount, $ml);
         } else {
@@ -361,7 +361,7 @@ class Query implements QueryInterface, Stringable
                 $escapedValue = '(' . implode(',', $escapedValue) . ')';
             }
 
-            $sql = substr_replace($sql, (string) $escapedValue, $matches[0][$c][1], $ml);
+            $sql = substr_replace($sql, (string)$escapedValue, $matches[0][$c][1], $ml);
         } while ($c !== 0);
 
         return $sql;
@@ -418,7 +418,7 @@ class Query implements QueryInterface, Stringable
          */
         $search = '/\b(?:' . implode('|', $highlight) . ')\b(?![^(&#039;)]*&#039;(?:(?:[^(&#039;)]*&#039;){2})*[^(&#039;)]*$)/';
 
-        return preg_replace_callback($search, static fn ($matches) => '<strong>' . str_replace(' ', '&nbsp;', $matches[0]) . '</strong>', $sql);
+        return preg_replace_callback($search, static fn($matches) => '<strong>' . str_replace(' ', '&nbsp;', $matches[0]) . '</strong>', $sql);
     }
 
     /**

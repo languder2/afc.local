@@ -75,7 +75,7 @@ class Routes extends BaseCollector
     public function display(): array
     {
         $rawRoutes = Services::routes(true);
-        $router    = Services::router(null, null, true);
+        $router = Services::router(null, null, true);
 
         // Get our parameters
         // Closure routes
@@ -93,7 +93,7 @@ class Routes extends BaseCollector
                     // If we're here, page cache is returned. The router is not executed.
                     return [
                         'matchedRoute' => [],
-                        'routes'       => [],
+                        'routes' => [],
                     ];
                 }
             }
@@ -105,7 +105,7 @@ class Routes extends BaseCollector
 
         foreach ($rawParams as $key => $param) {
             $params[] = [
-                'name'  => '$' . $param->getName() . ' = ',
+                'name' => '$' . $param->getName() . ' = ',
                 'value' => $router->params()[$key] ??
                     ' <empty> | default: '
                     . var_export(
@@ -117,12 +117,12 @@ class Routes extends BaseCollector
 
         $matchedRoute = [
             [
-                'directory'  => $router->directory(),
+                'directory' => $router->directory(),
                 'controller' => $router->controllerName(),
-                'method'     => $router->methodName(),
+                'method' => $router->methodName(),
                 'paramCount' => count($router->params()),
                 'truePCount' => count($params),
-                'params'     => $params,
+                'params' => $params,
             ],
         ];
 
@@ -135,8 +135,8 @@ class Routes extends BaseCollector
             // filter for strings, as callbacks aren't displayable
             if ($route['handler'] !== '(Closure)') {
                 $routes[] = [
-                    'method'  => strtoupper($route['method']),
-                    'route'   => $route['route'],
+                    'method' => strtoupper($route['method']),
+                    'route' => $route['route'],
                     'handler' => $route['handler'],
                 ];
             }
@@ -144,7 +144,7 @@ class Routes extends BaseCollector
 
         return [
             'matchedRoute' => $matchedRoute,
-            'routes'       => $routes,
+            'routes' => $routes,
         ];
     }
 

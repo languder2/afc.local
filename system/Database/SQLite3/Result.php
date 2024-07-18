@@ -57,23 +57,23 @@ class Result extends BaseResult
     {
         static $dataTypes = [
             SQLITE3_INTEGER => 'integer',
-            SQLITE3_FLOAT   => 'float',
-            SQLITE3_TEXT    => 'text',
-            SQLITE3_BLOB    => 'blob',
-            SQLITE3_NULL    => 'null',
+            SQLITE3_FLOAT => 'float',
+            SQLITE3_TEXT => 'text',
+            SQLITE3_BLOB => 'blob',
+            SQLITE3_NULL => 'null',
         ];
 
         $retVal = [];
         $this->resultID->fetchArray(SQLITE3_NUM);
 
         for ($i = 0, $c = $this->getFieldCount(); $i < $c; $i++) {
-            $retVal[$i]             = new stdClass();
-            $retVal[$i]->name       = $this->resultID->columnName($i);
-            $type                   = $this->resultID->columnType($i);
-            $retVal[$i]->type       = $type;
-            $retVal[$i]->type_name  = $dataTypes[$type] ?? null;
+            $retVal[$i] = new stdClass();
+            $retVal[$i]->name = $this->resultID->columnName($i);
+            $type = $this->resultID->columnType($i);
+            $retVal[$i]->type = $type;
+            $retVal[$i]->type_name = $dataTypes[$type] ?? null;
             $retVal[$i]->max_length = null;
-            $retVal[$i]->length     = null;
+            $retVal[$i]->length = null;
         }
         $this->resultID->reset();
 
@@ -138,7 +138,7 @@ class Result extends BaseResult
         }
 
         if ($className === 'stdClass') {
-            return (object) $row;
+            return (object)$row;
         }
 
         $classObj = new $className();

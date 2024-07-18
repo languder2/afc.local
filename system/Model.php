@@ -178,8 +178,8 @@ class Model extends BaseModel
      * matching $id.
      * This method works only with dbCalls.
      *
-     * @param bool                  $singleton Single or multiple results
-     * @param array|int|string|null $id        One primary key or an array of primary keys
+     * @param bool $singleton Single or multiple results
+     * @param array|int|string|null $id One primary key or an array of primary keys
      *
      * @return         array|object|null                                                     The resulting row of data, or null.
      * @phpstan-return ($singleton is true ? row_array|null|object : list<row_array|object>)
@@ -198,7 +198,7 @@ class Model extends BaseModel
             $builder->where($this->table . '.' . $this->deletedField, null);
         }
 
-        $row  = null;
+        $row = null;
         $rows = [];
 
         if (is_array($id)) {
@@ -257,8 +257,8 @@ class Model extends BaseModel
      * all results, while optionally limiting them.
      * This method works only with dbCalls.
      *
-     * @param int|null $limit  Limit
-     * @param int      $offset Offset
+     * @param int|null $limit Limit
+     * @param int $offset Offset
      *
      * @return         array
      * @phpstan-return list<row_array|object>
@@ -342,19 +342,19 @@ class Model extends BaseModel
      * Inserts data into the current table.
      * This method works only with dbCalls.
      *
-     * @param         array     $row Row data
+     * @param array $row Row data
      * @phpstan-param row_array $row
      *
      * @return bool
      */
     protected function doInsert(array $row)
     {
-        $escape       = $this->escape;
+        $escape = $this->escape;
         $this->escape = [];
 
         // Require non-empty primaryKey when
         // not using auto-increment feature
-        if (! $this->useAutoIncrement && ! isset($row[$this->primaryKey])) {
+        if (!$this->useAutoIncrement && !isset($row[$this->primaryKey])) {
             throw DataException::forEmptyPrimaryKey('insert');
         }
 
@@ -372,7 +372,7 @@ class Model extends BaseModel
             } elseif ($this->db->getPlatform() === 'OCI8') {
                 $allFields = $this->db->protectIdentifiers(
                     array_map(
-                        static fn ($row) => $row->name,
+                        static fn($row) => $row->name,
                         $this->db->getFieldData($this->table)
                     ),
                     false,
@@ -396,7 +396,7 @@ class Model extends BaseModel
 
         // If insertion succeeded then save the insert ID
         if ($result) {
-            $this->insertID = ! $this->useAutoIncrement ? $row[$this->primaryKey] : $this->db->insertID();
+            $this->insertID = !$this->useAutoIncrement ? $row[$this->primaryKey] : $this->db->insertID();
         }
 
         return $result;
@@ -406,10 +406,10 @@ class Model extends BaseModel
      * Compiles batch insert strings and runs the queries, validating each row prior.
      * This method works only with dbCalls.
      *
-     * @param array|null $set       An associative array of insert values
-     * @param bool|null  $escape    Whether to escape values
-     * @param int        $batchSize The size of the batch to run
-     * @param bool       $testing   True means only number of records is returned, false will execute the query
+     * @param array|null $set An associative array of insert values
+     * @param bool|null $escape Whether to escape values
+     * @param int $batchSize The size of the batch to run
+     * @param bool $testing True means only number of records is returned, false will execute the query
      *
      * @return bool|int Number of rows inserted or FALSE on failure
      */
@@ -419,7 +419,7 @@ class Model extends BaseModel
             foreach ($set as $row) {
                 // Require non-empty primaryKey when
                 // not using auto-increment feature
-                if (! $this->useAutoIncrement && ! isset($row[$this->primaryKey])) {
+                if (!$this->useAutoIncrement && !isset($row[$this->primaryKey])) {
                     throw DataException::forEmptyPrimaryKey('insertBatch');
                 }
             }
@@ -432,13 +432,13 @@ class Model extends BaseModel
      * Updates a single record in $this->table.
      * This method works only with dbCalls.
      *
-     * @param         array|int|string|null $id
-     * @param         array|null            $row Row data
-     * @phpstan-param row_array|null        $row
+     * @param array|int|string|null $id
+     * @param array|null $row Row data
+     * @phpstan-param row_array|null $row
      */
     protected function doUpdate($id = null, $row = null): bool
     {
-        $escape       = $this->escape;
+        $escape = $this->escape;
         $this->escape = [];
 
         $builder = $this->builder();
@@ -465,10 +465,10 @@ class Model extends BaseModel
      * Compiles an update string and runs the query
      * This method works only with dbCalls.
      *
-     * @param array|null  $set       An associative array of update values
-     * @param string|null $index     The where key
-     * @param int         $batchSize The size of the batch to run
-     * @param bool        $returnSQL True means SQL is returned, false will execute the query
+     * @param array|null $set An associative array of update values
+     * @param string|null $index The where key
+     * @param int $batchSize The size of the batch to run
+     * @param bool $returnSQL True means SQL is returned, false will execute the query
      *
      * @return false|int|list<string> Number of rows affected or FALSE on failure, SQL array when testMode
      *
@@ -484,8 +484,8 @@ class Model extends BaseModel
      * the table's primaryKey
      * This method works only with dbCalls.
      *
-     * @param array|int|string|null $id    The rows primary key(s)
-     * @param bool                  $purge Allows overriding the soft deletes setting.
+     * @param array|int|string|null $id The rows primary key(s)
+     * @param bool $purge Allows overriding the soft deletes setting.
      *
      * @return bool|string SQL string when testMode
      *
@@ -493,14 +493,14 @@ class Model extends BaseModel
      */
     protected function doDelete($id = null, bool $purge = false)
     {
-        $set     = [];
+        $set = [];
         $builder = $this->builder();
 
         if ($id) {
             $builder = $builder->whereIn($this->primaryKey, $id);
         }
 
-        if ($this->useSoftDeletes && ! $purge) {
+        if ($this->useSoftDeletes && !$purge) {
             if ($builder->getCompiledQBWhere() === []) {
                 throw new DatabaseException(
                     'Deletes are not allowed unless they contain a "where" or "like" clause.'
@@ -551,9 +551,9 @@ class Model extends BaseModel
      * Compiles a replace into string and runs the query
      * This method works only with dbCalls.
      *
-     * @param         array|null     $row       Data
+     * @param array|null $row Data
      * @phpstan-param row_array|null $row
-     * @param         bool           $returnSQL Set to true to return Query String
+     * @param bool $returnSQL Set to true to return Query String
      *
      * @return BaseResult|false|Query|string
      */
@@ -575,7 +575,7 @@ class Model extends BaseModel
         // $error is always ['code' => string|int, 'message' => string]
         $error = $this->db->error();
 
-        if ((int) $error['code'] === 0) {
+        if ((int)$error['code'] === 0) {
             return [];
         }
 
@@ -585,7 +585,7 @@ class Model extends BaseModel
     /**
      * Returns the id value for the data array or object
      *
-     * @param         array|object     $row Row data
+     * @param array|object $row Row data
      * @phpstan-param row_array|object $row
      *
      * @return array|int|string|null
@@ -630,14 +630,14 @@ class Model extends BaseModel
      */
     public function chunk(int $size, Closure $userFunc)
     {
-        $total  = $this->builder()->countAllResults(false);
+        $total = $this->builder()->countAllResults(false);
         $offset = 0;
 
         while ($offset <= $total) {
             $builder = clone $this->builder();
-            $rows    = $builder->get($size, $offset);
+            $rows = $builder->get($size, $offset);
 
-            if (! $rows) {
+            if (!$rows) {
                 throw DataException::forEmptyDataset('chunk');
             }
 
@@ -709,7 +709,7 @@ class Model extends BaseModel
         $table = ($table === null || $table === '') ? $this->table : $table;
 
         // Ensure we have a good db connection
-        if (! $this->db instanceof BaseConnection) {
+        if (!$this->db instanceof BaseConnection) {
             $this->db = Database::connect($this->DBGroup);
         }
 
@@ -728,16 +728,16 @@ class Model extends BaseModel
      * data here. This allows it to be used with any of the other
      * builder methods and still get validated data, like replace.
      *
-     * @param array|object|string               $key    Field name, or an array of field/value pairs, or an object
-     * @param bool|float|int|object|string|null $value  Field value, if $key is a single field
-     * @param bool|null                         $escape Whether to escape values
+     * @param array|object|string $key Field name, or an array of field/value pairs, or an object
+     * @param bool|float|int|object|string|null $value Field value, if $key is a single field
+     * @param bool|null $escape Whether to escape values
      *
      * @return $this
      */
     public function set($key, $value = '', ?bool $escape = null)
     {
         if (is_object($key)) {
-            $key = $key instanceof stdClass ? (array) $key : $this->objectToArray($key);
+            $key = $key instanceof stdClass ? (array)$key : $this->objectToArray($key);
         }
 
         $data = is_array($key) ? $key : [$key => $value];
@@ -776,9 +776,9 @@ class Model extends BaseModel
      * Inserts data into the database. If an object is provided,
      * it will attempt to convert it to an array.
      *
-     * @param         array|object|null     $row
+     * @param array|object|null $row
      * @phpstan-param row_array|object|null $row
-     * @param         bool                  $returnID Whether insert ID should be returned or not.
+     * @param bool $returnID Whether insert ID should be returned or not.
      *
      * @return         bool|int|string
      * @phpstan-return ($returnID is true ? int|string|false : bool)
@@ -796,7 +796,7 @@ class Model extends BaseModel
             }
         }
 
-        $this->escape   = $this->tempData['escape'] ?? [];
+        $this->escape = $this->tempData['escape'] ?? [];
         $this->tempData = [];
 
         return parent::insert($row, $returnID);
@@ -809,14 +809,14 @@ class Model extends BaseModel
      * @used-by insert() to protect against mass assignment vulnerabilities.
      * @used-by insertBatch() to protect against mass assignment vulnerabilities.
      *
-     * @param         array     $row Row data
+     * @param array $row Row data
      * @phpstan-param row_array $row
      *
      * @throws DataException
      */
     protected function doProtectFieldsForInsert(array $row): array
     {
-        if (! $this->protectFields) {
+        if (!$this->protectFields) {
             return $row;
         }
 
@@ -830,7 +830,7 @@ class Model extends BaseModel
                 continue;
             }
 
-            if (! in_array($key, $this->allowedFields, true)) {
+            if (!in_array($key, $this->allowedFields, true)) {
                 unset($row[$key]);
             }
         }
@@ -842,8 +842,8 @@ class Model extends BaseModel
      * Updates a single record in the database. If an object is provided,
      * it will attempt to convert it into an array.
      *
-     * @param         array|int|string|null $id
-     * @param         array|object|null     $row
+     * @param array|int|string|null $id
+     * @param array|object|null $row
      * @phpstan-param row_array|object|null $row
      *
      * @throws ReflectionException
@@ -859,7 +859,7 @@ class Model extends BaseModel
             }
         }
 
-        $this->escape   = $this->tempData['escape'] ?? [];
+        $this->escape = $this->tempData['escape'] ?? [];
         $this->tempData = [];
 
         return parent::update($id, $row);
@@ -869,8 +869,8 @@ class Model extends BaseModel
      * Takes a class and returns an array of its public and protected
      * properties as an array with raw values.
      *
-     * @param object $object    Object
-     * @param bool   $recursive If true, inner entities will be cast as array as well
+     * @param object $object Object
+     * @param bool $recursive If true, inner entities will be cast as array as well
      *
      * @return array<string, mixed> Array with raw values.
      *
@@ -920,7 +920,7 @@ class Model extends BaseModel
     public function __call(string $name, array $params)
     {
         $builder = $this->builder();
-        $result  = null;
+        $result = null;
 
         if (method_exists($this->db, $name)) {
             $result = $this->db->{$name}(...$params);

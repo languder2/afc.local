@@ -85,7 +85,7 @@ class SodiumHandler extends BaseHandler
         }
 
         // Extract info from encrypted data
-        $nonce      = self::substr($data, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $nonce = self::substr($data, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
         $ciphertext = self::substr($data, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 
         // decrypt data
@@ -137,6 +137,6 @@ class SodiumHandler extends BaseHandler
             return;
         }
 
-        $this->key = (string) $params;
+        $this->key = (string)$params;
     }
 }

@@ -35,7 +35,7 @@ class ContentReplacer
     /**
      * Add text
      *
-     * @param string $text    Text to add.
+     * @param string $text Text to add.
      * @param string $pattern Regexp search pattern.
      * @param string $replace Regexp replacement including text to add.
      *
@@ -69,8 +69,8 @@ class ContentReplacer
      * Add line after the line with the string
      *
      * @param string $content Whole content.
-     * @param string $line    Line to add.
-     * @param string $after   String to search.
+     * @param string $line Line to add.
+     * @param string $after String to search.
      *
      * @return string|null Updated content, or null if not updated.
      */
@@ -86,8 +86,8 @@ class ContentReplacer
      * Add line before the line with the string
      *
      * @param string $content Whole content.
-     * @param string $line    Line to add.
-     * @param string $before  String to search.
+     * @param string $line Line to add.
+     * @param string $before String to search.
      *
      * @return string|null Updated content, or null if not updated.
      */

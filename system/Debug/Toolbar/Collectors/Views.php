@@ -93,10 +93,10 @@ class Views extends BaseCollector
 
         foreach ($rows as $info) {
             $data[] = [
-                'name'      => 'View: ' . $info['view'],
+                'name' => 'View: ' . $info['view'],
                 'component' => 'Views',
-                'start'     => $info['start'],
-                'duration'  => $info['end'] - $info['start'],
+                'start' => $info['start'],
+                'duration' => $info['end'] - $info['start'],
             ];
         }
 

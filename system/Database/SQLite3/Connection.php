@@ -82,11 +82,11 @@ class Connection extends BaseConnection
         }
 
         try {
-            if ($this->database !== ':memory:' && ! str_contains($this->database, DIRECTORY_SEPARATOR)) {
+            if ($this->database !== ':memory:' && !str_contains($this->database, DIRECTORY_SEPARATOR)) {
                 $this->database = WRITEPATH . $this->database;
             }
 
-            $sqlite = (! $this->password)
+            $sqlite = (!$this->password)
                 ? new SQLite3($this->database)
                 : new SQLite3($this->database, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE, $this->password);
 
@@ -152,7 +152,7 @@ class Connection extends BaseConnection
                 ? $this->connID->exec($sql)
                 : $this->connID->query($sql);
         } catch (Exception $e) {
-            log_message('error', (string) $e);
+            log_message('error', (string)$e);
 
             if ($this->DBDebug) {
                 throw new DatabaseException($e->getMessage(), $e->getCode(), $e);
@@ -175,7 +175,7 @@ class Connection extends BaseConnection
      */
     protected function _escapeString(string $str): string
     {
-        if (! $this->connID instanceof SQLite3) {
+        if (!$this->connID instanceof SQLite3) {
             $this->initialize();
         }
 
@@ -191,15 +191,15 @@ class Connection extends BaseConnection
     {
         if ($tableName !== null) {
             return 'SELECT "NAME" FROM "SQLITE_MASTER" WHERE "TYPE" = \'table\''
-                   . ' AND "NAME" NOT LIKE \'sqlite!_%\' ESCAPE \'!\''
-                   . ' AND "NAME" LIKE ' . $this->escape($tableName);
+                . ' AND "NAME" NOT LIKE \'sqlite!_%\' ESCAPE \'!\''
+                . ' AND "NAME" LIKE ' . $this->escape($tableName);
         }
 
         return 'SELECT "NAME" FROM "SQLITE_MASTER" WHERE "TYPE" = \'table\''
-               . ' AND "NAME" NOT LIKE \'sqlite!_%\' ESCAPE \'!\''
-               . (($prefixLimit !== false && $this->DBPrefix !== '')
-                    ? ' AND "NAME" LIKE \'' . $this->escapeLikeString($this->DBPrefix) . '%\' ' . sprintf($this->likeEscapeStr, $this->likeEscapeChar)
-                    : '');
+            . ' AND "NAME" NOT LIKE \'sqlite!_%\' ESCAPE \'!\''
+            . (($prefixLimit !== false && $this->DBPrefix !== '')
+                ? ' AND "NAME" LIKE \'' . $this->escapeLikeString($this->DBPrefix) . '%\' ' . sprintf($this->likeEscapeStr, $this->likeEscapeChar)
+                : '');
     }
 
     /**
@@ -222,18 +222,18 @@ class Connection extends BaseConnection
             return $this->dataCache['field_names'][$table];
         }
 
-        if (! $this->connID instanceof SQLite3) {
+        if (!$this->connID instanceof SQLite3) {
             $this->initialize();
         }
 
         $sql = $this->_listColumns($table);
 
-        $query                                  = $this->query($sql);
+        $query = $this->query($sql);
         $this->dataCache['field_names'][$table] = [];
 
         foreach ($query->getResultArray() as $row) {
             // Do we know from where to get the column's name?
-            if (! isset($key)) {
+            if (!isset($key)) {
                 if (isset($row['column_name'])) {
                     $key = 'column_name';
                 } elseif (isset($row['COLUMN_NAME'])) {
@@ -276,11 +276,11 @@ class Connection extends BaseConnection
         for ($i = 0, $c = count($query); $i < $c; $i++) {
             $retVal[$i] = new stdClass();
 
-            $retVal[$i]->name       = $query[$i]->name;
-            $retVal[$i]->type       = $query[$i]->type;
+            $retVal[$i]->name = $query[$i]->name;
+            $retVal[$i]->type = $query[$i]->type;
             $retVal[$i]->max_length = null;
-            $retVal[$i]->nullable   = isset($query[$i]->notnull) && ! (bool) $query[$i]->notnull;
-            $retVal[$i]->default    = $query[$i]->dflt_value;
+            $retVal[$i]->nullable = isset($query[$i]->notnull) && !(bool)$query[$i]->notnull;
+            $retVal[$i]->default = $query[$i]->dflt_value;
             // "pk" (either zero for columns that are not part of the primary key,
             // or the 1-based index of the column within the primary key).
             // https://www.sqlite.org/pragma.html#pragma_table_info
@@ -324,12 +324,12 @@ class Connection extends BaseConnection
 
         foreach ($query as $row) {
             if ($row->indextype === 'PRIMARY') {
-                $tempVal['PRIMARY']['indextype']               = $row->indextype;
-                $tempVal['PRIMARY']['indexname']               = $row->indexname;
+                $tempVal['PRIMARY']['indextype'] = $row->indextype;
+                $tempVal['PRIMARY']['indexname'] = $row->indexname;
                 $tempVal['PRIMARY']['fields'][$row->fieldname] = $row->fieldname;
             } else {
-                $tempVal[$row->indexname]['indextype']               = $row->indextype;
-                $tempVal[$row->indexname]['indexname']               = $row->indexname;
+                $tempVal[$row->indexname]['indextype'] = $row->indextype;
+                $tempVal[$row->indexname]['indexname'] = $row->indexname;
                 $tempVal[$row->indexname]['fields'][$row->fieldname] = $row->fieldname;
             }
         }
@@ -337,10 +337,10 @@ class Connection extends BaseConnection
         $retVal = [];
 
         foreach ($tempVal as $val) {
-            $obj                = new stdClass();
-            $obj->name          = $val['indexname'];
-            $obj->fields        = array_values($val['fields']);
-            $obj->type          = $val['indextype'];
+            $obj = new stdClass();
+            $obj->name = $val['indexname'];
+            $obj->fields = array_values($val['fields']);
+            $obj->type = $val['indextype'];
             $retVal[$obj->name] = $obj;
         }
 
@@ -358,18 +358,18 @@ class Connection extends BaseConnection
             return [];
         }
 
-        $query   = $this->query("PRAGMA foreign_key_list({$table})")->getResult();
+        $query = $this->query("PRAGMA foreign_key_list({$table})")->getResult();
         $indexes = [];
 
         foreach ($query as $row) {
-            $indexes[$row->id]['constraint_name']       = null;
-            $indexes[$row->id]['table_name']            = $table;
-            $indexes[$row->id]['foreign_table_name']    = $row->table;
-            $indexes[$row->id]['column_name'][]         = $row->from;
+            $indexes[$row->id]['constraint_name'] = null;
+            $indexes[$row->id]['table_name'] = $table;
+            $indexes[$row->id]['foreign_table_name'] = $row->table;
+            $indexes[$row->id]['column_name'][] = $row->from;
             $indexes[$row->id]['foreign_column_name'][] = $row->to;
-            $indexes[$row->id]['on_delete']             = $row->on_delete;
-            $indexes[$row->id]['on_update']             = $row->on_update;
-            $indexes[$row->id]['match']                 = $row->match;
+            $indexes[$row->id]['on_delete'] = $row->on_delete;
+            $indexes[$row->id]['on_update'] = $row->on_update;
+            $indexes[$row->id]['match'] = $row->match;
         }
 
         return $this->foreignKeyDataToObjects($indexes);
@@ -405,7 +405,7 @@ class Connection extends BaseConnection
     public function error(): array
     {
         return [
-            'code'    => $this->connID->lastErrorCode(),
+            'code' => $this->connID->lastErrorCode(),
             'message' => $this->connID->lastErrorMsg(),
         ];
     }
@@ -450,6 +450,6 @@ class Connection extends BaseConnection
     {
         $result = $this->simpleQuery('PRAGMA foreign_keys');
 
-        return (bool) $result;
+        return (bool)$result;
     }
 }

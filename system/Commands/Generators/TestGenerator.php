@@ -68,7 +68,7 @@ class TestGenerator extends BaseCommand
      */
     protected $options = [
         '--namespace' => 'Set root namespace. Default: "Tests".',
-        '--force'     => 'Force overwrite existing file.',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -77,7 +77,7 @@ class TestGenerator extends BaseCommand
     public function run(array $params)
     {
         $this->component = 'Test';
-        $this->template  = 'test.tpl.php';
+        $this->template = 'test.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.test';
 
@@ -108,7 +108,7 @@ class TestGenerator extends BaseCommand
             );
         }
 
-        $class      = $this->normalizeInputClassName();
+        $class = $this->normalizeInputClassName();
         $classPaths = explode('\\', $class);
 
         $namespaces = service('autoloader')->getNamespace();
@@ -151,7 +151,7 @@ class TestGenerator extends BaseCommand
         }
 
         $realpath = realpath($base);
-        $base     = ($realpath !== false) ? $realpath : $base;
+        $base = ($realpath !== false) ? $realpath : $base;
 
         $file = $base . DIRECTORY_SEPARATOR
             . str_replace(
@@ -161,13 +161,13 @@ class TestGenerator extends BaseCommand
             ) . '.php';
 
         return implode(
-            DIRECTORY_SEPARATOR,
-            array_slice(
-                explode(DIRECTORY_SEPARATOR, $file),
-                0,
-                -1
-            )
-        ) . DIRECTORY_SEPARATOR . $this->basename($file);
+                DIRECTORY_SEPARATOR,
+                array_slice(
+                    explode(DIRECTORY_SEPARATOR, $file),
+                    0,
+                    -1
+                )
+            ) . DIRECTORY_SEPARATOR . $this->basename($file);
     }
 
     /**

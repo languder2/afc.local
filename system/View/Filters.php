@@ -35,12 +35,12 @@ class Filters
      */
     public static function date($value, string $format): string
     {
-        if (is_string($value) && ! is_numeric($value)) {
+        if (is_string($value) && !is_numeric($value)) {
             $value = strtotime($value);
         }
 
         if ($value !== null) {
-            $value = (int) $value;
+            $value = (int)$value;
         }
 
         return date($format, $value);
@@ -79,7 +79,7 @@ class Filters
     /**
      * Escapes the given value with our `esc()` helper function.
      *
-     * @param         string                               $value
+     * @param string $value
      * @phpstan-param 'html'|'js'|'css'|'url'|'attr'|'raw' $context
      */
     public static function esc($value, string $context = 'html'): string
@@ -154,23 +154,23 @@ class Filters
         helper('number');
 
         $types = [
-            'decimal'    => NumberFormatter::DECIMAL,
-            'currency'   => NumberFormatter::CURRENCY,
-            'percent'    => NumberFormatter::PERCENT,
+            'decimal' => NumberFormatter::DECIMAL,
+            'currency' => NumberFormatter::CURRENCY,
+            'percent' => NumberFormatter::PERCENT,
             'scientific' => NumberFormatter::SCIENTIFIC,
-            'spellout'   => NumberFormatter::SPELLOUT,
-            'ordinal'    => NumberFormatter::ORDINAL,
-            'duration'   => NumberFormatter::DURATION,
+            'spellout' => NumberFormatter::SPELLOUT,
+            'ordinal' => NumberFormatter::ORDINAL,
+            'duration' => NumberFormatter::DURATION,
         ];
 
-        return format_number((float) $value, $precision, $locale, ['type' => $types[$type]]);
+        return format_number((float)$value, $precision, $locale, ['type' => $types[$type]]);
     }
 
     /**
      * Returns the $value displayed as a currency string.
      *
      * @param float|int $value
-     * @param int       $fraction
+     * @param int $fraction
      */
     public static function local_currency($value, string $currency, ?string $locale = null, $fraction = null): string
     {
@@ -179,12 +179,12 @@ class Filters
         $fraction ??= 0;
 
         $options = [
-            'type'     => NumberFormatter::CURRENCY,
+            'type' => NumberFormatter::CURRENCY,
             'currency' => $currency,
             'fraction' => $fraction,
         ];
 
-        return format_number((float) $value, 2, $locale, $options);
+        return format_number((float)$value, 2, $locale, $options);
     }
 
     /**
@@ -223,17 +223,17 @@ class Filters
     public static function round(string $value, $precision = 2, string $type = 'common')
     {
         // In case that $precision is a type like `{ value1|round(ceil) }`
-        if (! is_numeric($precision)) {
-            $type      = $precision;
+        if (!is_numeric($precision)) {
+            $type = $precision;
             $precision = 2;
         } else {
-            $precision = (int) $precision;
+            $precision = (int)$precision;
         }
 
         return match ($type) {
-            'common' => round((float) $value, $precision),
-            'ceil'   => ceil((float) $value),
-            'floor'  => floor((float) $value),
+            'common' => round((float)$value, $precision),
+            'ceil' => ceil((float)$value),
+            'floor' => floor((float)$value),
             // Still here, just return the value.
             default => $value,
         };

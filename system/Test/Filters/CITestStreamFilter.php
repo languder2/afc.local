@@ -46,8 +46,8 @@ class CITestStreamFilter extends php_user_filter
      *
      * @param resource $in
      * @param resource $out
-     * @param int      $consumed
-     * @param bool     $closing
+     * @param int $consumed
+     * @param bool $closing
      */
     public function filter($in, $out, &$consumed, $closing): int
     {
@@ -62,7 +62,7 @@ class CITestStreamFilter extends php_user_filter
 
     public static function registration(): void
     {
-        if (! static::$registered) {
+        if (!static::$registered) {
             static::$registered = stream_filter_register('CITestStreamFilter', self::class); // @codeCoverageIgnore
         }
 

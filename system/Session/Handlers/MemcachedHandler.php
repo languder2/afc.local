@@ -93,7 +93,7 @@ class MemcachedHandler extends BaseHandler
         }
 
         if (
-            ! preg_match_all(
+            !preg_match_all(
                 '#,?([^,:]+)\:(\d{1,5})(?:\:(\d+))?#',
                 $this->savePath,
                 $matches,
@@ -116,7 +116,7 @@ class MemcachedHandler extends BaseHandler
                 continue;
             }
 
-            if (! $this->memcached->addServer($match[1], (int) $match[2], $match[3] ?? 0)) {
+            if (!$this->memcached->addServer($match[1], (int)$match[2], $match[3] ?? 0)) {
                 $this->logger->error(
                     'Could not add ' . $match[1] . ':' . $match[2] . ' to Memcached server pool.'
                 );
@@ -146,11 +146,11 @@ class MemcachedHandler extends BaseHandler
     public function read($id)
     {
         if (isset($this->memcached) && $this->lockSession($id)) {
-            if (! isset($this->sessionID)) {
+            if (!isset($this->sessionID)) {
                 $this->sessionID = $id;
             }
 
-            $data = (string) $this->memcached->get($this->keyPrefix . $id);
+            $data = (string)$this->memcached->get($this->keyPrefix . $id);
 
             $this->fingerprint = md5($data);
 
@@ -163,22 +163,22 @@ class MemcachedHandler extends BaseHandler
     /**
      * Writes the session data to the session storage.
      *
-     * @param string $id   The session ID
+     * @param string $id The session ID
      * @param string $data The encoded session data
      */
     public function write($id, $data): bool
     {
-        if (! isset($this->memcached)) {
+        if (!isset($this->memcached)) {
             return false;
         }
 
         if ($this->sessionID !== $id) {
-            if (! $this->releaseLock() || ! $this->lockSession($id)) {
+            if (!$this->releaseLock() || !$this->lockSession($id)) {
                 return false;
             }
 
             $this->fingerprint = md5('');
-            $this->sessionID   = $id;
+            $this->sessionID = $id;
         }
 
         if (isset($this->lockKey)) {
@@ -210,7 +210,7 @@ class MemcachedHandler extends BaseHandler
                 $this->memcached->delete($this->lockKey);
             }
 
-            if (! $this->memcached->quit()) {
+            if (!$this->memcached->quit()) {
                 return false;
             }
 
@@ -273,7 +273,7 @@ class MemcachedHandler extends BaseHandler
                 continue;
             }
 
-            if (! $this->memcached->set($lockKey, Time::now()->getTimestamp(), 300)) {
+            if (!$this->memcached->set($lockKey, Time::now()->getTimestamp(), 300)) {
                 $this->logger->error(
                     'Session: Error while trying to obtain lock for ' . $this->keyPrefix . $sessionID
                 );
@@ -305,7 +305,7 @@ class MemcachedHandler extends BaseHandler
     {
         if (isset($this->memcached, $this->lockKey) && $this->lock) {
             if (
-                ! $this->memcached->delete($this->lockKey)
+                !$this->memcached->delete($this->lockKey)
                 && $this->memcached->getResultCode() !== Memcached::RES_NOTFOUND
             ) {
                 $this->logger->error(
@@ -316,7 +316,7 @@ class MemcachedHandler extends BaseHandler
             }
 
             $this->lockKey = null;
-            $this->lock    = false;
+            $this->lock = false;
         }
 
         return true;

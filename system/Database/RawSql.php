@@ -40,7 +40,7 @@ class RawSql implements Stringable
      */
     public function with(string $newSqlString): self
     {
-        $new         = clone $this;
+        $new = clone $this;
         $new->string = $newSqlString;
 
         return $new;

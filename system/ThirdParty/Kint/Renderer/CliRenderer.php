@@ -100,7 +100,7 @@ class CliRenderer extends TextRenderer
         if (!self::$terminal_width) {
             if (!KINT_WIN && self::$detect_width) {
                 try {
-                    self::$terminal_width = (int) \exec('tput cols');
+                    self::$terminal_width = (int)\exec('tput cols');
                 } catch (Throwable $t) {
                     self::$terminal_width = self::$default_width;
                 }
@@ -122,7 +122,7 @@ class CliRenderer extends TextRenderer
             return $string;
         }
 
-        return "\x1b[32m".\str_replace("\n", "\x1b[0m\n\x1b[32m", $string)."\x1b[0m";
+        return "\x1b[32m" . \str_replace("\n", "\x1b[0m\n\x1b[32m", $string) . "\x1b[0m";
     }
 
     public function colorType(string $string): string
@@ -131,7 +131,7 @@ class CliRenderer extends TextRenderer
             return $string;
         }
 
-        return "\x1b[35;1m".\str_replace("\n", "\x1b[0m\n\x1b[35;1m", $string)."\x1b[0m";
+        return "\x1b[35;1m" . \str_replace("\n", "\x1b[0m\n\x1b[35;1m", $string) . "\x1b[0m";
     }
 
     public function colorTitle(string $string): string
@@ -140,7 +140,7 @@ class CliRenderer extends TextRenderer
             return $string;
         }
 
-        return "\x1b[36m".\str_replace("\n", "\x1b[0m\n\x1b[36m", $string)."\x1b[0m";
+        return "\x1b[36m" . \str_replace("\n", "\x1b[0m\n\x1b[36m", $string) . "\x1b[0m";
     }
 
     public function renderTitle(Value $o): string

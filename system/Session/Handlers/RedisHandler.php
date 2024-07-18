@@ -25,7 +25,7 @@ use ReturnTypeWillChange;
  */
 class RedisHandler extends BaseHandler
 {
-    private const DEFAULT_PORT     = 6379;
+    private const DEFAULT_PORT = 6379;
     private const DEFAULT_PROTOCOL = 'tcp';
 
     /**
@@ -84,7 +84,7 @@ class RedisHandler extends BaseHandler
 
         // Store Session configurations
         $this->sessionExpiration = ($config->expiration === 0)
-            ? (int) ini_get('session.gc_maxlifetime')
+            ? (int)ini_get('session.gc_maxlifetime')
             : $config->expiration;
 
         // Add sessionCookieName for multiple session cookies.
@@ -97,7 +97,7 @@ class RedisHandler extends BaseHandler
         }
 
         $this->lockRetryInterval = $config->lockWait ?? $this->lockRetryInterval;
-        $this->lockMaxRetries    = $config->lockAttempts ?? $this->lockMaxRetries;
+        $this->lockMaxRetries = $config->lockAttempts ?? $this->lockMaxRetries;
     }
 
     protected function setSavePath(): void
@@ -106,7 +106,7 @@ class RedisHandler extends BaseHandler
             throw SessionException::forEmptySavepath();
         }
 
-        $url   = parse_url($this->savePath);
+        $url = parse_url($this->savePath);
         $query = [];
 
         if ($url === false) {
@@ -128,13 +128,13 @@ class RedisHandler extends BaseHandler
                 $port = 0;
             } else {
                 // TCP connection.
-                if (! isset($url['host'])) {
+                if (!isset($url['host'])) {
                     throw SessionException::forInvalidSavePathFormat($this->savePath);
                 }
 
                 $protocol = $url['scheme'] ?? self::DEFAULT_PROTOCOL;
-                $host     = $protocol . '://' . $url['host'];
-                $port     = $url['port'] ?? self::DEFAULT_PORT;
+                $host = $protocol . '://' . $url['host'];
+                $port = $url['port'] ?? self::DEFAULT_PORT;
             }
 
             if (isset($url['query'])) {
@@ -143,16 +143,16 @@ class RedisHandler extends BaseHandler
         }
 
         $password = $query['auth'] ?? null;
-        $database = isset($query['database']) ? (int) $query['database'] : 0;
-        $timeout  = isset($query['timeout']) ? (float) $query['timeout'] : 0.0;
-        $prefix   = $query['prefix'] ?? null;
+        $database = isset($query['database']) ? (int)$query['database'] : 0;
+        $timeout = isset($query['timeout']) ? (float)$query['timeout'] : 0.0;
+        $prefix = $query['prefix'] ?? null;
 
         $this->savePath = [
-            'host'     => $host,
-            'port'     => $port,
+            'host' => $host,
+            'port' => $port,
             'password' => $password,
             'database' => $database,
-            'timeout'  => $timeout,
+            'timeout' => $timeout,
         ];
 
         if ($prefix !== null) {
@@ -177,16 +177,16 @@ class RedisHandler extends BaseHandler
         $redis = new Redis();
 
         if (
-            ! $redis->connect(
+            !$redis->connect(
                 $this->savePath['host'],
                 $this->savePath['port'],
                 $this->savePath['timeout']
             )
         ) {
             $this->logger->error('Session: Unable to connect to Redis with the configured settings.');
-        } elseif (isset($this->savePath['password']) && ! $redis->auth($this->savePath['password'])) {
+        } elseif (isset($this->savePath['password']) && !$redis->auth($this->savePath['password'])) {
             $this->logger->error('Session: Unable to authenticate to Redis instance.');
-        } elseif (isset($this->savePath['database']) && ! $redis->select($this->savePath['database'])) {
+        } elseif (isset($this->savePath['database']) && !$redis->select($this->savePath['database'])) {
             $this->logger->error(
                 'Session: Unable to select Redis database with index ' . $this->savePath['database']
             );
@@ -213,7 +213,7 @@ class RedisHandler extends BaseHandler
     public function read($id)
     {
         if (isset($this->redis) && $this->lockSession($id)) {
-            if (! isset($this->sessionID)) {
+            if (!isset($this->sessionID)) {
                 $this->sessionID = $id;
             }
 
@@ -236,19 +236,19 @@ class RedisHandler extends BaseHandler
     /**
      * Writes the session data to the session storage.
      *
-     * @param string $id   The session ID
+     * @param string $id The session ID
      * @param string $data The encoded session data
      *
      * @throws RedisException
      */
     public function write($id, $data): bool
     {
-        if (! isset($this->redis)) {
+        if (!isset($this->redis)) {
             return false;
         }
 
         if ($this->sessionID !== $id) {
-            if (! $this->releaseLock() || ! $this->lockSession($id)) {
+            if (!$this->releaseLock() || !$this->lockSession($id)) {
                 return false;
             }
 
@@ -262,7 +262,7 @@ class RedisHandler extends BaseHandler
             if ($this->fingerprint !== ($fingerprint = md5($data)) || $this->keyExists === false) {
                 if ($this->redis->set($this->keyPrefix . $id, $data, $this->sessionExpiration)) {
                     $this->fingerprint = $fingerprint;
-                    $this->keyExists   = true;
+                    $this->keyExists = true;
 
                     return true;
                 }
@@ -286,11 +286,11 @@ class RedisHandler extends BaseHandler
                 $pingReply = $this->redis->ping();
 
                 if (($pingReply === true) || ($pingReply === '+PONG')) {
-                    if (isset($this->lockKey) && ! $this->releaseLock()) {
+                    if (isset($this->lockKey) && !$this->releaseLock()) {
                         return false;
                     }
 
-                    if (! $this->redis->close()) {
+                    if (!$this->redis->close()) {
                         return false;
                     }
                 }
@@ -366,13 +366,13 @@ class RedisHandler extends BaseHandler
         do {
             $result = $this->redis->set(
                 $lockKey,
-                (string) Time::now()->getTimestamp(),
+                (string)Time::now()->getTimestamp(),
                 // NX -- Only set the key if it does not already exist.
                 // EX seconds -- Set the specified expire time, in seconds.
                 ['nx', 'ex' => 300]
             );
 
-            if (! $result) {
+            if (!$result) {
                 usleep($this->lockRetryInterval);
 
                 continue;
@@ -404,14 +404,14 @@ class RedisHandler extends BaseHandler
     protected function releaseLock(): bool
     {
         if (isset($this->redis, $this->lockKey) && $this->lock) {
-            if (! $this->redis->del($this->lockKey)) {
+            if (!$this->redis->del($this->lockKey)) {
                 $this->logger->error('Session: Error while trying to free lock for ' . $this->lockKey);
 
                 return false;
             }
 
             $this->lockKey = null;
-            $this->lock    = false;
+            $this->lock = false;
         }
 
         return true;

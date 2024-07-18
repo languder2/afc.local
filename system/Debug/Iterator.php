@@ -66,20 +66,20 @@ class Iterator
             // clear memory before start
             gc_collect_cycles();
 
-            $start    = microtime(true);
+            $start = microtime(true);
             $startMem = $maxMemory = memory_get_usage(true);
 
             for ($i = 0; $i < $iterations; $i++) {
-                $result    = $test();
+                $result = $test();
                 $maxMemory = max($maxMemory, memory_get_usage(true));
 
                 unset($result);
             }
 
             $this->results[$name] = [
-                'time'   => microtime(true) - $start,
+                'time' => microtime(true) - $start,
                 'memory' => $maxMemory - $startMem,
-                'n'      => $iterations,
+                'n' => $iterations,
             ];
         }
 

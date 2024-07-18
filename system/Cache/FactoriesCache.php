@@ -33,7 +33,7 @@ final class FactoriesCache
 
     public function save(string $component): void
     {
-        if (! Factories::isUpdated($component)) {
+        if (!Factories::isUpdated($component)) {
             return;
         }
 
@@ -51,7 +51,7 @@ final class FactoriesCache
     {
         $key = $this->getCacheKey($component);
 
-        if (! $data = $this->cache->get($key)) {
+        if (!$data = $this->cache->get($key)) {
             return false;
         }
 

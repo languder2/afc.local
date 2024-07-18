@@ -99,7 +99,7 @@ class TraceFrameValue extends Value
 
         if ($this->trace['object']) {
             $callee = new Representation('object');
-            $callee->label = 'Callee object ['.$this->trace['object']->classname.']';
+            $callee->label = 'Callee object [' . $this->trace['object']->classname . ']';
             $callee->contents[] = $this->trace['object'];
             $this->addRepresentation($callee);
         }

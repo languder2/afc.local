@@ -31,9 +31,9 @@ interface RouteCollectionInterface
     /**
      * Adds a single route to the collection.
      *
-     * @param string                                                            $from    The route path (with placeholders or regex)
-     * @param array|(Closure(mixed...): (ResponseInterface|string|void))|string $to      The route handler
-     * @param array|null                                                        $options The route options
+     * @param string $from The route path (with placeholders or regex)
+     * @param array|(Closure(mixed...): (ResponseInterface|string|void))|string $to The route handler
+     * @param array|null $options The route options
      *
      * @return RouteCollectionInterface
      */
@@ -48,7 +48,7 @@ interface RouteCollectionInterface
      * multiple placeholders added at once.
      *
      * @param array|string $placeholder
-     * @param string|null  $pattern     The regex pattern
+     * @param string|null $pattern The regex pattern
      *
      * @return RouteCollectionInterface
      */
@@ -173,7 +173,7 @@ interface RouteCollectionInterface
      *      // Equals 'path/$param1/$param2'
      *      reverseRoute('Controller::method', $param1, $param2);
      *
-     * @param string     $search    Named route or Controller::method
+     * @param string $search Named route or Controller::method
      * @param int|string ...$params
      *
      * @return false|string The route (URI path relative to baseURL) or false if not found.

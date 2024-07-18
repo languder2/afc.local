@@ -24,19 +24,20 @@ use CodeIgniter\Commands\Utilities\Routes\FilterCollector;
 final class AutoRouteCollector
 {
     /**
-     * @param string             $namespace            namespace to search
+     * @param string $namespace namespace to search
      * @param list<class-string> $protectedControllers List of controllers in Defined
      *                                                 Routes that should not be accessed via Auto-Routing.
-     * @param string             $prefix               URI prefix for Module Routing
+     * @param string $prefix URI prefix for Module Routing
      */
     public function __construct(
         private readonly string $namespace,
         private readonly string $defaultController,
         private readonly string $defaultMethod,
-        private readonly array $httpMethods,
-        private readonly array $protectedControllers,
-        private string $prefix = ''
-    ) {
+        private readonly array  $httpMethods,
+        private readonly array  $protectedControllers,
+        private string          $prefix = ''
+    )
+    {
     }
 
     /**
@@ -106,19 +107,19 @@ final class AutoRouteCollector
             }
 
             // Search filters for the URI with all params
-            $sampleUri      = $this->generateSampleUri($route);
+            $sampleUri = $this->generateSampleUri($route);
             $filtersLongest = $filterCollector->get($route['method'], $routePath . $sampleUri);
 
             // Search filters for the URI without optional params
-            $sampleUri       = $this->generateSampleUri($route, false);
+            $sampleUri = $this->generateSampleUri($route, false);
             $filtersShortest = $filterCollector->get($route['method'], $routePath . $sampleUri);
 
             // Get common array elements
             $filters['before'] = array_intersect($filtersLongest['before'], $filtersShortest['before']);
-            $filters['after']  = array_intersect($filtersLongest['after'], $filtersShortest['after']);
+            $filters['after'] = array_intersect($filtersLongest['after'], $filtersShortest['after']);
 
             $route['before'] = implode(' ', array_map('class_basename', $filters['before']));
-            $route['after']  = implode(' ', array_map('class_basename', $filters['after']));
+            $route['after'] = implode(' ', array_map('class_basename', $filters['after']));
         }
 
         return $routes;
@@ -132,7 +133,7 @@ final class AutoRouteCollector
             $i = 1;
 
             foreach ($route['params'] as $required) {
-                if ($longest && ! $required) {
+                if ($longest && !$required) {
                     $sampleUri .= '/' . $i++;
                 }
             }

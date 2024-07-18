@@ -104,7 +104,7 @@ class Autoloader
     {
         $this->prefixes = [];
         $this->classmap = [];
-        $this->files    = [];
+        $this->files = [];
 
         // We have to have one or the other, though we don't enforce the need
         // to have both present in order to work.
@@ -139,7 +139,7 @@ class Autoloader
     {
         // The path to the vendor directory.
         // We do not want to enforce this, so set the constant if Composer was used.
-        if (! defined('VENDORPATH')) {
+        if (!defined('VENDORPATH')) {
             define('VENDORPATH', dirname(COMPOSER_PATH) . DIRECTORY_SEPARATOR);
         }
 
@@ -263,9 +263,9 @@ class Autoloader
     /**
      * Loads the class file for a given class name.
      *
+     * @param string $class The fully qualified class name.
      * @internal For `spl_autoload_register` use.
      *
-     * @param string $class The fully qualified class name.
      */
     public function loadClass(string $class): void
     {
@@ -281,7 +281,7 @@ class Autoloader
      */
     protected function loadInNamespace(string $class)
     {
-        if (! str_contains($class, '\\')) {
+        if (!str_contains($class, '\\')) {
             return false;
         }
 
@@ -380,7 +380,7 @@ class Autoloader
             }
         }
 
-        if (! method_exists(InstalledVersions::class, 'getAllRawData')) {
+        if (!method_exists(InstalledVersions::class, 'getAllRawData')) {
             throw new RuntimeException(
                 'Your Composer version is too old.'
                 . ' Please update Composer (run `composer self-update`) to v2.0.14 or later'
@@ -388,7 +388,7 @@ class Autoloader
             );
         }
         // This method requires Composer 2.0.14 or later.
-        $allData     = InstalledVersions::getAllRawData();
+        $allData = InstalledVersions::getAllRawData();
         $packageList = [];
 
         foreach ($allData as $list) {
@@ -396,7 +396,7 @@ class Autoloader
         }
 
         // Check config for $composerPackages.
-        $only    = $composerPackages['only'] ?? [];
+        $only = $composerPackages['only'] ?? [];
         $exclude = $composerPackages['exclude'] ?? [];
         if ($only !== [] && $exclude !== []) {
             throw new ConfigException('Cannot use "only" and "exclude" at the same time in "Config\Modules::$composerPackages".');
@@ -412,7 +412,7 @@ class Autoloader
             }
         } else {
             foreach ($packageList as $packageName => $data) {
-                if (! in_array($packageName, $exclude, true) && isset($data['install_path'])) {
+                if (!in_array($packageName, $exclude, true) && isset($data['install_path'])) {
                     $installPaths[] = $data['install_path'];
                 }
             }
@@ -444,13 +444,13 @@ class Autoloader
     /**
      * Locates autoload information from Composer, if available.
      *
+     * @return void
      * @deprecated No longer used.
      *
-     * @return void
      */
     protected function discoverComposerNamespaces()
     {
-        if (! is_file(COMPOSER_PATH)) {
+        if (!is_file(COMPOSER_PATH)) {
             return;
         }
 
@@ -458,8 +458,8 @@ class Autoloader
          * @var ClassLoader $composer
          */
         $composer = include COMPOSER_PATH;
-        $paths    = $composer->getPrefixesPsr4();
-        $classes  = $composer->getClassMap();
+        $paths = $composer->getPrefixesPsr4();
+        $classes = $composer->getClassMap();
 
         unset($composer);
 
@@ -506,7 +506,7 @@ class Autoloader
     private function autoloadKint(): void
     {
         // If we have KINT_DIR it means it's already loaded via composer
-        if (! defined('KINT_DIR')) {
+        if (!defined('KINT_DIR')) {
             spl_autoload_register(function ($class) {
                 $class = explode('\\', $class);
 
@@ -529,9 +529,9 @@ class Autoloader
     {
         $config = new KintConfig();
 
-        Kint::$depth_limit         = $config->maxDepth;
+        Kint::$depth_limit = $config->maxDepth;
         Kint::$display_called_from = $config->displayCalledFrom;
-        Kint::$expanded            = $config->expanded;
+        Kint::$expanded = $config->expanded;
 
         if (isset($config->plugins) && is_array($config->plugins)) {
             Kint::$plugins = $config->plugins;
@@ -539,13 +539,13 @@ class Autoloader
 
         $csp = Services::csp();
         if ($csp->enabled()) {
-            RichRenderer::$js_nonce  = $csp->getScriptNonce();
+            RichRenderer::$js_nonce = $csp->getScriptNonce();
             RichRenderer::$css_nonce = $csp->getStyleNonce();
         }
 
-        RichRenderer::$theme  = $config->richTheme;
+        RichRenderer::$theme = $config->richTheme;
         RichRenderer::$folder = $config->richFolder;
-        RichRenderer::$sort   = $config->richSort;
+        RichRenderer::$sort = $config->richSort;
         if (isset($config->richObjectPlugins) && is_array($config->richObjectPlugins)) {
             RichRenderer::$value_plugins = $config->richObjectPlugins;
         }
@@ -553,9 +553,9 @@ class Autoloader
             RichRenderer::$tab_plugins = $config->richTabPlugins;
         }
 
-        CliRenderer::$cli_colors         = $config->cliColors;
-        CliRenderer::$force_utf8         = $config->cliForceUTF8;
-        CliRenderer::$detect_width       = $config->cliDetectWidth;
+        CliRenderer::$cli_colors = $config->cliColors;
+        CliRenderer::$force_utf8 = $config->cliForceUTF8;
+        CliRenderer::$detect_width = $config->cliDetectWidth;
         CliRenderer::$min_terminal_width = $config->cliMinWidth;
     }
 }

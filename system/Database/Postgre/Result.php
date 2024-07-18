@@ -56,12 +56,12 @@ class Result extends BaseResult
         $retVal = [];
 
         for ($i = 0, $c = $this->getFieldCount(); $i < $c; $i++) {
-            $retVal[$i]             = new stdClass();
-            $retVal[$i]->name       = pg_field_name($this->resultID, $i);
-            $retVal[$i]->type       = pg_field_type_oid($this->resultID, $i);
-            $retVal[$i]->type_name  = pg_field_type($this->resultID, $i);
+            $retVal[$i] = new stdClass();
+            $retVal[$i]->name = pg_field_name($this->resultID, $i);
+            $retVal[$i]->type = pg_field_type_oid($this->resultID, $i);
+            $retVal[$i]->type_name = pg_field_type($this->resultID, $i);
             $retVal[$i]->max_length = pg_field_size($this->resultID, $i);
-            $retVal[$i]->length     = $retVal[$i]->max_length;
+            $retVal[$i]->length = $retVal[$i]->max_length;
             // $retVal[$i]->primary_key = (int)($fieldData[$i]->flags & 2);
             // $retVal[$i]->default     = $fieldData[$i]->def;
         }
@@ -127,7 +127,7 @@ class Result extends BaseResult
      */
     public function getNumRows(): int
     {
-        if (! is_int($this->numRows)) {
+        if (!is_int($this->numRows)) {
             $this->numRows = pg_num_rows($this->resultID);
         }
 

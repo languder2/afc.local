@@ -68,13 +68,13 @@ class ChromeLoggerHandler extends BaseHandler
      */
     protected $levels = [
         'emergency' => 'error',
-        'alert'     => 'error',
-        'critical'  => 'error',
-        'error'     => 'error',
-        'warning'   => 'warn',
-        'notice'    => 'warn',
-        'info'      => 'info',
-        'debug'     => 'info',
+        'alert' => 'error',
+        'critical' => 'error',
+        'error' => 'error',
+        'warning' => 'warn',
+        'notice' => 'warn',
+        'info' => 'info',
+        'debug' => 'info',
     ];
 
     /**
@@ -137,12 +137,12 @@ class ChromeLoggerHandler extends BaseHandler
      */
     protected function format($object)
     {
-        if (! is_object($object)) {
+        if (!is_object($object)) {
             return $object;
         }
 
         // @todo Modify formatting of objects once we can view them in browser.
-        $objectArray = (array) $object;
+        $objectArray = (array)$object;
 
         $objectArray['___class_name'] = $object::class;
 

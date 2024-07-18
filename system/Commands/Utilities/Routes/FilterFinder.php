@@ -31,7 +31,7 @@ final class FilterFinder
 
     public function __construct(?Router $router = null, ?Filters $filters = null)
     {
-        $this->router  = $router ?? service('router');
+        $this->router = $router ?? service('router');
         $this->filters = $filters ?? service('filters');
     }
 
@@ -58,7 +58,7 @@ final class FilterFinder
             $this->filters->enableFilters($routeFilters, 'before');
 
             $oldFilterOrder = config(Feature::class)->oldFilterOrder ?? false;
-            if (! $oldFilterOrder) {
+            if (!$oldFilterOrder) {
                 $routeFilters = array_reverse($routeFilters);
             }
 
@@ -70,12 +70,12 @@ final class FilterFinder
         } catch (RedirectException) {
             return [
                 'before' => [],
-                'after'  => [],
+                'after' => [],
             ];
         } catch (PageNotFoundException) {
             return [
                 'before' => ['<unknown>'],
-                'after'  => ['<unknown>'],
+                'after' => ['<unknown>'],
             ];
         }
     }
@@ -88,11 +88,11 @@ final class FilterFinder
     public function getRequiredFilters(): array
     {
         [$requiredBefore] = $this->filters->getRequiredFilters('before');
-        [$requiredAfter]  = $this->filters->getRequiredFilters('after');
+        [$requiredAfter] = $this->filters->getRequiredFilters('after');
 
         return [
             'before' => $requiredBefore,
-            'after'  => $requiredAfter,
+            'after' => $requiredAfter,
         ];
     }
 }

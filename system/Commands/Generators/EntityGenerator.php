@@ -67,8 +67,8 @@ class EntityGenerator extends BaseCommand
      */
     protected $options = [
         '--namespace' => 'Set root namespace. Default: "APP_NAMESPACE".',
-        '--suffix'    => 'Append the component title to the class name (e.g. User => UserEntity).',
-        '--force'     => 'Force overwrite existing file.',
+        '--suffix' => 'Append the component title to the class name (e.g. User => UserEntity).',
+        '--force' => 'Force overwrite existing file.',
     ];
 
     /**
@@ -78,7 +78,7 @@ class EntityGenerator extends BaseCommand
     {
         $this->component = 'Entity';
         $this->directory = 'Entities';
-        $this->template  = 'entity.tpl.php';
+        $this->template = 'entity.tpl.php';
 
         $this->classNameLang = 'CLI.generator.className.entity';
         $this->generateClass($params);

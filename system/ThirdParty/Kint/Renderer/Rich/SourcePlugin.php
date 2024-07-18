@@ -61,9 +61,9 @@ class SourcePlugin extends AbstractPlugin implements TabPluginInterface
 
         foreach ($source as $linenum => $line) {
             if ($linenum === $r->line) {
-                $output .= '<div class="kint-highlight">'.$this->renderer->escape($line)."\n".'</div>';
+                $output .= '<div class="kint-highlight">' . $this->renderer->escape($line) . "\n" . '</div>';
             } else {
-                $output .= '<div>'.$this->renderer->escape($line)."\n".'</div>';
+                $output .= '<div>' . $this->renderer->escape($line) . "\n" . '</div>';
             }
         }
 
@@ -72,10 +72,10 @@ class SourcePlugin extends AbstractPlugin implements TabPluginInterface
 
             $data = '';
             if ($r->showfilename) {
-                $data = ' data-kint-filename="'.$this->renderer->escape($r->filename).'"';
+                $data = ' data-kint-filename="' . $this->renderer->escape($r->filename) . '"';
             }
 
-            return '<div><pre class="kint-source"'.$data.' style="counter-reset: kint-l '.((int) \key($source) - 1).';">'.$output.'</pre></div><div></div>';
+            return '<div><pre class="kint-source"' . $data . ' style="counter-reset: kint-l ' . ((int)\key($source) - 1) . ';">' . $output . '</pre></div><div></div>';
         }
 
         return null;

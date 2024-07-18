@@ -43,14 +43,15 @@ final class ExceptionHandler extends BaseExceptionHandler implements ExceptionHa
      * Determines the correct way to display the error.
      */
     public function handle(
-        Throwable $exception,
-        RequestInterface $request,
+        Throwable         $exception,
+        RequestInterface  $request,
         ResponseInterface $response,
-        int $statusCode,
-        int $exitCode
-    ): void {
+        int               $statusCode,
+        int               $exitCode
+    ): void
+    {
         // ResponseTrait needs these properties.
-        $this->request  = $request;
+        $this->request = $request;
         $this->response = $response;
 
         if ($request instanceof IncomingRequest) {
@@ -62,7 +63,7 @@ final class ExceptionHandler extends BaseExceptionHandler implements ExceptionHa
                 $response->setStatusCode($statusCode);
             }
 
-            if (! headers_sent()) {
+            if (!headers_sent()) {
                 header(
                     sprintf(
                         'HTTP/%s %s %s',
@@ -75,7 +76,7 @@ final class ExceptionHandler extends BaseExceptionHandler implements ExceptionHa
                 );
             }
 
-            if (! str_contains($request->getHeaderLine('accept'), 'text/html')) {
+            if (!str_contains($request->getHeaderLine('accept'), 'text/html')) {
                 $data = (ENVIRONMENT === 'development' || ENVIRONMENT === 'testing')
                     ? $this->collectVars($exception, $statusCode)
                     : '';
@@ -94,12 +95,12 @@ final class ExceptionHandler extends BaseExceptionHandler implements ExceptionHa
 
         // Determine possible directories of error views
         $addPath = ($request instanceof IncomingRequest ? 'html' : 'cli') . DIRECTORY_SEPARATOR;
-        $path    = $this->viewPath . $addPath;
+        $path = $this->viewPath . $addPath;
         $altPath = rtrim((new Paths())->viewDirectory, '\\/ ')
             . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR . $addPath;
 
         // Determine the views
-        $view    = $this->determineView($exception, $path, $statusCode);
+        $view = $this->determineView($exception, $path, $statusCode);
         $altView = $this->determineView($exception, $altPath, $statusCode);
 
         // Check if the view exists
@@ -128,9 +129,10 @@ final class ExceptionHandler extends BaseExceptionHandler implements ExceptionHa
      */
     protected function determineView(
         Throwable $exception,
-        string $templatePath,
-        int $statusCode = 500
-    ): string {
+        string    $templatePath,
+        int       $statusCode = 500
+    ): string
+    {
         // Production environments should have a custom exception file.
         $view = 'production.php';
 

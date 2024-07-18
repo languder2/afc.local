@@ -58,7 +58,7 @@ final class ArrayHelper
         );
 
         return array_map(
-            static fn ($key) => str_replace('\.', '.', $key),
+            static fn($key) => str_replace('\.', '.', $key),
             $segments
         );
     }
@@ -80,7 +80,7 @@ final class ArrayHelper
         // Grab the current index
         $currentIndex = array_shift($indexes);
 
-        if (! isset($array[$currentIndex]) && $currentIndex !== '*') {
+        if (!isset($array[$currentIndex]) && $currentIndex !== '*') {
             return null;
         }
 
@@ -89,14 +89,14 @@ final class ArrayHelper
             $answer = [];
 
             foreach ($array as $value) {
-                if (! is_array($value)) {
+                if (!is_array($value)) {
                     return null;
                 }
 
                 $answer[] = self::arraySearchDot($indexes, $value);
             }
 
-            $answer = array_filter($answer, static fn ($value) => $value !== null);
+            $answer = array_filter($answer, static fn($value) => $value !== null);
 
             if ($answer !== []) {
                 // If array only has one element, we return that element for BC.
@@ -149,7 +149,7 @@ final class ArrayHelper
                 $currentIndex = array_shift($indexes);
 
                 foreach ($currentArray as $item) {
-                    if (! array_key_exists($currentIndex, $item)) {
+                    if (!array_key_exists($currentIndex, $item)) {
                         return false;
                     }
                 }
@@ -164,7 +164,7 @@ final class ArrayHelper
                 continue;
             }
 
-            if (! array_key_exists($currentIndex, $currentArray)) {
+            if (!array_key_exists($currentIndex, $currentArray)) {
                 return false;
             }
 
@@ -179,9 +179,9 @@ final class ArrayHelper
      *
      * @used-by array_group_by()
      *
-     * @param array $array        Data array (i.e. from query result)
-     * @param array $indexes      Indexes to group by. Dot syntax used. Returns $array if empty
-     * @param bool  $includeEmpty If true, null and '' are also added as valid keys to group
+     * @param array $array Data array (i.e. from query result)
+     * @param array $indexes Indexes to group by. Dot syntax used. Returns $array if empty
+     * @param bool $includeEmpty If true, null and '' are also added as valid keys to group
      *
      * @return array Result array where rows are grouped together by indexes values.
      */
@@ -210,8 +210,9 @@ final class ArrayHelper
         array $result,
         array $row,
         array $indexes,
-        bool $includeEmpty
-    ): array {
+        bool  $includeEmpty
+    ): array
+    {
         if (($index = array_shift($indexes)) === null) {
             $result[] = $row;
 
@@ -220,19 +221,19 @@ final class ArrayHelper
 
         $value = dot_array_search($index, $row);
 
-        if (! is_scalar($value)) {
+        if (!is_scalar($value)) {
             $value = '';
         }
 
         if (is_bool($value)) {
-            $value = (int) $value;
+            $value = (int)$value;
         }
 
-        if (! $includeEmpty && $value === '') {
+        if (!$includeEmpty && $value === '') {
             return $result;
         }
 
-        if (! array_key_exists($value, $result)) {
+        if (!array_key_exists($value, $result)) {
             $result[$value] = [];
         }
 
@@ -274,7 +275,7 @@ final class ArrayHelper
                 if ($diffArrays !== []) {
                     $difference[$originalKey] = $diffArrays;
                 }
-            } elseif (is_string($originalValue) && ! array_key_exists($originalKey, $compareWith)) {
+            } elseif (is_string($originalValue) && !array_key_exists($originalKey, $compareWith)) {
                 $difference[$originalKey] = $originalValue;
             }
         }
@@ -303,16 +304,16 @@ final class ArrayHelper
      * If the value is an array, you need to specify the $sortByIndex of the key to sort
      *
      * @param list<int|list<int|string>|string> $array
-     * @param int|string|null                   $sortByIndex
+     * @param int|string|null $sortByIndex
      */
     public static function sortValuesByNatural(array &$array, $sortByIndex = null): bool
     {
         return usort($array, static function ($currentValue, $nextValue) use ($sortByIndex) {
             if ($sortByIndex !== null) {
-                return strnatcmp((string) $currentValue[$sortByIndex], (string) $nextValue[$sortByIndex]);
+                return strnatcmp((string)$currentValue[$sortByIndex], (string)$nextValue[$sortByIndex]);
             }
 
-            return strnatcmp((string) $currentValue, (string) $nextValue);
+            return strnatcmp((string)$currentValue, (string)$nextValue);
         });
     }
 }

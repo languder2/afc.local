@@ -95,7 +95,7 @@ final class FileLocatorCached implements FileLocatorInterface
         $classname = $this->locator->findQualifiedNameFromPath($path);
 
         $this->cache['findQualifiedNameFromPath'][$path] = $classname;
-        $this->cacheUpdated                              = true;
+        $this->cacheUpdated = true;
 
         return $classname;
     }
@@ -109,7 +109,7 @@ final class FileLocatorCached implements FileLocatorInterface
         $classname = $this->locator->getClassname($file);
 
         $this->cache['getClassname'][$file] = $classname;
-        $this->cacheUpdated                 = true;
+        $this->cacheUpdated = true;
 
         return $classname;
     }
@@ -123,7 +123,7 @@ final class FileLocatorCached implements FileLocatorInterface
         $foundPaths = $this->locator->search($path, $ext, $prioritizeApp);
 
         $this->cache['search'][$path][$ext][$prioritizeApp] = $foundPaths;
-        $this->cacheUpdated                                 = true;
+        $this->cacheUpdated = true;
 
         return $foundPaths;
     }
@@ -137,7 +137,7 @@ final class FileLocatorCached implements FileLocatorInterface
         $files = $this->locator->listFiles($path);
 
         $this->cache['listFiles'][$path] = $files;
-        $this->cacheUpdated              = true;
+        $this->cacheUpdated = true;
 
         return $files;
     }
@@ -151,7 +151,7 @@ final class FileLocatorCached implements FileLocatorInterface
         $files = $this->locator->listNamespaceFiles($prefix, $path);
 
         $this->cache['listNamespaceFiles'][$prefix][$path] = $files;
-        $this->cacheUpdated                                = true;
+        $this->cacheUpdated = true;
 
         return $files;
     }
@@ -165,7 +165,7 @@ final class FileLocatorCached implements FileLocatorInterface
         $files = $this->locator->locateFile($file, $folder, $ext);
 
         $this->cache['locateFile'][$file][$folder][$ext] = $files;
-        $this->cacheUpdated                              = true;
+        $this->cacheUpdated = true;
 
         return $files;
     }

@@ -79,9 +79,9 @@ class Database extends BaseCollector
      * The static method used during Events to collect
      * data.
      *
+     * @return void
      * @internal
      *
-     * @return void
      */
     public static function collect(Query $query)
     {
@@ -95,17 +95,17 @@ class Database extends BaseCollector
 
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
-            if (! is_cli()) {
+            if (!is_cli()) {
                 // when called in the browser, the first two trace arrays
                 // are from the DB event trigger, which are unneeded
                 $backtrace = array_slice($backtrace, 2);
             }
 
             static::$queries[] = [
-                'query'     => $query,
-                'string'    => $queryString,
+                'query' => $query,
+                'string' => $queryString,
                 'duplicate' => in_array($queryString, array_column(static::$queries, 'string', null), true),
-                'trace'     => $backtrace,
+                'trace' => $backtrace,
             ];
         }
     }
@@ -122,20 +122,20 @@ class Database extends BaseCollector
         foreach ($this->connections as $alias => $connection) {
             // Connection Time
             $data[] = [
-                'name'      => 'Connecting to Database: "' . $alias . '"',
+                'name' => 'Connecting to Database: "' . $alias . '"',
                 'component' => 'Database',
-                'start'     => $connection->getConnectStart(),
-                'duration'  => $connection->getConnectDuration(),
+                'start' => $connection->getConnectStart(),
+                'duration' => $connection->getConnectDuration(),
             ];
         }
 
         foreach (static::$queries as $query) {
             $data[] = [
-                'name'      => 'Query',
+                'name' => 'Query',
                 'component' => 'Database',
-                'start'     => $query['query']->getStartTime(true),
-                'duration'  => $query['query']->getDuration(),
-                'query'     => $query['query']->debugToolbarDisplay(),
+                'start' => $query['query']->getStartTime(true),
+                'duration' => $query['query']->getDuration(),
+                'query' => $query['query']->debugToolbarDisplay(),
             ];
         }
 
@@ -147,7 +147,7 @@ class Database extends BaseCollector
      */
     public function display(): array
     {
-        $data            = [];
+        $data = [];
         $data['queries'] = array_map(static function (array $query) {
             $isDuplicate = $query['duplicate'] === true;
 
@@ -163,7 +163,7 @@ class Database extends BaseCollector
                 }
 
                 // find the first trace line that does not originate from `system/`
-                if ($firstNonSystemLine === '' && ! str_contains($line['file'], 'SYSTEMPATH')) {
+                if ($firstNonSystemLine === '' && !str_contains($line['file'], 'SYSTEMPATH')) {
                     $firstNonSystemLine = $line['file'];
                 }
 
@@ -187,13 +187,13 @@ class Database extends BaseCollector
             }
 
             return [
-                'hover'      => $isDuplicate ? 'This query was called more than once.' : '',
-                'class'      => $isDuplicate ? 'duplicate' : '',
-                'duration'   => ((float) $query['query']->getDuration(5) * 1000) . ' ms',
-                'sql'        => $query['query']->debugToolbarDisplay(),
-                'trace'      => $query['trace'],
+                'hover' => $isDuplicate ? 'This query was called more than once.' : '',
+                'class' => $isDuplicate ? 'duplicate' : '',
+                'duration' => ((float)$query['query']->getDuration(5) * 1000) . ' ms',
+                'sql' => $query['query']->debugToolbarDisplay(),
+                'trace' => $query['trace'],
                 'trace-file' => $firstNonSystemLine,
-                'qid'        => md5($query['query'] . Time::now()->format('0.u00 U')),
+                'qid' => md5($query['query'] . Time::now()->format('0.u00 U')),
             ];
         }, static::$queries);
 
@@ -217,8 +217,8 @@ class Database extends BaseCollector
     {
         $this->getConnections();
 
-        $queryCount      = count(static::$queries);
-        $uniqueCount     = count(array_filter(static::$queries, static fn ($query) => $query['duplicate'] === false));
+        $queryCount = count(static::$queries);
+        $uniqueCount = count(array_filter(static::$queries, static fn($query) => $query['duplicate'] === false));
         $connectionCount = count($this->connections);
 
         return sprintf(

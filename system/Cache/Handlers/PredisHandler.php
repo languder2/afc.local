@@ -33,11 +33,11 @@ class PredisHandler extends BaseHandler
      * @var array
      */
     protected $config = [
-        'scheme'   => 'tcp',
-        'host'     => '127.0.0.1',
+        'scheme' => 'tcp',
+        'host' => '127.0.0.1',
         'password' => null,
-        'port'     => 6379,
-        'timeout'  => 0,
+        'port' => 6379,
+        'timeout' => 0,
     ];
 
     /**
@@ -84,7 +84,7 @@ class PredisHandler extends BaseHandler
             $this->redis->hmget($key, ['__ci_type', '__ci_value'])
         );
 
-        if (! isset($data['__ci_type'], $data['__ci_value']) || $data['__ci_value'] === false) {
+        if (!isset($data['__ci_type'], $data['__ci_value']) || $data['__ci_value'] === false) {
             return null;
         }
 
@@ -121,7 +121,7 @@ class PredisHandler extends BaseHandler
                 return false;
         }
 
-        if (! $this->redis->hmset($key, ['__ci_type' => $dataType, '__ci_value' => $value])) {
+        if (!$this->redis->hmset($key, ['__ci_type' => $dataType, '__ci_value' => $value])) {
             return false;
         }
 
@@ -205,12 +205,12 @@ class PredisHandler extends BaseHandler
 
         if (isset($data['__ci_value']) && $data['__ci_value'] !== false) {
             $time = Time::now()->getTimestamp();
-            $ttl  = $this->redis->ttl($key);
+            $ttl = $this->redis->ttl($key);
 
             return [
                 'expire' => $ttl > 0 ? $time + $ttl : null,
-                'mtime'  => $time,
-                'data'   => $data['__ci_value'],
+                'mtime' => $time,
+                'data' => $data['__ci_value'],
             ];
         }
 
