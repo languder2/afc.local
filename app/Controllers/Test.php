@@ -58,7 +58,7 @@ class Test extends BaseController
         $data->uStatus = $this->afc->getAFC("uStatus", false, false, false, false, false, false);
         $data->approval = $this->afc->getAFC("approval", false, false, false, false, false, false);
 
-        return view("public/afc/Main", (array)$data);
+        return view("public/AFC/Main", (array)$data);
 
     }
 
@@ -84,7 +84,7 @@ class Test extends BaseController
         foreach ($this->conditions as $code => $condition)
             $data->totals->apps->{$code} = $this->afc->getAFCCount("id", $condition);
 
-        $pageContent["appTotals"] = view("public/afc/ChartTotals", [
+        $pageContent["appTotals"] = view("public/AFC/ChartTotals", [
             "chartID" => "appTotals",
             "chartTitle" => "Заявки",
             "labels" => $data->titles,
@@ -99,7 +99,7 @@ class Test extends BaseController
         foreach ($this->conditions as $code => $condition)
             $data->totals->uIDs->{$code} = $this->afc->getAFCCount("uID", $condition);
 
-        $pageContent["abitTotals"] = view("public/afc/ChartTotals", [
+        $pageContent["abitTotals"] = view("public/AFC/ChartTotals", [
             "chartID" => "abitTotals",
             "chartTitle" => "Люди",
             "labels" => $data->titles,
@@ -119,7 +119,7 @@ class Test extends BaseController
                 $this->afc->getAFC("methodSubmitting", false, "methodSubmitting!='' AND $condition", false, false, false, ['methodSubmitting']),
                 "methodSubmitting"
             );
-            $pageContent["methodSubmitting"][$code] = view("public/afc/ChartTotals", [
+            $pageContent["methodSubmitting"][$code] = view("public/AFC/ChartTotals", [
                 "chartID" => "ms_$code",
                 "chartTitle" => $data->titles->{$code},
                 "labels" => $labels,
@@ -140,7 +140,7 @@ class Test extends BaseController
                 $this->afc->getAFC("specShape", false, "specShape!='' AND $condition", false, false, false, ['specShape']),
                 "specShape"
             );
-            $pageContent["forms"][$code] = view("public/afc/ChartTotals", [
+            $pageContent["forms"][$code] = view("public/AFC/ChartTotals", [
                 "chartID" => "form_$code",
                 "chartTitle" => $data->titles->{$code},
                 "labels" => $labels,
@@ -160,7 +160,7 @@ class Test extends BaseController
             $this->afc->getAFC("appBasis", false, ["appBasis!=" => ""]),
             "appBasis"
         );
-        $pageContent["appBasis"] = view("public/afc/ChartTotals", [
+        $pageContent["appBasis"] = view("public/AFC/ChartTotals", [
             "chartID" => "appBasis",
             "chartTitle" => "Основание",
             "labels" => $labels,
@@ -187,9 +187,9 @@ class Test extends BaseController
                 "list" => $this->afc->getAFC(["specName", "specProfile"], ['specID'], "specLevel IN ('Аспирантура','Докторантура')", 'specName')
             ],
         ];
-        $pageContent["specProfiles"] = view("public/afc/SpecsList", ["list" => $data->specProfiles]);
+        $pageContent["specProfiles"] = view("public/AFC/SpecsList", ["list" => $data->specProfiles]);
 
-        return view("public/page", ["pageContent" => view("public/afc/Main", $pageContent)]);
+        return view("public/page", ["pageContent" => view("public/AFC/Main", $pageContent)]);
     }
 
     public function chartSpecByDays($specID): string|bool
@@ -250,7 +250,7 @@ class Test extends BaseController
             "formRows" => $formRows,
             "levelRows" => $levelRows,
         ];
-        $pageContent = view("public/afc/SpecChart", $data);
+        $pageContent = view("public/AFC/SpecChart", $data);
 
         return view("public/page", ["pageContent" => $pageContent]);
     }
@@ -284,7 +284,7 @@ class Test extends BaseController
                 foreach ($treeFD as $code => $row)
                     $values[$code] = implode(",", $row);
 
-                $this->data['pageContent'] = view("public/afc/ChartByDays", [
+                $this->data['pageContent'] = view("public/AFC/ChartByDays", [
                     "chartTitle" => "Способ подачи: ВПО",
                     "colors" => $colors,
                     "dates" => $this->dates,
@@ -330,7 +330,7 @@ class Test extends BaseController
                 foreach ($treeFD as $code => $row)
                     $values[$code] = implode(",", $row);
 
-                $this->data['pageContent'] = view("public/afc/ChartByDays", [
+                $this->data['pageContent'] = view("public/AFC/ChartByDays", [
                     "chartTitle" => "Способ подачи: ВПО",
                     "colors" => $colors,
                     "dates" => $this->dates,
@@ -426,8 +426,8 @@ class Test extends BaseController
         foreach ($res as $row)
             $edLevels[$row->id] = $row->name;
 
-        $pageContent["specProfiles"] = view("public/afc/SpecsList2", ["list" => $results, "edLevels" => $edLevels, "showSpec" => true]);
+        $pageContent["specProfiles"] = view("public/AFC/SpecsList2", ["list" => $results, "edLevels" => $edLevels, "showSpec" => true]);
 
-        return view("public/page", ["pageContent" => view("public/afc/Main", $pageContent)]);
+        return view("public/page", ["pageContent" => view("public/AFC/Main", $pageContent)]);
     }
 }

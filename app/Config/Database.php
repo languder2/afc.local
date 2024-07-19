@@ -219,7 +219,8 @@ class Database extends Config
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
         // we don't overwrite live data on accident.
-        if (ENVIRONMENT === 'testing' or ENVIRONMENT === 'development')
+//        if (ENVIRONMENT === 'testing' or ENVIRONMENT === 'development')
+        if ($_SERVER["REMOTE_ADDR"] == "127.0.0.1")
             $this->defaultGroup = 'local';
         else
             $this->defaultGroup = 'beget';

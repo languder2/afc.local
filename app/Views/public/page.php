@@ -30,11 +30,13 @@
     <?php if (!empty($includes->css)) foreach ($includes->css as $css): ?>
         <link href="<?= base_url($css); ?>?t=<?php echo(microtime(true) . rand()); ?>" rel="stylesheet" type="text/css">
     <?php endforeach; ?>
-
 </head>
 <body>
-<div class="container-lg">
-    <?= $pageContent ?? "" ?>
-</div>
+<?= view("public/Templates/Header")?>
+<section class="pageContent">
+    <div class="container-lg">
+        <?= $pageContent ?? "" ?>
+    </div>
+</section>
 </body>
 </html>

@@ -1,91 +1,103 @@
+<?php echo view("public/AFC/Specs/Filter")?>
 <?php if (!empty($list)): ?>
     <div class="container-lg">
-        <h3>
-            Специальности:
+        <h3 class="my-5">
+            Специальности по уровню образования:
         </h3>
-        <?php foreach ($list as $level): if (count($level->list) == 0) continue; ?>
-            <h5 class="pt-4 pb-2">
-                <?= $level->level->name?>
-            </h5>
-            <div class="gridSpecList2">
-                <div class="fw-bold text-center">
-                    ОКСО
-                </div>
-                <div class="fw-bold text-center">
-                    Название (Профиль)
-                </div>
-                <div class="fw-bold text-center">
-                    Форма
-                </div>
-                <div class="fw-bold text-center">
-                    Заявок
-                </div>
-                <div class="fw-bold text-center">
-                    Мест
-                </div>
-                <?php foreach ($level->list as $spec): ?>
-                    <?php if($spec->places == 0) continue;?>
-                    <div class="text-center">
-                        <?= $spec->code ?>
-                    </div>
-                    <div>
-                        <?= $spec->name ?>
-                    </div>
-                    <div></div>
-                    <div class="text-end">
-                        <?= $spec->pr1 ?>
-                    </div>
-                    <div class="text-end">
-                        <?= $spec->places ?>
-                    </div>
-                    <?php foreach ($spec->list as $key=>$profile): ?>
-                        <?php if($profile->places == 0) continue;?>
-                        <div>
-                        </div>
-                        <div class="ps-5">
-                            <?= $profile->profile ?>
-                            <?php if ($profile->profile == " "): ?>
-                                <?php print_r($profile->profile) ?>
-                            <?php endif; ?>
-                        </div>
+        <div class="accordion specs-list" id="accordionPanelsStayOpenExample">
+            <?php foreach ($list as $level): if (count($level->list) == 0) continue; ?>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-heading<?=$level->level->id?>">
+                        <button
+                                class="accordion-button"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#panelsStayOpen-collapse<?=$level->level->id?>"
+                                aria-expanded="true"
+                                aria-controls="panelsStayOpen-collapse<?=$level->level->id?>"
+                        >
+                            <?= $level->level->name?>
+                        </button>
+                    </h2>
 
-                        <div class="text-center">
-                            <?=$profile->edFrom->name?>
-                        </div>
-                        <div class="text-end">
+                    <div
+                            id="panelsStayOpen-collapse<?=$level->level->id?>"
+                            class="accordion-collapse collapse show"
+                            aria-labelledby="panelsStayOpen-heading<?=$level->level->id?>"
+                    >
+                        <div class="accordion-body">
+                            <div class="head-container">
+                                <div class="grid-spec-list">
+                                    <div class="text-center">
+                                        ОКСО
+                                    </div>
+                                    <div class="text-center">
+                                        Название (Профиль)
+                                    </div>
+                                    <div class="text-center">
+                                        Форма
+                                    </div>
+                                    <div class="text-center">
+                                        Заявок
+                                    </div>
+                                    <div class="text-center">
+                                        Мест
+                                    </div>
+                                </div>
+                            </div>
+                            <?php foreach ($level->list as $sKey=>$spec): ?>
+                                <?php if($spec->places == 0) continue;?>
 
-                                <span class="active pr-1">
-                                    <?=$profile->pr1 ?>
-                                </span>
-                                 <span class="d-none pr-2">
-                                    <?=$profile->pr2 ?>
-                                </span>
-                                <span class="d-none pr-3">
-                                    <?=$profile->pr3 ?>
-                                </span>
-                                <span class="d-none pr-4">
-                                    <?=$profile->pr4 ?>
-                                </span>
-                                <span class="d-none pr-5">
-                                    <?=$profile->pr5 ?>
-                                </span>
-                                <span class="d-none pr-other">
-                                    <?=$profile->other ?>
-                                </span>
-                                <span class="d-none pr-all">
-                                    <?=$profile->other ?>
-                                </span>
-                        </div>
-                        <div class="text-end">
-                            <?= $profile->places ?>
-                        </div>
-                    <?php endforeach; ?>
+                                <?php if(count($spec->list)<2):?>
+                                    <?php
+                                    echo view("public/AFC/Specs/RowSingle",[
+                                        "spec"      => $spec,
+                                        "profile"   => reset($spec->list),
+                                    ]);
+                                    ?>
+                                <?php else:?>
+                                    <?php
+                                    echo view("public/AFC/Specs/RowSpec",[
+                                        "spec"=>$spec
+                                    ]);
+                                    ?>
+                                    <?php foreach ($spec->list as $pKey=>$profile): ?>
+                                        <?php if($profile->places == 0) continue;?>
+                                        <?php
+                                        echo view("public/AFC/Specs/RowProfile",[
+                                            "specName"      =>  $spec->name,
+                                            "profile"       =>  $profile
+                                        ]);
+                                        ?>
+                                    <?php endforeach; ?>
+                                <?php endif;?>
+                            <?php endforeach; ?>
 
-                <?php endforeach; ?>
-            </div>
-        <?php endforeach; ?>
+                            <div class="foot-container">
+                                <div class="grid-spec-list">
+                                    <div class="text-center">
+                                        ОКСО
+                                    </div>
+                                    <div class="text-center">
+                                        Название (Профиль)
+                                    </div>
+                                    <div class="text-center">
+                                        Форма
+                                    </div>
+                                    <div class="text-center">
+                                        Заявок
+                                    </div>
+                                    <div class="text-center">
+                                        Мест
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 <?php endif; ?>
 
 
-<?php echo view("public/AFC/Specs/Filter")?>

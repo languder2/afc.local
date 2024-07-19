@@ -56,28 +56,136 @@ class AFCSpec extends BaseController
                         "left"
                     )
                     ->where("edLevel", $level->id)
+                    ->where("places>", 0)
                     ->where("dataSpec.day","all")
                     ->orderBy("name")
                     ->orderBy("profile")
                     ->orderBy("profile")
-                    ->orderBy("edFrom")
+                    ->orderBy("edForm")
                     ->get()
                     ->getResult()
             ];
 
-            $this->model->replacementByRefers($specs[$level->id]->list,"edFrom",$forms);
+            $this->model->replacementByRefers($specs[$level->id]->list,"edForm",$forms);
 
             $this->afc->buildSpecsTree($specs[$level->id]->list);
 
         }
-
         /* show specialities */
         $pageContent= view("public/AFC/Specs/List",[
             "list"          => $specs,
         ]);
 
+
+        $includes=(object)[
+            'js'=>[
+                "js/public/specs-filter.js"
+            ],
+            'css'=>[
+                "css/public/spec-list.css"
+            ],
+        ];
+
         return view("public/page",[
             "pageContent"   =>  $pageContent,
+            "includes"      =>  $includes,
+        ]);
+    }
+
+    public function detail($type,$id):string
+    {
+
+        $forms= $this->db
+            ->table("edForms")
+            ->get()
+            ->getResult();
+
+        $forms= $this->model->prepareList($forms,"id");
+
+        $specs= $this->db
+            ->table("edSpecs")
+            ->select("id,code,edForm,edLevel,places,name,profile")
+            ->where($type,$id)
+            ->get()
+            ->getResult();
+
+        $spec= reset($specs);
+        $dates= [];
+
+        $max= 0;
+
+        $datasets= [];
+
+        foreach ($specs as $spec){
+            $data= $this->db
+                ->table("dataSpec")
+                ->select("*")
+                ->where("op",$spec->id)
+                ->get()
+                ->getResult();
+
+            $spec->data= (object)[
+                "total",
+                "pr1",
+                "all"
+            ];
+
+            $dates= [];
+            foreach ($data as $day){
+                $spec->data->all[$day->day]     = $day;
+                if($day->day == "all") continue;
+                $spec->data->total  [] = $day->cnt;
+                $spec->data->pr1    [] = $day->pr1;
+                $dates              [] = $day->day;
+            }
+
+            $max= (max($spec->data->total)>$max)?max($spec->data->total):$max;
+
+            $spec->datasets[] = (object)[
+                "label" => "Всего",
+                "color" => "#001AFF",
+                "list"  => json_encode($spec->data->total,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
+            ];
+
+            $spec->datasets[] = (object)[
+                "label" => "Приоритет 1",
+                "color" => "#820000",
+                "list"  => json_encode($spec->data->pr1,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
+            ];
+            $spec->chart= view("public/AFC/ChartDetails",[
+                "cid"       => "$spec->id",
+                "chartTitle"    => "$spec->code $spec->name: $spec->profile: ".$forms[$spec->edForm]->name,
+                "legend"        => null,
+                "labels"        => json_encode($dates,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
+                "datasets"      => $spec->datasets,
+                "max"           => $max,
+                "width"         => "100%",
+                "height"        => (count($specs)==1)?"50vh":"30vh",
+            ]);
+        }
+
+
+
+        $charts= [];
+        foreach ($specs as $spec)
+            $charts[]= $spec->chart;
+
+        $pageContent= view("public/AFC/Details",[
+            "charts"      => $charts,
+        ]);
+
+        $includes=(object)[
+            'js'=>[
+                "js/public/specs-filter.js"
+            ],
+            'css'=>[
+                "css/public/spec-list.css"
+            ],
+        ];
+
+        return view("public/page",[
+            "pageContent"   =>  $pageContent,
+            "includes"      =>  $includes,
         ]);
     }
 
