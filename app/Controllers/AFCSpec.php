@@ -154,7 +154,7 @@ class AFCSpec extends BaseController
             ];
             $spec->chart= view("public/AFC/ChartDetails",[
                 "cid"       => "$spec->id",
-                "chartTitle"    => "$spec->code $spec->name: $spec->profile: ".$forms[$spec->edForm]->name,
+                "chartTitle"    => "$spec->code $spec->name<br>$spec->profile<br>".$forms[$spec->edForm]->name,
                 "legend"        => null,
                 "labels"        => json_encode($dates,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
                 "datasets"      => $spec->datasets,
