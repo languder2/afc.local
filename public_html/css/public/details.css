@@ -1,6 +1,38 @@
+h5.detailTitle{
+    max-width: 950px;
+    margin: 20px auto !important;
+}
 section.details{
     display: grid;
-    grid-template-columns: 1fr repeat(7,70px);
+    grid-template-columns: 1fr repeat(6,65px) 100px;
     gap: 3px;
     text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
 }
+section.details.list-head{
+    position: sticky;
+    top: 0;
+}
+section.details.list-head div{
+    color: white;
+    text-align: center;
+    background-color: #820000 !important;
+}
+section.details div{
+    background-color: #f5faff;
+    padding: 3px 3px;
+}
+
+section.details div:not(.list-head):nth-child(16n+1),
+section.details div:not(.list-head):nth-child(16n+2),
+section.details div:not(.list-head):nth-child(16n+3),
+section.details div:not(.list-head):nth-child(16n+4),
+section.details div:not(.list-head):nth-child(16n+5),
+section.details div:not(.list-head):nth-child(16n+6),
+section.details div:not(.list-head):nth-child(16n+7),
+section.details div:not(.list-head):nth-child(16n+8)
+{
+    background-color: #0a53be10;
+}
+

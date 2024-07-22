@@ -255,4 +255,88 @@ class AFCSummary extends BaseController
         ]);
     }
 
+    public function details($type)
+    {
+        $datasets   = [];
+        $data       = [];
+        $dates      = [];
+
+        switch ($type) {
+            case "apps":
+                $apps= $this->db
+                    ->table("data")
+                    ->where("basis!=",     "all")
+                    ->where("form",        "all")
+                    ->where("level",       "all")
+                    ->where("day!=",       "all")
+                    ->orderBy("basis")
+                    ->orderBy("day")
+                    ->get()
+                    ->getResult();
+                foreach ($apps as $app){
+                    $data[$app->basis."_total"][]=  $app->total;
+                    $data[$app->basis."_pr1"][]=    $app->pr1;
+                    if(!in_array($app->day,$dates))
+                        $dates[]= $app->day;
+                }
+                break;
+        }
+
+        $max= 0;
+        foreach ($data as $arr)
+            $max= (max($arr)>$max)?max($arr):$max;
+
+        $datasets[] = (object)[
+            "label" => "Бюджет, всего",
+            "color" => "#001AFF",
+            "list"  => json_encode($data['budget_total'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
+        ];
+
+        $datasets[] = (object)[
+            "label" => "Бюджет, пр. 1",
+            "color" => "#CE9400",
+            "list"  => json_encode($data['budget_pr1'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
+        ];
+
+        $datasets[] = (object)[
+            "label" => "Контракт, всего",
+            "color" => "#0015CF",
+            "list"  => json_encode($data['contract_total'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
+        ];
+
+        $datasets[] = (object)[
+            "label" => "Контракт, пр. 1",
+            "color" => "#FFB800",
+            "list"  => json_encode($data['contract_pr1'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
+        ];
+
+        $chart= view("public/AFC/ChartDetails",[
+            "cid"           => "apps",
+            "legend"        => null,
+            "labels"        => json_encode($dates,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
+            "datasets"      => $datasets,
+            "max"           => $max,
+            "width"         => "100%",
+            "height"        => "30vh",
+        ]);
+
+        /**/
+
+        $pageContent= view("public/AFC/Details",[
+            "chart"      => $chart,
+        ]);
+
+        $includes=(object)[
+            'js'=>[
+            ],
+            'css'=>[
+                "css/public/details.css"
+            ],
+        ];
+        return view("public/page",[
+            "pageContent"   =>  $pageContent,
+            "includes"      =>  $includes,
+        ]);
+    }
+
 }

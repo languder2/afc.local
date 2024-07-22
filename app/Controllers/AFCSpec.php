@@ -152,7 +152,7 @@ class AFCSpec extends BaseController
                 "color" => "#820000",
                 "list"  => json_encode($spec->data->pr1,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
             ];
-            $spec->chart= view("public/AFC/ChartDetails",[
+            $spec->chart= view("public/AFC/ChartDetailsSpec",[
                 "cid"           => "$spec->id",
                 "edForm"        => $forms[$spec->edForm]->name,
                 "legend"        => null,

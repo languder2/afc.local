@@ -87,3 +87,66 @@
         );
     </script>
 </section>
+<h5 class="mb-3 ps-4 ms-2 detailTitle">
+    <?=$spec->name??""?>
+    <?php if($spec->profile != $spec->name && $spec->profile!=''):?>
+        <br>
+        <?=$spec->profile??""?>
+    <?php endif;?>
+</h5>
+<div class="mx-auto">
+    <section class="details list-head">
+        <div>
+            дата
+        </div>
+        <div>
+            пр. 1
+        </div>
+        <div>
+            пр. 2
+        </div>
+        <div>
+            пр. 3
+        </div>
+        <div>
+            пр. 4
+        </div>
+        <div>
+            пр. 5
+        </div>
+        <div>
+            пр. >5
+        </div>
+        <div>
+            суммарно
+        </div>
+    </section>
+    <section class="details">
+        <?php foreach ($spec->data->list as $day):?>
+            <div class="fw-bold">
+                <?=($day->day=="all")?"всего":$day->day?>
+            </div>
+            <div class="fw-bold">
+                <?=$day->pr1?>
+            </div>
+            <div>
+                <?=$day->pr2?>
+            </div>
+            <div>
+                <?=$day->pr3?>
+            </div>
+            <div>
+                <?=$day->pr4?>
+            </div>
+            <div>
+                <?=$day->pr5?>
+            </div>
+            <div>
+                <?=$day->other?>
+            </div>
+            <div class="fw-bold">
+                <?=$day->cnt?>
+            </div>
+        <?php endforeach;?>
+    </section>
+</div>
