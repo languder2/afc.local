@@ -1,0 +1,14 @@
+.head-link{
+    text-decoration: none;
+    color: #1d1e1e;
+    display: block;
+    position: relative;
+}
+.head-link:hover{
+    color: #820000;
+}
+.head-link svg{
+    position: absolute;
+    right: 0;
+    top: 12px;
+}

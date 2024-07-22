@@ -65,6 +65,7 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/apps"),
         ]);
 
         /* Заявки контракт */
@@ -86,6 +87,7 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/apps"),
         ]);
 
         /* Форма обучения*/
@@ -93,9 +95,9 @@ class AFCSummary extends BaseController
             ->table("data")
             ->where([
                 "day"       => "all",
-                "basis"       => "all",
+                "basis"     => "all",
                 "form!="    => "all",
-                "level"       => "all",
+                "level"     => "all",
             ])
             ->get()
             ->getResult();
@@ -112,6 +114,7 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/forms"),
         ]);
 
         /* Форма обучения по приориетеам */
@@ -137,22 +140,27 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/forms"),
         ]);
 
         /* Уровень обучения*/
         $apps= $this->db
             ->table("data")
+            ->join("edLevels","edLevels.id=data.level","right")
+            ->select("data.*,edLevels.sort2")
             ->where([
-                "day"       => "all",
-                "basis"     => "all",
-                "form"      => "all",
-                "level!="   => "all",
+                "data.day"       => "all",
+                "data.basis"     => "all",
+                "data.form"      => "all",
+                "data.level!="   => "all",
             ])
+            ->orderBy("edLevels.sort2","asc")
             ->get()
             ->getResult();
 
         $labels = [" "];
         $datasets= $this->model->prepareLevelDatasets($apps,$levels,$max, $labels);
+
 
         $appLevels= view("public/AFC/ChartSummary", [
             "chartID"       => "appLevels",
@@ -163,20 +171,10 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/levels"),
         ]);
 
         /* Уровень обучения по приориетеам */
-        $apps= $this->db
-            ->table("data")
-            ->where([
-                "day"       => "all",
-                "basis"     => "all",
-                "form"      => "all",
-                "level!="   => "all",
-            ])
-            ->get()
-            ->getResult();
-
         $datasets= $this->model->prepareLevelDatasetsPR($apps,$levels,$max, true);
 
         $appLevelsPR= view("public/AFC/ChartSummary", [
@@ -188,6 +186,7 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/levels"),
         ]);
 
         /* Способ подачи обучения*/
@@ -212,6 +211,7 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/methods"),
         ]);
 
         $datasets= $this->model->prepareMSDatasetsPR($apps,$max);
@@ -225,6 +225,7 @@ class AFCSummary extends BaseController
             "max"           => $max,
             "width"         => "100%",
             "height"        => "200px",
+            "link"          => base_url("details/methods"),
         ]);
 
         /**/
@@ -233,6 +234,7 @@ class AFCSummary extends BaseController
             'js'=>[
             ],
             'css'=>[
+                "css/public/afc.css"
             ],
         ];
 

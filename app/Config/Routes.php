@@ -24,3 +24,4 @@ $routes->get('/',                                       [AFCSummary::class,     
 $routes->get('specs/',                                  [AFCSpec::class,        "list"]);
 $routes->get('spec/(:segment)',                         [[AFCSpec::class,       "detail"],"code/$1"]);
 $routes->get('profile/(:num)',                          [[AFCSpec::class,       "detail"],"id/$1"]);
+$routes->get('details/apps',                            [[AFCSummary::class,    "detail"],"apps"]);

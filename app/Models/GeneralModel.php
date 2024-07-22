@@ -55,7 +55,7 @@ class GeneralModel extends UserModel
         $list = $results;
     }
 
-    public function replacementByRefers(array &$list,string $field,array $refer):void
+        public function replacementByRefers(array &$list,string $field,array $refer):void
     {
         foreach ($list as $key=>$item)
             $list[$key]->{$field} = $refer[$item->{$field}]??$item->{$field};

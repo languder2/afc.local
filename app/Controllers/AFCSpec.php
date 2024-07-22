@@ -125,14 +125,14 @@ class AFCSpec extends BaseController
                 ->getResult();
 
             $spec->data= (object)[
-                "total",
-                "pr1",
-                "all"
+                "total" => [],
+                "pr1"   => [],
+                "list"  => []
             ];
 
             $dates= [];
             foreach ($data as $day){
-                $spec->data->all[$day->day]     = $day;
+                $spec->data->list[$day->day] = $day;
                 if($day->day == "all") continue;
                 $spec->data->total  [] = $day->cnt;
                 $spec->data->pr1    [] = $day->pr1;
@@ -153,14 +153,15 @@ class AFCSpec extends BaseController
                 "list"  => json_encode($spec->data->pr1,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
             ];
             $spec->chart= view("public/AFC/ChartDetails",[
-                "cid"       => "$spec->id",
-                "chartTitle"    => "$spec->code $spec->name<br>$spec->profile<br>".$forms[$spec->edForm]->name,
+                "cid"           => "$spec->id",
+                "edForm"        => $forms[$spec->edForm]->name,
                 "legend"        => null,
                 "labels"        => json_encode($dates,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
                 "datasets"      => $spec->datasets,
+                "spec"          => $spec,
                 "max"           => $max,
                 "width"         => "100%",
-                "height"        => (count($specs)==1)?"50vh":"30vh",
+                "height"        => (count($specs)==1)?"30vh":"30vh",
             ]);
         }
 
@@ -176,10 +177,9 @@ class AFCSpec extends BaseController
 
         $includes=(object)[
             'js'=>[
-                "js/public/specs-filter.js"
             ],
             'css'=>[
-                "css/public/spec-list.css"
+                "css/public/details.css"
             ],
         ];
 

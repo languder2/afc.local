@@ -1,9 +1,8 @@
 <section>
-    <?php if(!empty($chartTitle)):?>
-        <h3 class="mb-3">
-            <?=$chartTitle?>
+        <h3 class="mb-3 ps-4 ms-2">
+            <?=$spec->code??""?>
+            <?=$edForm??""?>
         </h3>
-    <?php endif;?>
     <div style="position: relative; height: <?= $height ?? "100vh" ?>; width: <?= $width ?? "100vw" ?>">
         <canvas id="chartDetail_<?=$cid??""?>"></canvas>
     </div>
@@ -88,5 +87,62 @@
         );
     </script>
 </section>
-
-
+<h5 class="mb-3 ps-4 ms-2">
+    <?=$spec->name??""?>
+    <?php if($spec->profile != $spec->name && $spec->profile!=''):?>
+        <br>
+        <?=$spec->profile??""?>
+    <?php endif;?>
+</h5>
+<section class="details">
+        <div>
+            date
+        </div>
+        <div>
+            total
+        </div>
+        <div>
+            pr1
+        </div>
+        <div>
+            pr2
+        </div>
+        <div>
+            pr3
+        </div>
+        <div>
+            pr4
+        </div>
+        <div>
+            pr5
+        </div>
+        <div>
+            other
+        </div>
+    <?php foreach ($spec->data->list as $day):?>
+            <div class="text-start">
+                <?=$day->day?>
+            </div>
+            <div>
+                <?=$day->cnt?>
+            </div>
+            <div>
+                <?=$day->pr1?>
+            </div>
+            <div>
+                <?=$day->pr2?>
+            </div>
+            <div>
+                <?=$day->pr3?>
+            </div>
+            <div>
+                <?=$day->pr4?>
+            </div>
+            <div>
+                <?=$day->pr5?>
+            </div>
+            <div>
+                <?=$day->other?>
+            </div>
+    <?php endforeach;?>
+</section>
