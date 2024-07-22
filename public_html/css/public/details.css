@@ -19,6 +19,15 @@ section.details.list-head div{
     text-align: center;
     background-color: #820000 !important;
 }
+section.details.list-foot{
+    position: sticky;
+    bottom: 0;
+}
+section.details.list-foot div{
+    color: white;
+    text-align: center;
+    background-color: #820000 !important;
+}
 section.details div{
     background-color: #f5faff;
     padding: 3px 3px;
@@ -34,5 +43,29 @@ section.details div:not(.list-head):nth-child(16n+7),
 section.details div:not(.list-head):nth-child(16n+8)
 {
     background-color: #0a53be10;
+}
+
+/* box by days in detail charts*/
+.box-byDays::-webkit-scrollbar {
+    width: 5px; /* ÑˆÐ¸Ñ€Ð¸Ð½Ð° scrollbar */
+}
+.box-byDays::-webkit-scrollbar-track {
+    background: transparent; /* Ñ†Ð²ÐµÑ‚ Ð´Ð¾Ñ€Ð¾Ð¶ÐºÐ¸ */
+
+}
+.box-byDays::-webkit-scrollbar-thumb {
+    background-color: #820000;    /* Ñ†Ð²ÐµÑ‚ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+    border-radius: 20px;       /* Ð·Ð°ÐºÑ€ÑƒÐ³Ð»ÐµÐ½Ð¸Ñ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+    border: 3px solid #820000;  /* padding Ð²Ð¾ÐºÑ€ÑƒÐ³ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+}
+
+.box-byDays{
+    max-height: 30vh;
+    overflow-y: scroll;
+    margin-top: 60px;
+}
+
+/* list by day*/
+.listByDay-total{
 }
 

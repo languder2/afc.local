@@ -4,6 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Validation\ValidationInterface;
+use mysql_xdevapi\Exception;
 
 class AFCModel extends GeneralModel
 {
@@ -192,6 +193,57 @@ class AFCModel extends GeneralModel
         }
 
         $list= $results;
+    }
+
+
+    public function getDatasetsFormDetailChart(array $list,string $chartID,string $title,array $dates):string
+    {
+        $max        = 0;
+
+        $datasets   = [];
+
+        $colors= (object)[
+//            "total" =>  "#001AFF",
+            "total" =>  "#001AFF",
+            "pr1"    => "hsl(137, 100%, 14%)",
+//            "pr1"    => "#820000",
+        ];
+
+        $labels= (object)[
+            "total" =>  "суммарно",
+            "pr1"    => "1-й приоритет",
+        ];
+
+        $data       = (object)[
+            "total" => [],
+            "pr1"   => []
+        ];
+
+        foreach ($list as $app){
+            if($app->day == "all") continue;
+            $data->total[]  = $app->total;
+            $data->pr1[]    = $app->pr1;
+        }
+
+        foreach ($data as $key=>$set){
+            $max= max($set)>$max?max($set):$max;
+
+            $datasets[] = (object)[
+                "label" => $labels->{$key},
+                "color" => $colors->{$key},
+                "list"  => json_encode($set,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
+            ];
+        }
+        return view("public/AFC/ChartDetails",[
+            "cid"           => $chartID,
+            "chartTitle"    => $title,
+            "legend"        => null,
+            "labels"        => json_encode($dates,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
+            "datasets"      => $datasets,
+            "max"           => $max??0,
+            "width"         => "100%",
+            "height"        => "35vh",
+        ]);
     }
 
 }

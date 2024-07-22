@@ -1,10 +1,10 @@
 <?php
 
-use App\Controllers\Test;
 use App\Controllers\UserController;
 use CodeIgniter\Router\RouteCollection;
 use App\Controllers\AFCSpec;
 use App\Controllers\AFCSummary;
+use App\Controllers\Test;
 
 
 /**
@@ -25,3 +25,6 @@ $routes->get('specs/',                                  [AFCSpec::class,        
 $routes->get('spec/(:segment)',                         [[AFCSpec::class,       "detail"],"code/$1"]);
 $routes->get('profile/(:num)',                          [[AFCSpec::class,       "detail"],"id/$1"]);
 $routes->get('details/(:segment)',                      [AFCSummary::class,    "details"]);
+
+
+$routes->get("/correct",                                   [Test::class, 'correct']);

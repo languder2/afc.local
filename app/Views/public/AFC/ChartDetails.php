@@ -1,7 +1,6 @@
-<section>
+<section class="mb-5">
     <h3 class="mb-3 ps-4 ms-2">
-        <?=$spec->code??""?>
-        <?=$edForm??""?>
+        <?=$chartTitle??""?>
     </h3>
     <div style="position: relative; height: <?= $height ?? "100vh" ?>; width: <?= $width ?? "100vw" ?>">
         <canvas id="chartDetail_<?=$cid??""?>"></canvas>
@@ -17,12 +16,15 @@
                 labels: labels,
                 datasets: datasets
             }
+
             let xScaleConfig = {
+                max: 30,
                 ticks: {
                     autoSkip: true,
                     maxRotation: 0,
                     // minRotation: 90,
-                    color: 'rgba(74, 169, 230, 1)'
+                    //color: 'rgba(74, 169, 230, 1)'
+                    color: 'rgba(33, 33, 33, 1)'
                 },
                 border: {
                     color: 'rgba(74, 169, 230, 1)'
@@ -31,10 +33,12 @@
                     color: 'rgba(74, 169, 230, 0.3)'
                 }
             }
+
             let yScaleConfig = {
                 max: Math.ceil(max*1.1),
                 ticks: {
-                    color: 'rgba(74, 169, 230, 0.9)',
+                    //color: 'rgba(74, 169, 230, 0.9)',
+                    color: 'rgba(33, 33, 33, 0.9)',
                     beginAtZero: true,
                 },
                 border: {
@@ -44,6 +48,15 @@
                     color: 'rgba(74, 169, 230, 0.3)'
                 }
             }
+
+            let zoomOptions = {
+                pan: {
+                    enabled: true,
+                    mode: 'x',
+                },
+                /*  zoom: { mode: 'x',  pinch: { enabled: true }, wheel: { enabled: true } } */
+            }
+
             let config = {
                 type: 'line',
                 data: data,
@@ -58,6 +71,7 @@
                         legend: {
                             position: "bottom"
                         },
+                        zoom: zoomOptions
                     },
                 }
             }

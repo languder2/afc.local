@@ -430,4 +430,25 @@ class Test extends BaseController
 
         return view("public/page", ["pageContent" => view("public/AFC/Main", $pageContent)]);
     }
+
+
+    public function correct():void
+    {
+        $res= $this->db
+            ->table("dataMS")
+            ->where("day!=","all")
+            ->get()
+            ->getResult();
+
+        foreach ($res as $row){
+            $data= explode("-",$row->day);
+            $data= $data[0]."-".$data[2]."-".$data[1];
+            $this->db
+                ->table("data_")
+                ->update(
+                    ["day" => $data],
+                    ["id"=>$row->id]
+                );
+        }
+    }
 }

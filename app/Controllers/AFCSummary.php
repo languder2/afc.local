@@ -257,73 +257,191 @@ class AFCSummary extends BaseController
 
     public function details($type)
     {
-        $datasets   = [];
-        $data       = [];
-        $dates      = [];
+        $charts = [];
+
+        $types  = [
+            "budget"    => "Бюджет",
+            "contract"  => "Контракт"
+        ];
 
         switch ($type) {
             case "apps":
-                $apps= $this->db
-                    ->table("data")
-                    ->where("basis!=",     "all")
-                    ->where("form",        "all")
-                    ->where("level",       "all")
-                    ->where("day!=",       "all")
-                    ->orderBy("basis")
-                    ->orderBy("day")
+                foreach ($types as $type=>$name){
+
+                    $apps= $this->db
+                        ->table("data")
+                        ->where("basis",    $type)
+                        ->where("form",     "all")
+                        ->where("level",    "all")
+                        ->where("day!=",    "all")
+                        ->orderBy("day",    "asc")
+                        ->get()
+                        ->getResult();
+
+                    $total= $this->db
+                        ->table("data")
+                        ->where("basis",    $type)
+                        ->where("form",     "all")
+                        ->where("level",    "all")
+                        ->where("day=",    "all")
+                        ->orderBy("day",    "asc")
+                        ->get()
+                        ->getFirstRow();
+
+                    $charts[]= (object)[
+                        "list"  => $apps,
+                        "total" => $total,
+                        "chart" => $this->afc
+                        ->getDatasetsFormDetailChart(
+                            $apps,
+                            $type."_apps",
+                            "Заявки: $name",
+                            $this->dates)
+                    ];
+                }
+                break;
+
+            case "forms":
+
+                $forms= $this->db
+                    ->table("edForms")
                     ->get()
                     ->getResult();
-                foreach ($apps as $app){
-                    $data[$app->basis."_total"][]=  $app->total;
-                    $data[$app->basis."_pr1"][]=    $app->pr1;
-                    if(!in_array($app->day,$dates))
-                        $dates[]= $app->day;
+
+                foreach ($forms as $form) {
+                    foreach ($types as $type=>$name){
+
+                        $apps= $this->db
+                            ->table("data")
+                            ->where("basis",    $type)
+                            ->where("form",     $form->id)
+                            ->where("level",    "all")
+                            ->where("day!=",    "all")
+                            ->orderBy("day",    "asc")
+                            ->get()
+                            ->getResult();
+
+                        $total= $this->db
+                            ->table("data")
+                            ->where("basis",    $type)
+                            ->where("form",     $form->id)
+                            ->where("level",    "all")
+                            ->where("day=",    "all")
+                            ->orderBy("day",    "asc")
+                            ->get()
+                            ->getFirstRow();
+
+                        $charts[]=  (object)[
+                            "list"  => $apps,
+                            "total" => $total,
+                            "chart" => $this->afc->getDatasetsFormDetailChart(
+                                    $apps,
+                                    $type."_form_$form->id",
+                                    "$form->name: $name",
+                                    $this->dates)
+                        ];
+                    }
                 }
+
+            break;
+
+            case "levels":
+
+                $levels= $this->db
+                    ->table("edLevels")
+                    ->orderBy("sort2")
+                    ->get()
+                    ->getResult();
+
+                foreach ($levels as $level) {
+                    foreach ($types as $type=>$name){
+
+                        $apps= $this->db
+                            ->table("data")
+                            ->where("basis",    $type)
+                            ->where("form",     "all")
+                            ->where("level",    $level->id)
+                            ->where("day!=",    "all")
+                            ->orderBy("day",    "asc")
+                            ->get()
+                            ->getResult();
+
+                        $total= $this->db
+                            ->table("data")
+                            ->where("basis",    $type)
+                            ->where("form",     "all")
+                            ->where("level",    $level->id)
+                            ->where("day",    "all")
+                            ->orderBy("day",    "asc")
+                            ->get()
+                            ->getFirstRow();
+
+                        if(count($apps))
+                            $charts[]= (object)[
+                                "list"  => $apps,
+                                "total" => $total,
+                                "chart" => $this->afc
+                                    ->getDatasetsFormDetailChart(
+                                        $apps,
+                                        $type."_level_$level->id",
+                                        "   $level->name: $name",
+                                        $this->dates)
+                            ];
+                    }
+                }
+            break;
+
+            case "methods":
+
+                $methods= $this->db
+                    ->table("edMethods")
+                    ->orderBy("sort")
+                    ->get()
+                    ->getResult();
+
+                foreach ($methods as $method) {
+                    foreach ($types as $type=>$name){
+
+                        $apps= $this->db
+                            ->table("dataMS")
+                            ->where("basis",    $type)
+                            ->where("op",       $method->name)
+                            ->where("day!=",    "all")
+                            ->orderBy("day", "asc")
+                            ->get()
+                            ->getResult();
+
+                        $total= $this->db
+                            ->table("dataMS")
+                            ->where("basis",    $type)
+                            ->where("op",       $method->name)
+                            ->where("day=",    "all")
+                            ->orderBy("day", "asc")
+                            ->get()
+                            ->getFirstRow();
+
+                        if(count($apps))
+                            $charts[]= (object)[
+                                "list"  => $apps,
+                                "total" => $total,
+                                "chart" => $this->afc
+                                    ->getDatasetsFormDetailChart(
+                                        $apps,
+                                        $type."_method_$method->id",
+                                        "   $method->text: $name",
+                                        $this->dates)
+                            ];
+                    }
+                }
+            break;
+            default:
+                dd($type);
                 break;
         }
 
-        $max= 0;
-        foreach ($data as $arr)
-            $max= (max($arr)>$max)?max($arr):$max;
-
-        $datasets[] = (object)[
-            "label" => "Бюджет, всего",
-            "color" => "#001AFF",
-            "list"  => json_encode($data['budget_total'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
-        ];
-
-        $datasets[] = (object)[
-            "label" => "Бюджет, пр. 1",
-            "color" => "#CE9400",
-            "list"  => json_encode($data['budget_pr1'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
-        ];
-
-        $datasets[] = (object)[
-            "label" => "Контракт, всего",
-            "color" => "#0015CF",
-            "list"  => json_encode($data['contract_total'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
-        ];
-
-        $datasets[] = (object)[
-            "label" => "Контракт, пр. 1",
-            "color" => "#FFB800",
-            "list"  => json_encode($data['contract_pr1'],JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
-        ];
-
-        $chart= view("public/AFC/ChartDetails",[
-            "cid"           => "apps",
-            "legend"        => null,
-            "labels"        => json_encode($dates,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
-            "datasets"      => $datasets,
-            "max"           => $max,
-            "width"         => "100%",
-            "height"        => "30vh",
-        ]);
-
         /**/
-
         $pageContent= view("public/AFC/Details",[
-            "chart"      => $chart,
+            "charts"      => $charts??[],
         ]);
 
         $includes=(object)[

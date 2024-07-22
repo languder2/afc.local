@@ -1,5 +1,5 @@
 
-<section>
+<section class="mb-5">
     <?php if(!empty($chartTitle)):?>
         <h3 class="mb-3">
             <a href="<?=$link??"#"?>" class="head-link">

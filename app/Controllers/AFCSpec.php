@@ -171,7 +171,7 @@ class AFCSpec extends BaseController
         foreach ($specs as $spec)
             $charts[]= $spec->chart;
 
-        $pageContent= view("public/AFC/Details",[
+        $pageContent= view("public/AFC/DetailsSpec",[
             "charts"      => $charts,
         ]);
 

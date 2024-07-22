@@ -17,7 +17,7 @@ class Database extends Config
     /**
      * Lets you choose which connection group to use if no other is specified.
      */
-    public string $defaultGroup = 'beget';
+    public string $defaultGroup = 'local';
 
     /**
      * The default database connection.
@@ -220,6 +220,7 @@ class Database extends Config
         // we are currently running an automated test suite, so that
         // we don't overwrite live data on accident.
 //        if (ENVIRONMENT === 'testing' or ENVIRONMENT === 'development')
+
         if ($_SERVER["REMOTE_ADDR"] == "127.0.0.1")
             $this->defaultGroup = 'local';
         else

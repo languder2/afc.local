@@ -144,7 +144,7 @@
             <div>
                 <?=$day->other?>
             </div>
-            <div class="fw-bold">
+            <div class="fw-bolder listByDay-total">
                 <?=$day->cnt?>
             </div>
         <?php endforeach;?>
