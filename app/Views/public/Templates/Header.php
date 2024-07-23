@@ -6,8 +6,11 @@
         <a href="<?=base_url("/")?>" class="btn d-none d-sm-inline-block">
             Инфографика
         </a>
-        <a href="<?=base_url("specs")?>" class="btn me-0">
+        <a href="<?=base_url("specs")?>" class="btn">
             Специальности
+        </a>
+        <a href="<?=base_url("map")?>" class="btn me-0">
+            Карта
         </a>
     </div>
 </header>

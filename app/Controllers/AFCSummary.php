@@ -218,7 +218,7 @@ class AFCSummary extends BaseController
 
         $appMSPR= view("public/AFC/ChartSummary", [
             "chartID"       => "appMSPR",
-            "chartTitle"    => "Способ подачи",
+            "chartTitle"    => "Способ подачи по приоритетам",
             "legend"        => true,
             "labels"        => json_encode($priorities,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
             "datasets"      => $datasets,
@@ -457,4 +457,46 @@ class AFCSummary extends BaseController
         ]);
     }
 
+
+    public function map()
+    {
+
+        $list= $this->db
+            ->table("regions")
+            ->orderBy("cnt","desc")
+            ->get()
+            ->getResult();
+
+        $sum= $this->db
+            ->table("regions")
+            ->select("SUM(cnt) as total")
+            ->get()
+            ->getFirstRow();
+
+        $regCount= $this->db
+            ->table("regions")
+            ->where("cnt>",0)
+            ->get()
+            ->getNumRows();
+
+        $pageContent= view("public/AFC/Map",[
+            "list"      => $list,
+            "sum"       => $sum->total,
+            "regCount"  => $regCount,
+        ]);
+
+        $includes=(object)[
+            'js'=>[
+                "js/public/map.js"
+            ],
+            'css'=>[
+                "css/public/map.css",
+                "css/public/details.css"
+            ],
+        ];
+        return view("public/page",[
+            "pageContent"   =>  $pageContent,
+            "includes"      =>  $includes,
+        ]);
+    }
 }

@@ -12,6 +12,7 @@ section.details{
 }
 section.details.list-head{
     position: sticky;
+    position: sticky;
     top: 0;
 }
 section.details.list-head div{
@@ -66,6 +67,3 @@ section.details div:not(.list-head):nth-child(16n+8)
 }
 
 /* list by day*/
-.listByDay-total{
-}
-
