@@ -5,21 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a842a95f-e208-4264-be16-574c46ea73bf" name="Changes" comment="eqwsqasdasdsad">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Controllers/AFCSpec.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controllers/AFCSpec.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Controllers/AFCSummary.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controllers/AFCSummary.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/ChartDetails.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/ChartDetails.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/ChartDetailsSpec.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/ChartDetailsSpec.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/ChartSummary.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/ChartSummary.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/Details.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/Details.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/DetailsSpec.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/DetailsSpec.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/Map.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/Map.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/page.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/page.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/css/public/afc.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/afc.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/css/public/details.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/details.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/css/public/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/css/public/map.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/map.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/css/public/spec-list.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/spec-list.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Controllers/Test.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controllers/Test.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="D:\OSP\modules\PHP-8.1\PHP\php.exe">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="D:\OSPanel\modules\PHP-8.3\PHP\php.exe">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
@@ -62,18 +48,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/OSP/home/afc.local&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/OSP/home/afc.local",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\OSP\home\afc.local\public_html\js\public" />
@@ -86,8 +73,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-PS-241.14494.237" />
-        <option value="bundled-php-predefined-ba97393d7c68-8f0632a2a215-com.jetbrains.php.sharedIndexes-PS-241.14494.237" />
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-PS-241.15989.102" />
+        <option value="bundled-php-predefined-ba97393d7c68-c76157a7178b-com.jetbrains.php.sharedIndexes-PS-241.15989.102" />
       </set>
     </attachedChunks>
   </component>
@@ -120,6 +107,7 @@
       <workItem from="1721740215845" duration="827000" />
       <workItem from="1721807275725" duration="9401000" />
       <workItem from="1721825507613" duration="1541000" />
+      <workItem from="1721834267266" duration="42000" />
     </task>
     <task id="LOCAL-00001" summary="eqwsq">
       <option name="closed" value="true" />
