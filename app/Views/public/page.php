@@ -20,8 +20,16 @@
     <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js"></script>
 
-    <link href="<?= base_url("css/public/main.css"); ?>?t=<?php echo(microtime(true) . rand()); ?>" rel="stylesheet"
-          type="text/css">
+    <link
+            href="<?= base_url("css/public/main.css"); ?>?t=<?php echo(microtime(true) . rand()); ?>"
+            rel="stylesheet"
+            type="text/css"
+    >
+    <link
+            href="<?= base_url("css/public/afc.css"); ?>?t=<?php echo(microtime(true) . rand()); ?>"
+            rel="stylesheet"
+            type="text/css"
+    >
 
     <?php if (!empty($includes->js)) foreach ($includes->js as $js): ?>
         <script defer src="<?= base_url($js); ?>?t=<?php echo(microtime(true) . rand()); ?>"></script>

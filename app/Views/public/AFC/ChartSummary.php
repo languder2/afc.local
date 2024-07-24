@@ -1,5 +1,5 @@
 
-<section class="mb-5">
+<section class="mb-4 chart-box">
     <?php if(!empty($chartTitle)):?>
         <h3 class="mb-3">
             <a href="<?=$link??"#"?>" class="head-link">
@@ -10,7 +10,7 @@
             </a>
         </h3>
     <?php endif;?>
-    <div style="position: relative; height: <?= $height ?? "100vh" ?>; width: <?= $width ?? "100vw" ?>">
+    <div class="chart-shell" style="height: <?= $height ?? "100vh" ?>; width: <?= $width ?? "100vw" ?>">
         <canvas id="<?=$chartID??""?>"></canvas>
     </div>
     <script>

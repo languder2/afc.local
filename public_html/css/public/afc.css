@@ -11,4 +11,24 @@
     position: absolute;
     right: 0;
     top: 12px;
+    transition: 0.15s;
 }
+.head-link:hover svg{
+    transform: scale(1.3);
+    transition: 0.15s;
+}
+
+.chart-box{
+    position: relative;
+    padding: 10px 20px;
+    background-color: white;
+    box-shadow: 0 0 10px 0 #50505070;
+    border-radius: 15px;
+}
+.chart-shell{
+    position: relative;
+}
+section.chart-box h3{
+    padding: 0 5px;
+}
+

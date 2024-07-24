@@ -60,7 +60,7 @@
 }
 
 .grid-spec-list:nth-child(2n+1) > div {
-    background-color: #0a53be10;
+    background-color: #fdfdfd;
 }
 .foot-container .grid-spec-list > div,
 .head-container .grid-spec-list > div{

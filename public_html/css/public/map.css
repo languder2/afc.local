@@ -8,42 +8,6 @@
     margin: auto;
     padding: 20px;
 }
-.rf-map .district b {
-    position: absolute;
-    z-index: 5;
-    width: 18px;
-    height: 18px;
-    background: rgba(51, 122, 183, 0.9);
-    border-radius: 50%;
-    left: 6px;
-    top: 18px;
-    transition: all 0.3s;
-}
-.rf-map .district span {
-    position: absolute;
-    z-index: 5;
-    top: 20px;
-    left: 30px;
-    font-size: 13px;
-    font-weight: bold;
-    font-family: Tahoma, sans-serif;
-    line-height: 1;
-    color: #337AB7;
-}
-.rf-map .district {
-    display: none;
-}
-.rf-map.open .district b {
-    top: 0;
-    left: 0;
-    border-radius: 0;
-    width:100%;
-    height: 100%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2), 0 16px 20px rgba(0,0,0,0.2);
-}
-.rf-map.open .district span {
-    color: #FFF;
-}
 .rf-map svg {
     width: 100%;
     height: 100%;
@@ -56,54 +20,7 @@
 }
 .rf-map [data-code] {
     fill: hsla(0,0%,20%, 0.5);
-
     transition: fill 0.2s;
-}
-.rf-map .district-text {
-    display: none;
-    position: absolute;
-    z-index: 6;
-    left: 0;
-    top: 60px;
-    width: calc(100% - 20px);
-    height: calc(100% - 90px);
-    padding: 0 20px;
-    overflow: auto;
-    color: #FFF;
-    font-size: 13px;
-    font-family: Verdana, sans-serif;
-}
-.rf-map .close-district {
-    opacity: 0;
-    z-index: 6;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    line-height: 1;
-    font-size: 40px;
-    color: #fff;
-    cursor: pointer;
-    transition: opacity 1s;
-    pointer-events: none;
-}
-.rf-map.open .close-district {
-    opacity: 1;
-    pointer-events: initial;
-}
-.rf-map .district-links {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-}
-.rf-map .district-links div {
-    font-size: 13px;
-    font-family: Verdana, sans-serif;
-    padding: 4px;
 }
 .rf-map .active[data-code='RU-ZP']{
     fill: #ffd700;
@@ -114,35 +31,6 @@
 .rf-map .active[data-code='RU-CR']{
     fill: #cd7f32;
 }
-@media (min-width:768px){
-    .rf-map .district b {
-        width: 28px;
-        height: 28px;
-        left: 6px;
-        top: 28px;
-    }
-    .rf-map .district span {
-        top: 30px;
-        left: 46px;
-        font-size: 20px;
-        font-weight: normal;
-    }
-    .rf-map .district-text {
-        left: 30px;
-        top: 80px;
-        width: calc(100% - 60px);
-        height: calc(100% - 130px);
-        font-size: 16px;
-    }
-    .rf-map .close-district {
-        width: 60px;
-        height: 60px;
-        font-size: 60px;
-    }
-    .rf-map .district-links {
-        display: none;
-    }
-}
 /* Цвета регионов */
 .rf-map .active{
     cursor: pointer;
@@ -150,27 +38,13 @@
 }
 .rf-map .active:hover{
     cursor: pointer;
-    fill: hsla(240,50%,30%, 1);
+    //fill: hsla(240,50%,30%, 1);
+    fill: #820000;
+    transition: fill 0.2s;
 }
 /* list */
-/* box by days in detail charts*/
-.regions::-webkit-scrollbar {
-    width: 5px; /* ÑˆÐ¸Ñ€Ð¸Ð½Ð° scrollbar */
-}
-.regions::-webkit-scrollbar-track {
-    background: transparent; /* Ñ†Ð²ÐµÑ‚ Ð´Ð¾Ñ€Ð¾Ð¶ÐºÐ¸ */
-
-}
-.regions::-webkit-scrollbar-thumb {
-    background-color: #820000;    /* Ñ†Ð²ÐµÑ‚ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
-    border-radius: 20px;       /* Ð·Ð°ÐºÑ€ÑƒÐ³Ð»ÐµÐ½Ð¸Ñ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
-    border: 3px solid #820000;  /* padding Ð²Ð¾ÐºÑ€ÑƒÐ³ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
-}
 
 section.regions{
-    max-height: 700px;
-    overflow-y: scroll;
-    overflow-x: hidden;
     margin-top: 20px;
     max-width:  900px;
 }
@@ -181,36 +55,65 @@ section.regions .grid{
     gap: 3px;
     text-align: center;
 }
+section.regions .grid:not(.list-body){
+    grid-template-columns: 1fr 103px;
 
-section.regions .grid div{
-    padding: 3px 10px;
 }
 
-section.regions .list-head{
-    position: sticky;
-    top: 0;
-}
+
 section.regions .list-head div{
     color: white;
     text-align: center;
     background-color: #820000 !important;
-}
-section.regions .list-foot{
-    position: sticky;
-    top: 35px;
+    padding: 10px 20px;
 }
 section.regions .list-foot div{
     color: white;
     text-align: center;
     background-color: #820000 !important;
+    padding: 10px 20px;
 }
-section.regions div{
+section.regions .list-body div{
     background-color: #f5faff;
-    padding: 3px 3px;
+    padding: 10px 20px;
+
 }
 
+section.regions .list-body {
+    max-height: 518px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-left: solid 3px #820000;
+}
 section.regions .list-body > div:nth-child(4n+3),
 section.regions .list-body > div:nth-child(4n+4){
-    background-color: #0a53be10 !important;
+    background-color: #fefefe !important;
 }
 
+/* box by days in detail charts*/
+section.regions .list-body::-webkit-scrollbar {
+    width: 3px;
+    position: relative;
+    background-color: #820000;
+}
+section.regions .list-body::-webkit-scrollbar-track {
+    background: transparent;
+
+}
+section.regions .list-body::-webkit-scrollbar-thumb {
+    border: 1px solid #820000;
+    background-color: white;
+}
+
+section.regions .list-head > div:first-child{
+    border-radius: 15px 0 0 0;
+}
+section.regions .list-head > div:last-child{
+    border-radius: 0 15px 0 0;
+}
+section.regions .list-foot > div:first-child{
+    border-radius: 0 0 0 15px;
+}
+section.regions .list-foot > div:last-child{
+    border-radius: 0 0 15px 0;
+}

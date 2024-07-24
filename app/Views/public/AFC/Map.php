@@ -43,25 +43,34 @@
 </section>
 
 <section class="mx-auto regions mb-5">
-        <div class="grid list-head">
+    <div class="grid list-head">
+        <div class="text-start">
+            Регионы (охвачено <?=$regCount??0?>)
+        </div>
+        <div>
+            кол-во
+        </div>
+    </div>
+
+    <div class="grid list-body">
+        <?php if(isset($list)) foreach ($list as $region):?>
+            <?php if($region->cnt == 0) continue;?>
             <div class="text-start">
-                Регионы (охвачено <?=$regCount??0?>)
+                <?=$region->name?>
             </div>
             <div>
-                кол-во
+                <?=$region->cnt?>
             </div>
-        </div>
+        <?php endforeach;?>
+    </div>
 
-        <div class="grid list-body">
-            <?php if(isset($list)) foreach ($list as $region):?>
-                <?php if($region->cnt == 0) continue;?>
-                <div class="text-start">
-                    <?=$region->name?>
-                </div>
-                <div>
-                    <?=$region->cnt?>
-                </div>
-            <?php endforeach;?>
+    <div class="grid list-foot">
+        <div class="text-start">
+            Всего
         </div>
+        <div>
+            <?=$sum??0?>
+        </div>
+    </div>
 </section>
 </>

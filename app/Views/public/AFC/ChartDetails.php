@@ -1,8 +1,8 @@
-<section class="mb-5">
+<section class="chart-box mb-5">
     <h3 class="mb-3 ps-4 ms-2">
         <?=$chartTitle??""?>
     </h3>
-    <div style="position: relative; height: <?= $height ?? "100vh" ?>; width: <?= $width ?? "100vw" ?>">
+    <div class="chart-shell" style="height: <?= $height ?? "100vh" ?>; width: <?= $width ?? "100vw" ?>">
         <canvas id="chartDetail_<?=$cid??""?>"></canvas>
     </div>
     <script>

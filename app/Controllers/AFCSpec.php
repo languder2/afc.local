@@ -49,7 +49,6 @@ class AFCSpec extends BaseController
                 "level" =>  $level,
                 "list"  =>  $this->db
                     ->table("edSpecs")
-                    ->select("*, dataSpec.cnt as total")
                     ->join(
                         "dataSpec",
                         "dataSpec.op=edSpecs.id",
@@ -109,69 +108,36 @@ class AFCSpec extends BaseController
             ->get()
             ->getResult();
 
-        $spec= reset($specs);
-        $dates= [];
+        $charts= [];
 
-        $max= 0;
-
-        $datasets= [];
-
-        foreach ($specs as $spec){
-            $data= $this->db
+        foreach ($specs as $spec) {
+            $list = $this->db
                 ->table("dataSpec")
-                ->select("*")
-                ->where("op",$spec->id)
+                ->where("op",       $spec->id)
+                ->where("day!=",    "all")
                 ->get()
                 ->getResult();
 
-            $spec->data= (object)[
-                "total" => [],
-                "pr1"   => [],
-                "list"  => []
+            $total = $this->db
+                ->table("dataSpec")
+                ->where("op",       $spec->id)
+                ->where("day",    "all")
+                ->get()
+                ->getFirstRow();
+
+            $charts[]= (object)[
+                "list"  => $list,
+                "total" => $total,
+                "chart" => $this->afc
+                    ->getDatasetsFormDetailChart(
+                        $list,
+                        "spec$spec->id",
+                        "   $spec->code",
+                        $this->dates)
             ];
 
-            $dates= [];
-            foreach ($data as $day){
-                $spec->data->list[$day->day] = $day;
-                if($day->day == "all") continue;
-                $spec->data->total  [] = $day->cnt;
-                $spec->data->pr1    [] = $day->pr1;
-                $dates              [] = $day->day;
-            }
-
-            $max= (max($spec->data->total)>$max)?max($spec->data->total):$max;
-
-            $spec->datasets[] = (object)[
-                "label" => "Всего",
-                "color" => "#001AFF",
-                "list"  => json_encode($spec->data->total,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
-            ];
-
-            $spec->datasets[] = (object)[
-                "label" => "Приоритет 1",
-                "color" => "#820000",
-                "list"  => json_encode($spec->data->pr1,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
-            ];
-            $spec->chart= view("public/AFC/ChartDetailsSpec",[
-                "cid"           => "$spec->id",
-                "edForm"        => $forms[$spec->edForm]->name,
-                "legend"        => null,
-                "labels"        => json_encode($dates,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE),
-                "datasets"      => $spec->datasets,
-                "spec"          => $spec,
-                "max"           => $max,
-                "width"         => "100%",
-                "height"        => (count($specs)==1)?"30vh":"30vh",
-            ]);
         }
-
-
-
-        $charts= [];
-        foreach ($specs as $spec)
-            $charts[]= $spec->chart;
-
-        $pageContent= view("public/AFC/DetailsSpec",[
+        $pageContent= view("public/AFC/Details",[
             "charts"      => $charts,
         ]);
 

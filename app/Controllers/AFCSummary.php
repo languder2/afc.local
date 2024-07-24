@@ -231,11 +231,8 @@ class AFCSummary extends BaseController
         /**/
 
         $includes=(object)[
-            'js'=>[
-            ],
-            'css'=>[
-                "css/public/afc.css"
-            ],
+            'js'    => [],
+            'css'   => [],
         ];
 
         $pageContent= view("public/AFC/Summary", [
