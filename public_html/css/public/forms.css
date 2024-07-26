@@ -1,0 +1,75 @@
+/* s-input + label*/
+.s-input{
+    position: relative;
+    padding: 1rem;
+}
+.s-input input{
+    border-width: 2px;
+}
+
+.s-input label{
+    position:           absolute;
+    top:                1.5rem;
+    left:               21px;
+    background-color:   white;
+    padding-left:       10px;
+    z-index:            1000;
+}
+.s-input >input:focus{
+    box-shadow:         none;
+    border:             solid 2px #820000;
+    margin:             0;
+    border-radius:      6px;
+}
+.s-input:has(>input:not(:placeholder-shown)) label,
+.s-input:has(>input:focus) label,
+.s-input label.active{
+    transition:         0.3s ease;
+    font-size:          13px;
+    top:                7px;
+    padding:            0 3px;
+    left:               24px;
+}
+
+/**/
+.btn-red{
+    --bs-btn-color:                 #ffffff;
+    --bs-btn-border-color:          darkred;
+    --bs-btn-bg:                    #820000;
+    --bs-btn-hover-color:           #fff;
+    --bs-btn-hover-bg:              #af0000;
+    --bs-btn-hover-border-color:    #820000;
+    --bs-btn-active-color:          #fff;
+    --bs-btn-active-bg:             #bf0000;
+    --bs-btn-active-border-color:   #820000;
+    --bs-btn-disabled-color:        #6c757d;
+    --bs-btn-disabled-bg:           transparent;
+    --bs-btn-disabled-border-color: #6c757d;
+    --bs-gradient:                  none;
+}
+/**/
+.rounded-top-4{
+    border-top-left-radius:         1rem;
+    border-top-right-radius:        1rem;
+}
+.rounded-bottom-4{
+    border-bottom-left-radius:      1rem;
+    border-bottom-right-radius:     1rem;
+}
+
+.mw-450{
+    max-width:                      450px;
+}
+
+@media (min-width: 992px) {
+    .w-lg-50{
+        width: 50%;
+    }
+}
+
+.bg-darkred{
+    background-color:               darkred !important;
+}
+.mt-center{
+    margin-top: calc(50vh - 300px) !important;
+}

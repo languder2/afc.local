@@ -1,4 +1,4 @@
-<div class="container-lg">
+<div class="container-lg mt-5">
     <div class="row row-cols-1 row-cols-lg-2">
         <div>
             <?=$appBudget??""?>
@@ -22,7 +22,7 @@
             <?=$appMS??""?>
         </div>
         <div>
-            <?=$appMSPR??""?>
+            <?=$appPrMs??""?>
         </div>
     </div>
 </div>

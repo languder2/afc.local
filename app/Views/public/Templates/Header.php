@@ -12,5 +12,8 @@
         <a href="<?=base_url("map")?>" class="btn me-0">
             Карта
         </a>
+        <a href="<?=base_url("exit")?>" class="btn me-0 mt-2 float-end">
+            Выход
+        </a>
     </div>
 </header>

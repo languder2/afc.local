@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>AFC</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
             integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
             crossorigin="anonymous"></script>
@@ -30,6 +29,11 @@
             rel="stylesheet"
             type="text/css"
     >
+    <link
+            href="<?= base_url("css/public/forms.css"); ?>?t=<?php echo(microtime(true) . rand()); ?>"
+            rel="stylesheet"
+            type="text/css"
+    >
 
     <?php if (!empty($includes->js)) foreach ($includes->js as $js): ?>
         <script defer src="<?= base_url($js); ?>?t=<?php echo(microtime(true) . rand()); ?>"></script>
@@ -39,7 +43,8 @@
     <?php endforeach; ?>
 </head>
 <body>
-<?= view("public/Templates/Header")?>
+
+<?=isset($notHeaders)?"":view("public/Templates/Header")?>
 <section class="pageContent">
     <div class="container-lg">
         <?= $pageContent ?? "" ?>

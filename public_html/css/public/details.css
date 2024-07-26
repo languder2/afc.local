@@ -4,15 +4,15 @@ h5.detailTitle{
 }
 section.details{
     display: grid;
-    grid-template-columns: 1fr repeat(6,65px) 100px;
+    grid-template-columns: minmax(100px,300px) repeat(6,65px) 100px;
     gap: 3px;
     text-align: center;
-    max-width: 900px;
+    max-width: 814px;
     margin: 0 auto;
 }
 section.details.list-foot,
 section.details.list-head{
-    grid-template-columns: 1fr repeat(6,65px) 103px;
+    grid-template-columns: minmax(100px,300px) repeat(6,65px) 103px;
 }
 
 section.details.list-head div{

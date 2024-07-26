@@ -1,9 +1,10 @@
 <?php echo view("public/AFC/Specs/Filter")?>
 <?php if (!empty($list)): ?>
     <div class="container-lg">
-        <h3 class="my-5">
+        <h3 class="header-sticky">
             Специальности по уровню образования:
         </h3>
+
         <div class="accordion specs-list" id="accordionPanelsStayOpenExample">
             <?php foreach ($list as $level): if (count($level->list) == 0) continue; ?>
                 <div class="accordion-item">

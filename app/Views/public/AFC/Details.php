@@ -1,6 +1,17 @@
+<?php if(!empty($header)):?>
+    <h3 class="header-sticky">
+        <?=$header?>
+    </h3>
+<?php endif;?>
+
 <?php if(!empty($charts)):?>
-    <div class="row row-cols-1 row-cols-lg-2">
-        <?php foreach ($charts as $chart):?>
+    <?php foreach ($charts as $chart):?>
+        <?php if(!empty($chart->title)):?>
+            <h3 class="mb-4 mx-auto header-limited <?=(count($charts)==1)?"mw-814":""?>"">
+                <?=$chart->title?>
+            </h3>
+        <?php endif;?>
+        <div class="row row-cols-1 <?=(count($charts)>1)?"row-cols-lg-2":""?>">
             <div>
                 <?=$chart->chart?>
             </div>
@@ -89,8 +100,8 @@
                     </section>
                 </div>
             </div>
-        <?php endforeach;?>
-    </div>
+        </div>
+    <?php endforeach;?>
 <?php elseif(!empty($chart)):?>
     <div class="row row-cols-1">
         <div>

@@ -1,12 +1,4 @@
 <section class="rf-map margin-top-20">
-    <div class="district"><b></b><span></span></div>
-    <div class="close-district">&times;</div>
-    <div id="RU-SAR" class="district-text">
-        <div class="saratov"></div>
-    </div>
-    <div id="RU-SA" class="district-text">
-        <div class="saha"></div>
-    </div>
     <svg
             xmlns:svg="http://www.w3.org/2000/svg"
             xmlns="http://www.w3.org/2000/svg"

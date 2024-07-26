@@ -18,7 +18,7 @@
             }
 
             let xScaleConfig = {
-                max: 35,
+                max: 30,
                 ticks: {
                     autoSkip: true,
                     maxRotation: 0,

@@ -24,6 +24,9 @@
     background-color: white;
     box-shadow: 0 0 10px 0 #50505070;
     border-radius: 15px;
+    max-width: 814px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .chart-shell{
     position: relative;
@@ -32,3 +35,26 @@ section.chart-box h3{
     padding: 0 5px;
 }
 
+@media (max-width: 1402px) {
+    .row-cols-lg-2>* {
+        flex:               0 0 auto;
+        width:              100%;
+    }
+    .header-limited{
+        max-width:          814px;
+    }
+}
+/* header sticky*/
+.mw-814{
+    max-width:          814px;
+}
+.header-sticky{
+    background-color: #520000;
+    color: white;
+    padding: 20px;
+    position: sticky;
+    top: 2px;
+    z-index: 2;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}

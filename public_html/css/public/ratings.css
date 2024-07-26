@@ -1,0 +1,41 @@
+.red-title{
+    font-size: 1.75rem;
+    text-align: center;
+    color: white;
+    background-color: #820000;
+    padding: 20px;
+}
+.form-get-snils{
+    background-color: white;
+    padding: 10px;
+}
+
+.results-spec-grid{
+    display: grid;
+    grid-template-columns: 100px 1fr 200px 200px 100px;
+    gap: 3px;
+    align-items: center;
+    text-align: center;
+}
+.results-exam-grid{
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 3px;
+    align-items: center;
+    text-align: right;
+}
+.results-list{
+    background-color: white;
+    padding: 0;
+}
+
+.results-list .result-spec:last-child{
+    border: none !important;
+}
+
+.inRating{
+    background-color: #CDFFC9;
+}
+.inRatingOrigin{
+    background-color: #CDFFC9;
+}

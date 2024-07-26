@@ -2,12 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Models\AFCModel;
+use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use App\Models\AFCModel;
 
-class AFCSummary extends BaseController
+class AFC extends BaseController
 {
     protected array $data;
     protected array $dates;
@@ -25,10 +26,155 @@ class AFCSummary extends BaseController
 
     public function list(): string
     {
-        $priorities = ["Приоритет 1","Приоритет 2","Приоритет 3","Приоритет 4","Приоритет 5","Остальные"];
-        //$shorts =     ["Приоритет 1","Остальные"];
-        $max        = 0;
+        /* get forms */
+        $forms= $this->db
+            ->table("edForms")
+            ->get()
+            ->getResult();
 
+        $this->model->setArrayKey($forms);
+
+        /* get levels */
+        $levels= $this->db
+            ->table("edLevels")
+            ->orderBy("sort","ASC")
+            ->get()
+            ->getResult();
+
+        $this->model->setArrayKey($levels);
+
+        /* get specialities */
+        $specs= [];
+        foreach ($levels as $level){
+            $specs[$level->id]= (object)[
+                "level" =>  $level,
+                "list"  =>  $this->db
+                    ->table("edSpecs")
+                    ->join(
+                        "dataSpec",
+                        "dataSpec.op=edSpecs.id",
+                        "left"
+                    )
+                    ->where("edLevel", $level->id)
+                    ->where("places>", 0)
+                    ->where("dataSpec.day","all")
+                    ->orderBy("name")
+                    ->orderBy("profile")
+                    ->orderBy("profile")
+                    ->orderBy("edForm")
+                    ->get()
+                    ->getResult()
+            ];
+
+            $this->model->replacementByRefers($specs[$level->id]->list,"edForm",$forms);
+
+            $this->afc->buildSpecsTree($specs[$level->id]->list);
+
+        }
+        /* show specialities */
+        $pageContent= view("public/AFC/Specs/List",[
+            "list"          => $specs,
+        ]);
+
+
+        $includes=(object)[
+            'js'=>[
+                "js/public/specs-filter.js"
+            ],
+            'css'=>[
+                "css/public/spec-list.css"
+            ],
+        ];
+
+        return view("public/page",[
+            "pageContent"   =>  $pageContent,
+            "includes"      =>  $includes,
+        ]);
+    }
+
+    public function detail($type,$id):string
+    {
+
+        $specs= $this->db
+            ->table("edSpecs")
+            ->join("edForms","edForms.id=edSpecs.edForm")
+            ->select("edSpecs.id,edSpecs.code,edForms.name as form,edSpecs.places,.edSpecs.name,edSpecs.profile")
+            ->where("edSpecs.$type",$id)
+            ->get()
+            ->getResult();
+
+        $spec= reset($specs);
+        $specName= "$spec->code $spec->name";
+
+        $charts= [];
+
+        foreach ($specs as $spec) {
+            $list = $this->db
+                ->table("dataSpec")
+                ->where("op",       $spec->id)
+                ->where("day!=",    "all")
+                ->get()
+                ->getResult();
+
+            $total = $this->db
+                ->table("dataSpec")
+                ->where("op",       $spec->id)
+                ->where("day",    "all")
+                ->get()
+                ->getFirstRow();
+
+            if(empty($spec->profile))
+                $spec->profile= $spec->name;
+
+            $spec->name=  "$spec->code $spec->name";
+
+            $charts[]= (object)[
+                "list"  => $list,
+                "total" => $total,
+                "title" => $spec->profile,
+                "chart" => $this->afc
+                    ->getDatasetsFormDetailChart(
+                        $list,
+                        "spec$spec->id",
+                        $spec->form,
+                        $this->dates,
+                    )
+            ];
+        }
+
+        $pageContent= view("public/AFC/Details",[
+            "charts"    => $charts,
+            "header"    => $specName,
+        ]);
+
+        $includes=(object)[
+            'js'=>[
+            ],
+            'css'=>[
+                "css/public/details.css"
+            ],
+        ];
+
+        return view("public/page",[
+            "pageContent"   =>  $pageContent,
+            "includes"      =>  $includes,
+        ]);
+    }
+
+    public function summary(): string
+    {
+
+        if(!$this->session->has("auth")){
+            return view("public/page",[
+                "pageContent"   => view("public/Templates/Auth",[
+                    "message"   => $this->session->getFlashdata("authError"),
+                ]),
+                "notHeaders"    =>  true,
+            ]);
+        }
+
+        $priorities = ["Приоритет 1","Приоритет 2","Приоритет 3","Приоритет 4","Приоритет 5","Остальные"];
+        $max        = 0;
 
         $forms= $this->db
             ->table("edForms")
@@ -44,7 +190,6 @@ class AFCSummary extends BaseController
 
         $levels= $this->model->prepareList($levels,"id");
 
-
         /* Заявки бюджет */
         $apps= $this->db
             ->table("data")
@@ -54,7 +199,6 @@ class AFCSummary extends BaseController
             ->where("day",          "all")
             ->get()
             ->getFirstRow();
-
 
         $appBudget= view("public/AFC/ChartSummary", [
             "chartID"       => "appBudget",
@@ -161,7 +305,6 @@ class AFCSummary extends BaseController
         $labels = [" "];
         $datasets= $this->model->prepareLevelDatasets($apps,$levels,$max, $labels);
 
-
         $appLevels= view("public/AFC/ChartSummary", [
             "chartID"       => "appLevels",
             "chartTitle"    => "Уровень обучения",
@@ -216,7 +359,7 @@ class AFCSummary extends BaseController
 
         $datasets= $this->model->prepareMSDatasetsPR($apps,$max);
 
-        $appMSPR= view("public/AFC/ChartSummary", [
+        $appPrMs= view("public/AFC/ChartSummary", [
             "chartID"       => "appMSPR",
             "chartTitle"    => "Способ подачи по приоритетам",
             "legend"        => true,
@@ -243,7 +386,7 @@ class AFCSummary extends BaseController
             "appLevels"             => $appLevels,
             "appLevelsPR"           => $appLevelsPR,
             "appMS"                 => $appMS,
-            "appMSPR"               => $appMSPR,
+            "appPrMs"               => $appPrMs,
         ]);
 
         return view("public/page",[
@@ -252,7 +395,7 @@ class AFCSummary extends BaseController
         ]);
     }
 
-    public function details($type)
+    public function detailsSummary($type)
     {
         $charts = [];
 
@@ -263,6 +406,9 @@ class AFCSummary extends BaseController
 
         switch ($type) {
             case "apps":
+
+                $header = "Подробности по заявкам";
+
                 foreach ($types as $type=>$name){
 
                     $apps= $this->db
@@ -289,16 +435,18 @@ class AFCSummary extends BaseController
                         "list"  => $apps,
                         "total" => $total,
                         "chart" => $this->afc
-                        ->getDatasetsFormDetailChart(
-                            $apps,
-                            $type."_apps",
-                            "Заявки: $name",
-                            $this->dates)
+                            ->getDatasetsFormDetailChart(
+                                $apps,
+                                $type."_apps",
+                                "Заявки: $name",
+                                $this->dates)
                     ];
                 }
                 break;
 
             case "forms":
+
+                $header = "Подробности по формам обучения";
 
                 $forms= $this->db
                     ->table("edForms")
@@ -332,17 +480,19 @@ class AFCSummary extends BaseController
                             "list"  => $apps,
                             "total" => $total,
                             "chart" => $this->afc->getDatasetsFormDetailChart(
-                                    $apps,
-                                    $type."_form_$form->id",
-                                    "$form->name: $name",
-                                    $this->dates)
+                                $apps,
+                                $type."_form_$form->id",
+                                "$form->name: $name",
+                                $this->dates)
                         ];
                     }
                 }
 
-            break;
+                break;
 
             case "levels":
+
+                $header = "Подробности по уровням обучения";
 
                 $levels= $this->db
                     ->table("edLevels")
@@ -386,9 +536,11 @@ class AFCSummary extends BaseController
                             ];
                     }
                 }
-            break;
+                break;
 
             case "methods":
+
+                $header = "Подробности по способам подачи заявки";
 
                 $methods= $this->db
                     ->table("edMethods")
@@ -430,15 +582,16 @@ class AFCSummary extends BaseController
                             ];
                     }
                 }
-            break;
-            default:
-                dd($type);
                 break;
+            default:
+            break;
         }
 
         /**/
         $pageContent= view("public/AFC/Details",[
-            "charts"      => $charts??[],
+            "charts"    => $charts??[],
+            "header"    => $header??"test",
+
         ]);
 
         $includes=(object)[
@@ -453,7 +606,6 @@ class AFCSummary extends BaseController
             "includes"      =>  $includes,
         ]);
     }
-
 
     public function map()
     {
@@ -496,4 +648,5 @@ class AFCSummary extends BaseController
             "includes"      =>  $includes,
         ]);
     }
+
 }
