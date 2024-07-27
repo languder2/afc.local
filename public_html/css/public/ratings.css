@@ -39,3 +39,11 @@
 .inRatingOrigin{
     background-color: #CDFFC9;
 }
+
+/**/
+.rating-faculty{
+    display: none;
+}
+.rating-faculties-content:not(.rating-faculty.active) .rating-faculty:first-child{
+    display: block;
+}

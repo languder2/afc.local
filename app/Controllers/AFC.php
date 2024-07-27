@@ -26,6 +26,15 @@ class AFC extends BaseController
 
     public function list(): string
     {
+        if(!$this->session->has("auth")){
+            return view("public/page",[
+                "pageContent"   => view("public/Templates/Auth",[
+                    "message"   => $this->session->getFlashdata("authError"),
+                ]),
+                "notHeaders"    =>  true,
+            ]);
+        }
+
         /* get forms */
         $forms= $this->db
             ->table("edForms")
@@ -94,6 +103,14 @@ class AFC extends BaseController
 
     public function detail($type,$id):string
     {
+        if(!$this->session->has("auth")){
+            return view("public/page",[
+                "pageContent"   => view("public/Templates/Auth",[
+                    "message"   => $this->session->getFlashdata("authError"),
+                ]),
+                "notHeaders"    =>  true,
+            ]);
+        }
 
         $specs= $this->db
             ->table("edSpecs")
@@ -163,7 +180,6 @@ class AFC extends BaseController
 
     public function summary(): string
     {
-
         if(!$this->session->has("auth")){
             return view("public/page",[
                 "pageContent"   => view("public/Templates/Auth",[
@@ -397,6 +413,17 @@ class AFC extends BaseController
 
     public function detailsSummary($type)
     {
+        /**/
+        if(!$this->session->has("auth")){
+            return view("public/page",[
+                "pageContent"   => view("public/Templates/Auth",[
+                    "message"   => $this->session->getFlashdata("authError"),
+                ]),
+                "notHeaders"    =>  true,
+            ]);
+        }
+
+        /**/
         $charts = [];
 
         $types  = [
@@ -609,7 +636,17 @@ class AFC extends BaseController
 
     public function map()
     {
+        /**/
+        if(!$this->session->has("auth")){
+            return view("public/page",[
+                "pageContent"   => view("public/Templates/Auth",[
+                    "message"   => $this->session->getFlashdata("authError"),
+                ]),
+                "notHeaders"    =>  true,
+            ]);
+        }
 
+        /**/
         $list= $this->db
             ->table("regions")
             ->orderBy("cnt","desc")
