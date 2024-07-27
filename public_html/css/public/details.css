@@ -1,0 +1,80 @@
+h5.detailTitle{
+    max-width: 950px;
+    margin: 20px auto !important;
+}
+section.details{
+    display: grid;
+    grid-template-columns: minmax(100px,300px) repeat(6,65px) 100px;
+    gap: 3px;
+    text-align: center;
+    max-width: 814px;
+    margin: 0 auto;
+}
+section.details.list-foot,
+section.details.list-head{
+    grid-template-columns: minmax(100px,300px) repeat(6,65px) 103px;
+}
+
+section.details.list-head div{
+    color: white;
+    text-align: center;
+    background-color: #820000 !important;
+    padding: 7px 5px;
+}
+section.details.list-foot div{
+    color: white;
+    text-align: center;
+    background-color: #820000 !important;
+    padding: 7px 5px;
+}
+section.details div{
+    background-color: #f5faff;
+    padding: 7px 5px;
+}
+
+section.details div:not(.list-head):nth-child(16n+1),
+section.details div:not(.list-head):nth-child(16n+2),
+section.details div:not(.list-head):nth-child(16n+3),
+section.details div:not(.list-head):nth-child(16n+4),
+section.details div:not(.list-head):nth-child(16n+5),
+section.details div:not(.list-head):nth-child(16n+6),
+section.details div:not(.list-head):nth-child(16n+7),
+section.details div:not(.list-head):nth-child(16n+8)
+{
+    background-color: #fefefe;
+}
+
+/* box by days in detail charts*/
+.box-byDays .list-head > div:first-child{
+    border-radius: 15px 0 0 0;
+}
+.box-byDays .list-head > div:last-child{
+    border-radius: 0 15px 0 0;
+}
+.box-byDays .list-foot > div:first-child{
+    border-radius: 0 0 0 15px;
+}
+.box-byDays .list-foot > div:last-child{
+    border-radius: 0 0 15px 0;
+}
+
+.box-byDays .list-body{
+    max-height: calc(35vh - 6px);
+    overflow-y: scroll;
+    border-left: solid 3px #820000;
+}
+
+.box-byDays .list-body::-webkit-scrollbar {
+    width: 3px;
+    position: relative;
+    background-color: #820000;
+}
+.box-byDays .list-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.box-byDays .list-body::-webkit-scrollbar-thumb {
+    border: 1px solid #820000;
+    background-color: white;
+}
+
+/* list by day*/

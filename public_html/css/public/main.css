@@ -1,0 +1,117 @@
+html{
+    height:             100%;
+    margin:             0;
+    padding:            0;
+}
+body{
+    background-color:   #F5F5F5 !important;
+}
+/**/
+header{
+    background-color:       #520000;
+    position:               fixed;
+    top:                    0;
+    right:                  0;
+    left:                   0;
+    padding:                20px 0;
+    color: white;
+    height:                 80px;
+}
+section.pageContent{
+    position:               fixed;
+    top:                    80px;
+    right:                  0;
+    left:                   0;
+    bottom:                 0;
+    overflow-y:             scroll;
+}
+section.pageContent::-webkit-scrollbar {
+    width: 5px; /* ÑˆÐ¸Ñ€Ð¸Ð½Ð° scrollbar */
+}
+section.pageContent::-webkit-scrollbar-track {
+    background: transparent; /* Ñ†Ð²ÐµÑ‚ Ð´Ð¾Ñ€Ð¾Ð¶ÐºÐ¸ */
+
+}
+section.pageContent::-webkit-scrollbar-thumb {
+    background-color: #820000;    /* Ñ†Ð²ÐµÑ‚ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+    border-radius: 20px;       /* Ð·Ð°ÐºÑ€ÑƒÐ³Ð»ÐµÐ½Ð¸Ñ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+    border: 3px solid #820000;  /* padding Ð²Ð¾ÐºÑ€ÑƒÐ³ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
+}
+/**/
+.logo img{
+    max-height: 50px;
+}
+
+header a{
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 1rem;
+
+}
+header a.btn{
+    background-color: #f0f0f0;
+}
+header a.btn:hover{
+    background-color: #a0a0a0;
+    color: white;
+}
+
+/**/
+
+
+
+.gridSpecList {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 5px;
+    vertical-align: center;
+    justify-content: center;
+}
+
+.gridSpecList > div {
+    padding: 5px 10px;
+    background-color: #f5faff;
+}
+
+.gridSpecList:nth-child(2n+1) > div {
+    background-color: #0a53be10;
+}
+
+.gridSpecDetailList {
+    display: grid;
+    grid-template-columns: 200px 100px 1fr 1fr;
+    gap: 5px;
+}
+
+
+.grid-DayCnt {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+}
+
+.grid-Day {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 3px;
+}
+
+.grid-Cnt {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 3px;
+}
+
+.bg0 {
+    background-color: #4AA9E607;
+}
+
+.bg1 {
+    background-color: #4AA9E615;
+}
+
+.bg0, .bg1 {
+    padding: 3px 5px;
+}
+
+/**/

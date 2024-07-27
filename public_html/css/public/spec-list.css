@@ -1,0 +1,147 @@
+.grid-spec-list {
+    display: grid;
+    grid-template-columns: 100px 1fr 200px 100px 100px;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+.grid-spec-list a,
+.gridSpecList a {
+    text-decoration: none;
+    color: darkblue;
+}
+
+.grid-spec-list a:hover,
+.gridSpecList a:hover {
+    color: #0a53be;
+}
+/* specs menu/filter */
+.specs-filter{
+    position:           fixed;
+    top:                80px;
+    right:              0;
+    bottom:             0;
+    padding:            1rem 0;
+    background-color:   #f5f5f5;
+    transform:          translateX( 110%);
+    transition:         0.4s ease-in-out;
+    border-left:        solid 2px #82000020;
+    z-index:            1000;
+}
+.specs-filter.active{
+    transform:          translateX(0);
+    transition:         0.4s ease-in-out;
+}
+.specs-filter label{
+    cursor: pointer;
+}
+.specs-filter .form-check-input:checked{
+    background-color:   #820000;
+    border-color:       #820000;
+    box-shadow:         0 0 0 5px #9f000030;
+}
+
+.specs-list .head-container{
+    position:           sticky;
+    top:                78px;
+    margin-bottom:      5px;
+    background-color:   white;
+}
+.specs-list .foot-container{
+    position:           sticky;
+    bottom:             2px;
+    margin-top:         5px;
+}
+.span-2{
+    grid-column:        span 2;
+}
+.grid-spec-list > div{
+    background-color:   #f5faff;
+    padding:            5px 10px;
+}
+
+.grid-spec-list:nth-child(2n+1) > div {
+    background-color:   #fdfdfd;
+}
+.foot-container .grid-spec-list > div,
+.head-container .grid-spec-list > div{
+    color: #f5f5f5;
+    background-color: #820000;
+}
+.grid-spec-list .pr{
+    display: none;
+}
+.grid-spec-list .pr.active{
+    display: block;
+}
+/* btn link*/
+.btn-main{
+    color: #fff;
+    background-color: #820000;
+    border-color: #820000;
+}
+.btn-main:hover{
+    background-color: #9f0000;
+    border-color: #9f0000;
+    color: white;
+}
+.btn-main:focus,
+.btn-main:active{
+    box-shadow: 0 0 0 5px #9f000030;
+}
+/* btn show filter*/
+.showFilter{
+    position:           fixed;
+    z-index:            1100;
+    top:                10px;
+    right:              10px;
+    border-color:       #777;
+    background-color:   white;
+    padding:            10px 12px;
+    color:              #777;
+    border-width:       2px;
+    box-shadow:         none;
+    border-left:        solid 1px #820000;
+}
+.showFilter.active{
+    background-color:   #820000;
+    border-color:       white;
+    color:              white;
+}
+.showFilter:focus{
+    box-shadow:         none;
+}
+.showFilter:active{
+    box-shadow:         0 0 0 5px #9f000030;
+}
+.showFilter:hover{
+    background-color:   #a0a0a0;
+    color: white;
+}
+
+/* hr */
+hr{
+    border-color:       #820000;
+}
+
+.specs-list .accordion-button:not(.collapsed):after {
+    //background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 8-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+.specs-list .accordion-button:not(.collapsed) {
+    //color:              white;
+    //background-color:   #82000000;
+    //box-shadow:         none;
+}
+.specs-list .accordion-button:focus{
+    //box-shadow:         none;
+}
+.specs-list .accordion-collapse.show,
+.specs-list .accordion-collapse{
+    transition: 0.5s ease-in-out;
+}
+/* links */
+.specs-list a{
+    color: #212529;
+}
+.specs-list a:hover{
+    color: #820000;
+}
