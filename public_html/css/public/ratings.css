@@ -40,32 +40,14 @@
     background-color: #CDFFC9;
 }
 
-/**/
-.rating-faculty{
-    display: none;
-}
-.rating-faculties-content:not(.rating-faculty.active) .rating-faculty:first-child{
-    display: block;
-}
-
 /* Панель выбора факультета */
 .rating-faculties-panel a{
     text-decoration:        none;
-}
-.rating-faculties-panel a{
-    background-color:       #d0d0d0;
+    background-color:       #e0e0e0;
     color:                  #1d1e1e;
     border:                 solid 2px #d0d0d0;
     border-bottom-width:    0;
     border-radius:          15px 15px 0 0;
-}
-.rating-faculties-panel a:first-child{
-    background-color:       white;
-    color:                  darkred;
-}
-.rating-faculties-panel:has(.active) a:first-child{
-    background-color:       #d0d0d0;
-    color:                  #1d1e1e;
 }
 .rating-faculties-panel a.active{
     background-color:       darkred;
@@ -79,9 +61,29 @@
 }
 .rating-faculties-panel a:focus{
     outline-width:          0;
+}
+.rating-faculties-panel a:focus:not(.active){
+    background-color:       #f5f5f5;
     color:                  darkred;
 }
-.rating-faculties-panel a:not(.active):focus{
-    background-color:       #e5e5e5;
-    color:                  darkred;
+.rating-faculties-panel a:first-child{
+    margin-left: 0 !important;
 }
+.rating-faculties-panel a:last-child{
+    margin-right: 0 !important;
+}
+/**/
+.rating-faculties-content{
+    background-color: white;
+    border: solid 2px darkred;
+    padding: 10px 20px;
+}
+
+.rating-faculty{
+    display: none;
+}
+.rating-faculty.active{
+    display: block;
+}
+
+

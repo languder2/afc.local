@@ -1,12 +1,19 @@
 <?php if(!empty($list)):?>
-
     <?php echo view("public/Rating/FacultyTabsPanel",["list"=>$list]);?>
-
-    <div class="rating-faculties-content">
+    <div class="rating-faculties-content rounded-bottom-4 mb-4">
         <?php foreach ($list as $fid=>$faculty):?>
-            <div class="rating-faculty" data-fid="<?=$fid?>">
+            <div
+                    data-fid="<?=$fid?>"
+                    class="
+                        rating-faculty
+                        <?=(!empty($facultyID) && $fid==$facultyID)?"active":""?>
+                    "
+            >
                 <div class="rating-faculty-levels ps-2">
                     <?php foreach ($faculty->levels as $lid=>$level):?>
+                        <?php echo view("public/Rating/LevelPanel",[
+                                "level" => $level,
+                        ]);?>
                         <div class="rating-level">
                             <h2 class="rating-level-title">
                                 <?=$level->name?>

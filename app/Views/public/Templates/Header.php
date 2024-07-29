@@ -9,8 +9,11 @@
         <a href="<?=base_url("specs")?>" class="btn">
             Специальности
         </a>
-        <a href="<?=base_url("map")?>" class="btn me-0">
+        <a href="<?=base_url("map")?>" class="btn">
             Карта
+        </a>
+        <a href="<?=base_url("rating")?>" class="btn me-0">
+            Рейтинг
         </a>
         <a href="<?=base_url("exit")?>" class="btn me-0 mt-2 float-end">
             Выход

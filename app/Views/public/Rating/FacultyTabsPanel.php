@@ -13,7 +13,7 @@
                         d-inline-flex
                         py-2 px-4 mx-1
                         align-items-center text-center
-                        <?=($fid==35)?"active":""?>
+                        <?=(!empty($facultyID) && $fid==$facultyID)?"active":""?>
                     "
             >
                 <span>

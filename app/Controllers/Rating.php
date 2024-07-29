@@ -48,18 +48,21 @@ class Rating extends BaseController
         foreach($rows as $row){
             if(!isset($list[$row->facultyID]))
                 $list[$row->facultyID]= (object)[
+                    "id"        => $row->facultyID,
                     "name"      => $row->FacultyAlias??$row->FacultyName,
                     "levels"    => [],
                 ];
 
             if(!isset($list[$row->facultyID]->levels[$row->edLevel]))
                 $list[$row->facultyID]->levels[$row->edLevel]  = (object)[
+                    "id"        => $row->edLevel,
                     "name"      => $row->Level,
                     "specs"     => [],
                 ];
 
             if(!isset($list[$row->facultyID]->levels[$row->edLevel]->specs[$row->code]))
                 $list[$row->facultyID]->levels[$row->edLevel]->specs[$row->code]  = (object)[
+                    "id"        => $row->code,
                     "name"      => $row->name,
                     "profiles"  => [],
                 ];
@@ -67,12 +70,16 @@ class Rating extends BaseController
             $list[$row->facultyID]->levels[$row->edLevel]->specs[$row->code]->profiles[$row->id]    = $row;
         }
 
+        $facultyID = current($list)->id;
+
         $pageContent    = view("public/Rating/SpecList",[
             "list"          => $list,
+            "facultyID"     => $facultyID,
         ]);
 
         $includes=(object)[
             'js'=>[
+                "js/public/rating.js"
             ],
             'css'=>[
                 "css/public/ratings.css"
