@@ -30,7 +30,7 @@
             type="text/css"
     >
     <link
-            href="<?= base_url("css/public/forms.css"); ?>?t=<?php echo(microtime(true) . rand()); ?>"
+            href="<?= base_url("css/public/bs5-add-on.css"); ?>?t=<?php echo(microtime(true) . rand()); ?>"
             rel="stylesheet"
             type="text/css"
     >

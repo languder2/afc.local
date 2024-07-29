@@ -47,3 +47,41 @@
 .rating-faculties-content:not(.rating-faculty.active) .rating-faculty:first-child{
     display: block;
 }
+
+/* Панель выбора факультета */
+.rating-faculties-panel a{
+    text-decoration:        none;
+}
+.rating-faculties-panel a{
+    background-color:       #d0d0d0;
+    color:                  #1d1e1e;
+    border:                 solid 2px #d0d0d0;
+    border-bottom-width:    0;
+    border-radius:          15px 15px 0 0;
+}
+.rating-faculties-panel a:first-child{
+    background-color:       white;
+    color:                  darkred;
+}
+.rating-faculties-panel:has(.active) a:first-child{
+    background-color:       #d0d0d0;
+    color:                  #1d1e1e;
+}
+.rating-faculties-panel a.active{
+    background-color:       darkred;
+    color:                  white;
+    cursor:                 default;
+    border-color:           darkred;
+}
+.rating-faculties-panel a:not(.active):hover{
+    background-color:       #e5e5e5;
+    color:                  darkred;
+}
+.rating-faculties-panel a:focus{
+    outline-width:          0;
+    color:                  darkred;
+}
+.rating-faculties-panel a:not(.active):focus{
+    background-color:       #e5e5e5;
+    color:                  darkred;
+}

@@ -5,9 +5,6 @@
     <div class="rating-faculties-content">
         <?php foreach ($list as $fid=>$faculty):?>
             <div class="rating-faculty" data-fid="<?=$fid?>">
-                <h1 class="rating-faculty-title">
-                    <?=$faculty->name?>
-                </h1>
                 <div class="rating-faculty-levels ps-2">
                     <?php foreach ($faculty->levels as $lid=>$level):?>
                         <div class="rating-level">

@@ -38,6 +38,9 @@ section.pageContent::-webkit-scrollbar-thumb {
     border: 3px solid #820000;  /* padding Ð²Ð¾ÐºÑ€ÑƒÐ³ Ð¿Ð»Ð°ÑˆÐºÐ¸ */
 }
 /**/
+.logo{
+    outline-width: 0;
+}
 .logo img{
     max-height: 50px;
 }
