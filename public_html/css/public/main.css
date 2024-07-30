@@ -52,11 +52,15 @@ header a{
 
 }
 header a.btn{
-    background-color: #f0f0f0;
+    background-color:           #f0f0f0;
+    border:                     solid 2px transparent;
 }
 header a.btn:hover{
-    background-color: #a0a0a0;
-    color: white;
+    background-color:           #fff;
+    color:                      darkred;
+    font-weight:                500;
+    transform:                  scale(1.1);
+    box-shadow:                 0 0 0px 1px #999;
 }
 
 /**/

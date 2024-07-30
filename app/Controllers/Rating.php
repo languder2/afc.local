@@ -72,7 +72,7 @@ class Rating extends BaseController
 
         $facultyID = current($list)->id;
 
-        $pageContent    = view("public/Rating/SpecList",[
+        $pageContent    = view("public/Rating/Faculties",[
             "list"          => $list,
             "facultyID"     => $facultyID,
         ]);

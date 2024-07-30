@@ -1,89 +1,148 @@
 .red-title{
-    font-size: 1.75rem;
-    text-align: center;
-    color: white;
-    background-color: #820000;
-    padding: 20px;
+    font-size:                  1.75rem;
+    text-align:                 center;
+    color:                      white;
+    background-color:           #820000;
+    padding:                    20px;
 }
 .form-get-snils{
-    background-color: white;
-    padding: 10px;
+    background-color:           white;
+    padding:                    10px;
 }
 
 .results-spec-grid{
-    display: grid;
-    grid-template-columns: 100px 1fr 200px 200px 100px;
-    gap: 3px;
-    align-items: center;
-    text-align: center;
+    display:                    grid;
+    grid-template-columns:      100px 1fr 200px 200px 100px;
+    gap:                        3px;
+    align-items:                center;
+    text-align:                 center;
 }
 .results-exam-grid{
-    display: grid;
-    grid-template-columns: 1fr 150px;
-    gap: 3px;
-    align-items: center;
-    text-align: right;
+    display:                    grid;
+    grid-template-columns:      1fr 150px;
+    gap:                        3px;
+    align-items:                center;
+    text-align:                 right;
 }
 .results-list{
-    background-color: white;
-    padding: 0;
+    background-color:           white;
+    padding:                    0;
 }
 
 .results-list .result-spec:last-child{
-    border: none !important;
+    border:                     none !important;
 }
 
 .inRating{
-    background-color: #CDFFC9;
+    background-color:           #CDFFC9;
 }
+
 .inRatingOrigin{
-    background-color: #CDFFC9;
+    background-color:           #CDFFC9;
 }
 
 /* Панель выбора факультета */
-.rating-faculties-panel a{
-    text-decoration:        none;
-    background-color:       #e0e0e0;
-    color:                  #1d1e1e;
-    border:                 solid 2px #d0d0d0;
-    border-bottom-width:    0;
-    border-radius:          15px 15px 0 0;
+.faculties-panel a{
+    text-decoration:            none;
+    background-color:           #f5f5f5;
+    color:                      #1d1e1e;
+    border:                     solid 2px #d0d0d0;
+    border-bottom-width:        0;
+    border-radius:              15px 15px 0 0;
 }
-.rating-faculties-panel a.active{
-    background-color:       darkred;
-    color:                  white;
-    cursor:                 default;
-    border-color:           darkred;
+.faculties-panel a.active{
+    background-color:           darkred;
+    color:                      white;
+    cursor:                     default;
+    border-color:               darkred;
 }
-.rating-faculties-panel a:not(.active):hover{
-    background-color:       #e5e5e5;
-    color:                  darkred;
+.faculties-panel a:not(.active):hover{
+    background-color:           #908590;
+    color:                      white;
+    border-color:               darkred;
 }
-.rating-faculties-panel a:focus{
-    outline-width:          0;
+.faculties-panel a:focus{
+    outline-width:              0;
 }
-.rating-faculties-panel a:focus:not(.active){
-    background-color:       #f5f5f5;
-    color:                  darkred;
+.faculties-panel a:focus:not(.active){
+    background-color:           #f5f5f5;
+    color:                      darkred;
 }
-.rating-faculties-panel a:first-child{
-    margin-left: 0 !important;
+.faculties-panel a:first-child{
+    margin-left:                0 !important;
 }
-.rating-faculties-panel a:last-child{
-    margin-right: 0 !important;
+.faculties-panel a:last-child{
+    margin-right:               0 !important;
 }
 /**/
-.rating-faculties-content{
-    background-color: white;
-    border: solid 2px darkred;
-    padding: 10px 20px;
+.faculties-content{
+    background-color:           white;
+    border:                     solid 2px darkred;
+    padding:                    20px;
+    transition:                 all .3s ease-in-out;
+    height:                     auto;
+    overflow-y:                 hidden;
+}
+.faculties-content.hide{
+    height:                     0 !important;
+    padding:                    0 20px;
+    overflow:                   hidden;
+    transition:                 all .3s ease-in-out;
 }
 
-.rating-faculty{
-    display: none;
+.faculty{
+    opacity:                    0;
+    transform:                  scaleY(0);
+    overflow-y:                 hidden;
+    max-height:                 0;
+    transition:                 all 0s;
 }
-.rating-faculty.active{
-    display: block;
+.faculty.show{
+    opacity:                    1;
+    transform:                  scaleY(1);
+    max-height:                 inherit;
 }
-
-
+.faculty-levels .levelTitle{
+    background-color:           #f5f5f5;
+    border:                     solid 2px darkred;
+    color:                      #520000;
+    padding:                    10px 20px;
+    cursor:                     pointer;
+    border-top-width:           0;
+    transition:                 all 0.5s ease-out;
+}
+.faculty-level.show .levelTitle{
+    background-color:           darkred;
+    color:                      white;
+}
+.faculty-level .levelTitle:hover{
+    background-color:           #908590;
+    color:                      white;
+}
+.faculty .faculty-level:first-child .levelTitle{
+    border-top-right-radius:    15px;
+    border-top-left-radius:     15px;
+    border-top-width:           2px;
+}
+.faculty .faculty-level:last-child:not(.show) .levelTitle{
+    border-bottom-left-radius:  15px;
+    border-bottom-right-radius: 15px;
+}
+.faculty-levels .faculty-specs{
+    overflow-y:                 hidden;
+    transform:                  scaleY(0);
+    max-height:                 0;
+    transition:                 min-height .3s ease-out, all 0.5s ease-out, border 0s;
+}
+.faculty-levels .show .faculty-specs{
+    border:                     solid 2px darkred;
+    border-top-width:           0;
+    transform:                  scaleY(1);
+    padding:                    10px 20px;
+    max-height:                 2000px;
+}
+.faculty .faculty-level:last-child.show .faculty-specs{
+    border-bottom-left-radius:  15px;
+    border-bottom-right-radius: 15px;
+    border-bottom-width:        2px;
+}

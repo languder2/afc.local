@@ -1,6 +1,6 @@
 <?php if(!empty($list)):?>
     <div class="
-        rating-faculties-panel
+        faculties-panel
         d-flex flex-wrap flex-lg-nowrap
         mt-3
     ">
@@ -9,7 +9,7 @@
                     href="#"
                     data-fid="<?=$fid?>"
                     class="
-                        rating-faculty-btn
+                        faculty-btn
                         d-inline-flex
                         py-2 px-4 mx-1
                         align-items-center text-center
