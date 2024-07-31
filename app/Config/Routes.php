@@ -21,3 +21,4 @@ $routes->post(  "auth",                                     [Auth::class,   'aut
 $routes->get(   "exit",                                     [Auth::class,   'exit']);
 
 $routes->get(   "rating",                                   [Rating::class, 'specList']);
+$routes->get(   "specs-new",                                [[Rating::class, 'specList'],"places"]);

@@ -11,7 +11,7 @@ class Rating extends BaseController
     }
 
     /**/
-    public function speclist():string
+    public function speclist($type= "rating"):string
     {
         if(!$this->session->has("auth")){
             return view("public/page",[
@@ -24,13 +24,16 @@ class Rating extends BaseController
 
         $rows  = $this->db
             ->table("edSpecs")
+            ->join("dataSpec","dataSpec.op=edSpecs.id","left")
             ->join("edFaculties","edSpecs.facultyID = edFaculties.id","left")
             ->join("edForms","edSpecs.edForm = edForms.id","left")
             ->join("edLevels","edSpecs.edLevel = edLevels.id","left")
 
             ->where("edSpecs.places>",0)
+            ->where("dataSpec.day","all")
 
-            ->select("edSpecs.*")
+            ->select("edSpecs.*,edSpecs.id specID")
+            ->select("dataSpec.*")
             ->select("edFaculties.name FacultyName,edFaculties.alias FacultyAlias")
             ->select("edForms.name Form")
             ->select("edLevels.name Level")
@@ -65,9 +68,23 @@ class Rating extends BaseController
                     "id"        => $row->code,
                     "name"      => $row->name,
                     "profiles"  => [],
+                    "details"   => (object)[
+                        "places"    => 0,
+                        "pr1"       => 0,
+                        "pr2"       => 0,
+                        "pr3"       => 0,
+                        "pr4"       => 0,
+                        "pr5"       => 0,
+                        "other"     => 0,
+                        "total"     => 0,
+                    ]
                 ];
 
-            $list[$row->facultyID]->levels[$row->edLevel]->specs[$row->code]->profiles[$row->id]    = $row;
+            $list[$row->facultyID]->levels[$row->edLevel]->specs[$row->code]->profiles[$row->specID]    = $row;
+
+            foreach ($list[$row->facultyID]->levels[$row->edLevel]->specs[$row->code]->details as $filed=>$value)
+                $list[$row->facultyID]->levels[$row->edLevel]->specs[$row->code]->details->{$filed}+= $row->{$filed};
+
         }
 
         $facultyID = current($list)->id;
@@ -75,14 +92,17 @@ class Rating extends BaseController
         $pageContent    = view("public/Rating/Faculties",[
             "list"          => $list,
             "facultyID"     => $facultyID,
+            "specListType"      => $type,
         ]);
 
         $includes=(object)[
             'js'=>[
-                "js/public/rating.js"
+                "js/public/rating.js",
+                "js/public/specs-filter.js"
             ],
             'css'=>[
-                "css/public/ratings.css"
+                "css/public/ratings.css",
+                "css/public/spec-list.css"
             ],
         ];
         return view("public/page",[

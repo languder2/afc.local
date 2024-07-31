@@ -46,7 +46,7 @@
                     <section class="details list-body">
                         <?php foreach ($chart->list as $day):?>
                             <div class="fw-bold">
-                                <?=date("d.m",strtotime($day->day))?>
+                                <?=$day->day?>
                             </div>
                             <div class="fw-bold">
                                 <?=$day->pr1?>

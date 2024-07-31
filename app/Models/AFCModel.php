@@ -234,6 +234,7 @@ class AFCModel extends GeneralModel
                 "list"  => json_encode($set,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE)
             ];
         }
+
         return view("public/AFC/ChartDetails",[
             "cid"           => $chartID,
             "chartTitle"    => $title,

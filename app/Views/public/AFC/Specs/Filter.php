@@ -57,7 +57,7 @@
             </label>
         </div>
     </div>
-
+<!--
     <hr>
     <h3 class="px-5 py-2 text-center">Список</h3>
         <div class="px-5 mb-3">
@@ -66,5 +66,5 @@
         <div class="px-5">
             <a href="#" class="btn btn-main w-100 btnSpecHideAll">Свернуть все</a>
         </div>
-
+-->
 </div>

@@ -44,23 +44,28 @@ section.pageContent::-webkit-scrollbar-thumb {
 .logo img{
     max-height: 50px;
 }
-
 header a{
     text-decoration: none;
     display: inline-block;
-    margin-right: 1rem;
-
 }
-header a.btn{
-    background-color:           #f0f0f0;
-    border:                     solid 2px transparent;
+header .menu > div a:not(.logo){
+    display:                block;
+    padding:                5px 10px;
+    border-radius:          8px;
+    text-decoration:        none;
+    border:                 solid 2px darkred;
+    background-color:       white;
+    transition:             all .2s ease-in-out;
+    color:                  #353535;
+    box-shadow:             0 0 0 2px #ffffff70;
 }
-header a.btn:hover{
-    background-color:           #fff;
-    color:                      darkred;
-    font-weight:                500;
-    transform:                  scale(1.1);
-    box-shadow:                 0 0 0px 1px #999;
+header .menu > div:hover a:not(.logo){
+    transform:              scale(1.2);
+    color:                  darkred;
+}
+header .menu > div:active a:not(.logo){
+    transform:              scale(1.2);
+    color:                  white;
 }
 
 /**/

@@ -5,16 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a842a95f-e208-4264-be16-574c46ea73bf" name="Changes" comment="h test">
-      <change afterPath="$PROJECT_DIR$/app/Views/public/Rating/Faculties.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Views/public/Rating/LevelTab.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Views/public/Rating/SpecListPlaces.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Config/Routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Config/Routes.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Controllers/Rating.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Controllers/Rating.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/Rating/FacultyTabsPanel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/Rating/FacultyTabsPanel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Views/public/Rating/LevelPanel.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/AFCModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/AFCModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/ChartDetails.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/ChartDetails.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/Details.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/Details.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Views/public/AFC/Specs/Filter.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/AFC/Specs/Filter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Views/public/Rating/Faculties.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/Rating/Faculties.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Views/public/Rating/LevelTab.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/Rating/LevelTab.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Views/public/Rating/SpecList.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/Rating/SpecList.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Views/public/Templates/Header.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Views/public/Templates/Header.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public_html/css/public/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/css/public/ratings.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/ratings.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public_html/js/public/rating.js" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/js/public/rating.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public_html/css/public/spec-list.css" beforeDir="false" afterPath="$PROJECT_DIR$/public_html/css/public/spec-list.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,19 +62,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/OSP/home/afc.local/app/Views/public/Rating&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/OSP/home/elar.local",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\OSP\home\afc.local\app\Views\public\Rating" />
@@ -128,7 +132,9 @@
       <workItem from="1721960452580" duration="4033000" />
       <workItem from="1722052643884" duration="3611000" />
       <workItem from="1722153638666" duration="4886000" />
-      <workItem from="1722318636228" duration="23070000" />
+      <workItem from="1722318636228" duration="23701000" />
+      <workItem from="1722402662881" duration="16000" />
+      <workItem from="1722417349204" duration="10492000" />
     </task>
     <task id="LOCAL-00001" summary="eqwsq">
       <option name="closed" value="true" />
@@ -186,7 +192,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722258974405</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="h test">
+      <option name="closed" value="true" />
+      <created>1722347122174</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1722347122174</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

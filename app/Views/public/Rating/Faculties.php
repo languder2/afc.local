@@ -1,3 +1,7 @@
+<?php
+    if(isset($specListType) and $specListType != "rating")
+        echo view("public/AFC/Specs/Filter")
+?>
 <?php if(!empty($list)):?>
     <div class="faculties">
         <?php echo view("public/Rating/FacultyTabsPanel",["list"=>$list]);?>
@@ -52,36 +56,4 @@
         box-shadow:             0 0 5px 2px green;
     }
 </style>
-<div class="test2 d-flex ">
-    <div>
-        <button>123</button>
-    </div>
-    <div>
-        <button>123</button>
-    </div>
-    <div>
-        <button>123</button>
-    </div>
-    <div>
-        <button>123</button>
-    </div>
-    <div class="ms-auto">
-        <button>123</button>
-    </div>
-</div>
-<style>
-    .test2{
-        width: 100%;
-        background-color: #0a53be30;
-    }
-    .test2 > div{
-        padding: 3px;
-    }
-    .test2 > div:hover button{
-        background-color:       red;
-        color:                  white;
-        transform:              scale(1.3);
-        box-shadow:             0 0 5px 2px green;
-    }
 
-</style>

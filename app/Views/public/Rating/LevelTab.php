@@ -10,9 +10,14 @@
                     <?=$level->name?>
                 </h4>
                 <?php
-                    echo view("public/Rating/SpecList",[
-                        "specs"=>$level->specs
-                    ]);
+                    if(isset($specListType) && $specListType == "rating")
+                        echo view("public/Rating/SpecList",[
+                            "specs"=>$level->specs
+                        ]);
+                    else
+                        echo view("public/Rating/SpecListPlaces",[
+                            "specs"=>$level->specs
+                        ]);
                 ?>
             </div>
         <?php endforeach;?>

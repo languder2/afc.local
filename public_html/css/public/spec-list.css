@@ -145,3 +145,35 @@ hr{
 .specs-list a:hover{
     color: #820000;
 }
+/**/
+.places-grid{
+    display:                                    grid;
+    grid-template-columns:                      100px 1fr 100px 100px;
+    gap:                                        5px;
+    margin-bottom:                              5px;
+}
+.places-grid.box-spec{
+    font-weight:                                bold;
+    font-size:                                  1.25rem;
+}
+.places-grid.box-profile{
+    font-size:                                  1rem;
+}
+.places-grid .pr{
+    display:                                    none;
+}
+.places-grid .pr.active{
+    display:                                    block;
+}
+.places-grid a{
+    text-decoration:                            none;
+    color:                                      inherit;
+    transition:                                 all .2s ease-in-out;
+}
+.places-grid a:hover{
+    color:                                      darkred;
+}
+
+.grid-test{
+    display: none !important;
+}
